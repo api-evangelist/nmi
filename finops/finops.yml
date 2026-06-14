@@ -1,0 +1,69 @@
+name: NMI Payment Gateway FinOps
+description: NMI operates as a payment gateway and embedded payments enablement platform. Its pricing model is B2B and channel-partner driven — merchants access NMI through ISOs (Independent Sales Organizations), payment facilitators, and software platforms rather than direct self-service sign-up. This means cost visibility depends on the reseller relationship. NMI processes over $502 billion in annual payments volume across 1.2 million active merchants. Key cost drivers for API consumers are gateway fees, transaction fees, and optional value-added service fees negotiated through the partner channel.
+url: https://www.nmi.com/about-us/contact-us/
+tags:
+  - Payments
+  - Payment Gateway
+  - FinOps
+  - Cost Management
+costDrivers:
+  - name: Gateway Monthly Fee
+    description: A recurring monthly fee for access to the NMI payment gateway infrastructure. Typically assessed at the merchant account level by the reselling ISO or payment facilitator. Specific amounts vary by partner agreement and are not publicly disclosed by NMI.
+    type: subscription
+    unit: merchant/month
+    disclosed: false
+    notes: Contact NMI authorized reseller or ISO for current gateway fees
+
+  - name: Transaction Processing Fee
+    description: Per-transaction fee assessed for each payment processed through the NMI gateway. May be a flat per-transaction fee, a percentage of transaction value, or a combination, depending on the merchant's processor agreement and the reseller's pricing model. Not set directly by NMI at the gateway layer for most merchants.
+    type: usage
+    unit: per transaction
+    disclosed: false
+    notes: Transaction fees are determined by the acquiring processor and ISO, not directly by NMI
+
+  - name: Customer Vault Storage
+    description: Fees associated with storing tokenized customer payment credentials in the NMI Customer Vault. Enables recurring billing and credential-on-file transactions. Storage fees may be included in the gateway fee or assessed separately depending on the partner agreement.
+    type: usage
+    unit: per stored record/month
+    disclosed: false
+    notes: Vault storage pricing depends on reseller agreement
+
+  - name: Recurring Billing Management
+    description: Costs associated with operating subscription and recurring billing plans through the NMI Recurring Billing API. May include setup fees or per-subscription fees in some partner pricing models.
+    type: usage
+    unit: per subscription/month
+    disclosed: false
+    notes: Recurring billing pricing depends on reseller agreement
+
+  - name: Partner / PayFac Platform Fee
+    description: For ISOs and payment facilitators using the full NMI platform including Merchant Onboarding API, Merchant Central CRM, and white-label gateway capabilities. Platform fees are negotiated directly with NMI and are volume-based. Includes residuals management, reporting, and underwriting infrastructure.
+    type: platform
+    unit: custom/negotiated
+    disclosed: false
+    notes: Contact NMI enterprise sales team for PayFac platform pricing
+
+costOptimization:
+  - name: Batch Query Scheduling
+    description: Schedule Query API calls during off-peak hours and batch transaction data retrieval to minimize API call overhead and avoid potential throttling. Use date-range filters to reduce response payload sizes.
+
+  - name: Tokenization to Reduce Scope
+    description: Use Collect.js or Three Step Redirect to tokenize payment data at the browser/client level, reducing the merchant's PCI compliance scope and potentially lowering compliance-related costs.
+
+  - name: Webhook-Driven Processing
+    description: Use webhooks for real-time event notification instead of polling the Query API for status updates. This reduces unnecessary API calls and associated processing overhead.
+
+  - name: Recurring Plans vs Custom Subscriptions
+    description: Use predefined recurring billing plans for standardized subscription products rather than custom subscriptions to simplify management and reduce per-subscription configuration overhead.
+
+  - name: Volume Negotiation
+    description: NMI's channel-partner model means that higher processing volumes enable negotiation of lower gateway and transaction fees through the ISO or reseller relationship. Aggregate volume across sub-merchants for PayFac accounts to improve negotiating position.
+
+externalResources:
+  - name: NMI Contact / Sales
+    url: https://www.nmi.com/about-us/contact-us/
+  - name: NMI Partner Program
+    url: https://www.nmi.com/
+  - name: NMI Developer Portal
+    url: https://docs.nmi.com
+  - name: NMI Support
+    url: https://support.nmi.com

@@ -1,0 +1,63 @@
+name: NMI Payment Gateway Plans
+description: NMI does not publish self-serve pricing plans publicly. Access to the NMI payment gateway is provided through channel partners, ISOs (Independent Sales Organizations), and payment facilitators. Merchants must contact NMI or work through an authorized reseller to obtain pricing. Gateway fees, transaction rates, and feature access vary based on the partner agreement, business type, and processing volume. The information below reflects the general structure of NMI's service tiers based on publicly available information.
+url: https://www.nmi.com/about-us/contact-us/
+plans:
+  - name: Standard Gateway
+    description: Core payment gateway access for merchants processing payments through an authorized NMI reseller or ISO. Includes access to the Payment API, Customer Vault, Recurring Billing, and Query API for transaction reporting. PCI compliant infrastructure with 150+ processor connections.
+    url: https://www.nmi.com/about-us/contact-us/
+    features:
+      - Payment API (Direct Post)
+      - Customer Vault (tokenization)
+      - Recurring Billing
+      - Query API (reporting)
+      - Collect.js tokenization
+      - Hosted Payment Page
+      - Webhook notifications
+      - 150+ processor connections
+      - PCI DSS Level 1 compliance
+      - Sandbox testing environment
+    pricing:
+      - description: Gateway fees vary by reseller agreement; contact NMI or authorized reseller for pricing
+        model: contact
+        unit: custom
+
+  - name: Payment Facilitator (PayFac)
+    description: Full payment facilitation stack for ISOs and software platforms onboarding sub-merchants. Includes all Standard Gateway features plus the Merchant Onboarding API, automated risk review, processor configuration, fee schedule management, and partner reporting. Enables white-label gateway deployment.
+    url: https://www.nmi.com/about-us/contact-us/
+    features:
+      - All Standard Gateway features
+      - Merchant Onboarding API
+      - Automated risk review
+      - Real-time approval monitoring
+      - Processor configuration API
+      - Fee schedule management
+      - API key generation per merchant
+      - White-label gateway
+      - Partner/residuals reporting
+      - Merchant Central CRM integration
+      - Sub-merchant management
+    pricing:
+      - description: PayFac pricing is custom; contact NMI partner team for volume-based pricing
+        model: contact
+        unit: custom
+
+  - name: Enterprise / White-Label
+    description: Full white-label payment platform for large ISOs, acquirers, and enterprise software companies. Includes all PayFac features plus custom branding, dedicated infrastructure, advanced fraud (Kount integration), 3D Secure (3DS2), in-person device management via Customer-Present Cloud, and dedicated technical support.
+    url: https://www.nmi.com/about-us/contact-us/
+    features:
+      - All PayFac features
+      - White-label branding
+      - Customer-Present Cloud API
+      - In-person device management
+      - 3D Secure 2 (3DS2)
+      - Kount fraud prevention
+      - Advanced reporting and analytics
+      - Mobile SDK (iOS and Android)
+      - .NET, Java, PHP SDKs
+      - Dedicated technical support
+      - NMI Merchant Central
+      - Business capital offerings
+    pricing:
+      - description: Enterprise pricing is negotiated; contact NMI enterprise sales for custom quotes
+        model: contact
+        unit: custom

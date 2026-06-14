@@ -1,0 +1,35 @@
+name: NMI Payment Gateway Rate Limits
+description: NMI does not publicly disclose specific rate limit thresholds for its Payment API or associated APIs. Rate limiting policies are managed at the gateway level and may vary based on merchant account configuration, processing volume, and partner agreement. The NMI integration documentation references a Rate Limits appendix within the Payment API documentation, but specific numerical thresholds are not published. Merchants and integrators should contact NMI or their authorized reseller for rate limit details applicable to their specific account.
+url: https://docs.nmi.com/reference/getting-started
+rateLimits:
+  - name: Payment API Transaction Rate
+    description: Transaction submission rate for the Payment API (Direct Post) at the secure.networkmerchants.com endpoint. Specific limits are not publicly disclosed and are configured per merchant account. Integrators should implement exponential backoff and retry logic for 429 or gateway error responses.
+    url: https://secure.networkmerchants.com/gw/merchants/resources/integration/integration_portal.php
+    limits:
+      - description: Rate limit thresholds are not publicly published; contact NMI or your ISO for account-specific limits
+        unit: request
+        window: not disclosed
+
+  - name: Query API Rate
+    description: The Query API for transaction data retrieval and reporting is subject to rate limiting to prevent excessive data extraction. Specific limits are defined per account. Best practice is to schedule batch queries during off-peak hours and paginate responses.
+    url: https://docs.nmi.com/reference/getting-started
+    limits:
+      - description: Query API rate limits are not publicly published; configure polling intervals to avoid throttling
+        unit: request
+        window: not disclosed
+
+  - name: Merchant Onboarding API Rate
+    description: The Merchant Onboarding API for application submission and status monitoring is rate limited to protect the underwriting pipeline. Automated application submission must respect gateway-enforced throttling. Specific thresholds are available through the NMI partner program.
+    url: https://docs.nmi.com/reference/getting-started
+    limits:
+      - description: Onboarding API rate limits are defined in partner agreements; not publicly disclosed
+        unit: request
+        window: not disclosed
+
+  - name: Webhook Event Delivery
+    description: NMI Webhooks include built-in retry logic for event delivery. While not a traditional rate limit, webhook consumers should be capable of handling event bursts during high transaction volume periods. Retry schedules and delivery guarantees are defined in the webhook documentation.
+    url: https://docs.nmi.com/reference/getting-started
+    limits:
+      - description: Webhook delivery includes automatic retry logic; consumer endpoints should respond within standard HTTP timeout windows
+        unit: event
+        window: not disclosed

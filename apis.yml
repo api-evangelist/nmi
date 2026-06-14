@@ -1,0 +1,204 @@
+name: NMI
+description: NMI is a global embedded payments enablement platform providing full-stack payment technology with REST APIs for payment processing, tokenization, recurring billing, customer vault management, and payment facilitation across ecommerce, in-person, mobile, and unattended acquisition channels. With over 20 years of operation, NMI connects 1.2 million active merchants, 6,000 channel partners, and 150+ processor connections, processing over $502 billion in annual payments volume.
+image: https://kinlane-productions2.s3.amazonaws.com/apis-json/apis-json-logo.jpg
+url: https://raw.githubusercontent.com/api-evangelist/nmi/refs/heads/main/apis.yml
+created: '2026-06-13'
+modified: '2026-06-13'
+specificationVersion: '0.19'
+tags:
+  - Payments
+  - Payment Gateway
+  - Payment Processing
+  - Tokenization
+  - Recurring Billing
+  - Customer Vault
+  - Fintech
+  - Embedded Payments
+  - Payment Facilitation
+apis:
+  - name: NMI Payment API
+    description: The core NMI Payment API (Direct Post) enables transaction processing across card-present, ecommerce, mobile, and alternative payment methods including Apple Pay and Google Pay. Supports authorization, sale, capture, refund, void, credit, and validation operations with credential-on-file and partial payment support.
+    image: https://kinlane-productions2.s3.amazonaws.com/apis-json/apis-json-logo.jpg
+    humanURL: https://docs.nmi.com/reference/getting-started
+    baseURL: https://secure.networkmerchants.com
+    tags:
+      - Payments
+      - Transactions
+      - Authorization
+      - Refunds
+    properties:
+      - type: Documentation
+        url: https://docs.nmi.com/docs
+      - type: OpenAPI
+        url: https://docs.nmi.com/reference/getting-started
+      - type: Sandbox
+        url: https://docs.nmi.com/docs/sandbox-testing
+    contact:
+      - FN: NMI Developer Support
+        url: https://support.nmi.com
+        email: ''
+
+  - name: NMI Customer Vault API
+    description: The NMI Customer Vault API enables secure storage and management of customer payment credentials at Level 1 PCI compliance. Supports creating, updating, and retrieving tokenized customer payment profiles for recurring use without storing raw card data.
+    image: https://kinlane-productions2.s3.amazonaws.com/apis-json/apis-json-logo.jpg
+    humanURL: https://docs.nmi.com/reference/getting-started
+    baseURL: https://secure.networkmerchants.com
+    tags:
+      - Tokenization
+      - Customer Vault
+      - PCI Compliance
+      - Storage
+    properties:
+      - type: Documentation
+        url: https://docs.nmi.com/docs
+      - type: OpenAPI
+        url: https://docs.nmi.com/reference/getting-started
+    contact:
+      - FN: NMI Developer Support
+        url: https://support.nmi.com
+        email: ''
+
+  - name: NMI Recurring Billing API
+    description: The NMI Recurring Billing API provides subscription and recurring payment management including plan creation, subscription enrollment, billing cycle configuration, and automated payment scheduling. Supports daily and monthly frequency options with customizable payment counts and amounts.
+    image: https://kinlane-productions2.s3.amazonaws.com/apis-json/apis-json-logo.jpg
+    humanURL: https://support.nmi.com/hc/en-gb/articles/14525725002385-API-Recurring-Payments-and-Subscriptions
+    baseURL: https://secure.networkmerchants.com
+    tags:
+      - Recurring Billing
+      - Subscriptions
+      - Plans
+      - Billing
+    properties:
+      - type: Documentation
+        url: https://docs.nmi.com/docs
+      - type: OpenAPI
+        url: https://docs.nmi.com/reference/getting-started
+    contact:
+      - FN: NMI Developer Support
+        url: https://support.nmi.com
+        email: ''
+
+  - name: NMI Query API
+    description: The NMI Query API provides transaction data retrieval and reporting capabilities including detailed transaction records, customer data, invoice information, and account reporting with customizable query parameters for data downloads and analytics.
+    image: https://kinlane-productions2.s3.amazonaws.com/apis-json/apis-json-logo.jpg
+    humanURL: https://docs.nmi.com/reference/getting-started
+    baseURL: https://secure.networkmerchants.com
+    tags:
+      - Reporting
+      - Transactions
+      - Analytics
+      - Query
+    properties:
+      - type: Documentation
+        url: https://docs.nmi.com/docs
+      - type: OpenAPI
+        url: https://docs.nmi.com/reference/getting-started
+    contact:
+      - FN: NMI Developer Support
+        url: https://support.nmi.com
+        email: ''
+
+  - name: NMI Merchant Onboarding API
+    description: The NMI Merchant Onboarding API enables payment facilitators and ISOs to programmatically onboard merchants through a complete application workflow. Supports application creation and submission, automated risk review, real-time approval status monitoring, document upload, legal consent management, and provisioning of Gateway and Merchant IDs.
+    image: https://kinlane-productions2.s3.amazonaws.com/apis-json/apis-json-logo.jpg
+    humanURL: https://docs.nmi.com/reference/getting-started
+    baseURL: https://secure.networkmerchants.com
+    tags:
+      - Merchant Onboarding
+      - Payment Facilitation
+      - ISO
+      - KYC
+    properties:
+      - type: Documentation
+        url: https://docs.nmi.com/docs
+      - type: OpenAPI
+        url: https://docs.nmi.com/reference/getting-started
+    contact:
+      - FN: NMI Developer Support
+        url: https://support.nmi.com
+        email: ''
+
+  - name: NMI Webhooks API
+    description: The NMI Webhooks API provides event-driven integration for real-time notifications on transaction events, recurring billing updates, settlements, and chargebacks. Includes webhook registration management, event configuration, and retry logic for reliable event delivery.
+    image: https://kinlane-productions2.s3.amazonaws.com/apis-json/apis-json-logo.jpg
+    humanURL: https://docs.nmi.com/reference/getting-started
+    baseURL: https://secure.networkmerchants.com
+    tags:
+      - Webhooks
+      - Events
+      - Notifications
+      - Real-time
+    properties:
+      - type: Documentation
+        url: https://docs.nmi.com/docs
+      - type: OpenAPI
+        url: https://docs.nmi.com/reference/getting-started
+    contact:
+      - FN: NMI Developer Support
+        url: https://support.nmi.com
+        email: ''
+
+  - name: NMI Three Step Redirect API
+    description: The NMI Three Step Redirect API keeps merchants outside the scope of transmitting sensitive payment data by routing cardholder information directly to NMI servers. Supports transaction, recurring billing, and customer vault operations with reduced PCI compliance scope for merchants.
+    image: https://kinlane-productions2.s3.amazonaws.com/apis-json/apis-json-logo.jpg
+    humanURL: https://secure.networkmerchants.com/gw/merchants/resources/integration/integration_portal.php
+    baseURL: https://secure.networkmerchants.com
+    tags:
+      - Payments
+      - PCI Compliance
+      - Redirect
+      - Tokenization
+    properties:
+      - type: Documentation
+        url: https://secure.networkmerchants.com/gw/merchants/resources/integration/integration_portal.php
+    contact:
+      - FN: NMI Developer Support
+        url: https://support.nmi.com
+        email: ''
+
+  - name: NMI Customer-Present Cloud API
+    description: The NMI Customer-Present Cloud API enables browser-based point-of-sale payment processing without software installation. Supports cloud device registration and control, payment requests on connected devices, device prompts including menu, signature, and yes/no interactions, and QR code display for in-person payment scenarios.
+    image: https://kinlane-productions2.s3.amazonaws.com/apis-json/apis-json-logo.jpg
+    humanURL: https://docs.nmi.com/docs/introduction-to-the-customer-present-cloud-api
+    baseURL: https://secure.networkmerchants.com
+    tags:
+      - In-Person Payments
+      - Point of Sale
+      - Device Management
+      - Cloud POS
+    properties:
+      - type: Documentation
+        url: https://docs.nmi.com/docs/introduction-to-the-customer-present-cloud-api
+    contact:
+      - FN: NMI Developer Support
+        url: https://support.nmi.com
+        email: ''
+
+common:
+  - type: Portal
+    url: https://docs.nmi.com
+  - type: Developer Experience
+    url: https://www.nmi.com/dev-experience/
+  - type: SDKs
+    url: https://www.nmi.com/payment-gateway-sdks-apis/
+  - type: Integration Portal
+    url: https://secure.networkmerchants.com/gw/merchants/resources/integration/integration_portal.php
+  - type: Sandbox
+    url: https://docs.nmi.com/docs/sandbox-testing
+  - type: Support
+    url: https://support.nmi.com
+  - type: Blog
+    url: https://www.nmi.com/blog/
+  - type: Contact
+    url: https://www.nmi.com/about-us/contact-us/
+  - type: Plans
+    url: https://raw.githubusercontent.com/api-evangelist/nmi/refs/heads/main/plans/plans.yml
+  - type: RateLimits
+    url: https://raw.githubusercontent.com/api-evangelist/nmi/refs/heads/main/rate-limits/rate-limits.yml
+  - type: FinOps
+    url: https://raw.githubusercontent.com/api-evangelist/nmi/refs/heads/main/finops/finops.yml
+
+maintainers:
+  - FN: API Evangelist
+    url: https://apievangelist.com
+    email: info@apievangelist.com
