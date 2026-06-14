@@ -1,0 +1,150 @@
+{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "NMI",
+  "url": "https://www.nmi.com",
+  "description": "NMI is a global embedded payments enablement platform providing full-stack payment technology with REST APIs for payment processing, tokenization, recurring billing, customer vault management, and payment facilitation across ecommerce, in-person, mobile, and unattended acquisition channels.",
+  "sameAs": [
+    "https://docs.nmi.com",
+    "https://secure.networkmerchants.com"
+  ],
+  "contactPoint": {
+    "@type": "ContactPoint",
+    "url": "https://support.nmi.com",
+    "contactType": "developer support"
+  },
+  "hasOfferCatalog": {
+    "@type": "OfferCatalog",
+    "name": "NMI Payment APIs",
+    "itemListElement": [
+      {
+        "@type": "SoftwareApplication",
+        "name": "NMI Payment API",
+        "applicationCategory": "Payment Processing",
+        "description": "The core NMI Payment API (Direct Post) enables transaction processing across card-present, ecommerce, mobile, and alternative payment methods including Apple Pay and Google Pay.",
+        "url": "https://docs.nmi.com/reference/getting-started",
+        "featureList": [
+          "Authorization",
+          "Sale",
+          "Capture",
+          "Refund",
+          "Void",
+          "Credit",
+          "Validation",
+          "Credential-on-file",
+          "Partial payment support"
+        ]
+      },
+      {
+        "@type": "SoftwareApplication",
+        "name": "NMI Customer Vault API",
+        "applicationCategory": "Payment Tokenization",
+        "description": "The NMI Customer Vault API enables secure storage and management of customer payment credentials at Level 1 PCI compliance.",
+        "url": "https://docs.nmi.com/reference/getting-started",
+        "featureList": [
+          "Tokenization",
+          "PCI Level 1 compliance",
+          "Customer profile management",
+          "Recurring payment support"
+        ]
+      },
+      {
+        "@type": "SoftwareApplication",
+        "name": "NMI Recurring Billing API",
+        "applicationCategory": "Subscription Management",
+        "description": "The NMI Recurring Billing API provides subscription and recurring payment management including plan creation, subscription enrollment, billing cycle configuration, and automated payment scheduling.",
+        "url": "https://support.nmi.com/hc/en-gb/articles/14525725002385-API-Recurring-Payments-and-Subscriptions",
+        "featureList": [
+          "Plan creation",
+          "Subscription enrollment",
+          "Billing cycle configuration",
+          "Automated payment scheduling"
+        ]
+      },
+      {
+        "@type": "SoftwareApplication",
+        "name": "NMI Query API",
+        "applicationCategory": "Reporting and Analytics",
+        "description": "The NMI Query API provides transaction data retrieval and reporting capabilities including detailed transaction records, customer data, invoice information, and account reporting.",
+        "url": "https://docs.nmi.com/reference/getting-started",
+        "featureList": [
+          "Transaction records",
+          "Customer data retrieval",
+          "Invoice information",
+          "Account reporting",
+          "Data downloads"
+        ]
+      },
+      {
+        "@type": "SoftwareApplication",
+        "name": "NMI Merchant Onboarding API",
+        "applicationCategory": "Merchant Management",
+        "description": "The NMI Merchant Onboarding API enables payment facilitators and ISOs to programmatically onboard merchants through a complete application workflow.",
+        "url": "https://docs.nmi.com/reference/getting-started",
+        "featureList": [
+          "Application creation and submission",
+          "Automated risk review",
+          "Real-time approval status monitoring",
+          "Document upload",
+          "Legal consent management",
+          "Gateway and Merchant ID provisioning"
+        ]
+      },
+      {
+        "@type": "SoftwareApplication",
+        "name": "NMI Webhooks API",
+        "applicationCategory": "Event Notifications",
+        "description": "The NMI Webhooks API provides event-driven integration for real-time notifications on transaction events, recurring billing updates, settlements, and chargebacks.",
+        "url": "https://docs.nmi.com/reference/getting-started",
+        "featureList": [
+          "Transaction event notifications",
+          "Recurring billing updates",
+          "Settlement notifications",
+          "Chargeback notifications",
+          "Webhook registration management",
+          "Retry logic"
+        ]
+      },
+      {
+        "@type": "SoftwareApplication",
+        "name": "NMI Three Step Redirect API",
+        "applicationCategory": "Payment Processing",
+        "description": "The NMI Three Step Redirect API keeps merchants outside the scope of transmitting sensitive payment data by routing cardholder information directly to NMI servers.",
+        "url": "https://secure.networkmerchants.com/gw/merchants/resources/integration/integration_portal.php",
+        "featureList": [
+          "Reduced PCI compliance scope",
+          "Transaction processing",
+          "Recurring billing",
+          "Customer vault operations"
+        ]
+      },
+      {
+        "@type": "SoftwareApplication",
+        "name": "NMI Customer-Present Cloud API",
+        "applicationCategory": "Point of Sale",
+        "description": "The NMI Customer-Present Cloud API enables browser-based point-of-sale payment processing without software installation.",
+        "url": "https://docs.nmi.com/docs/introduction-to-the-customer-present-cloud-api",
+        "featureList": [
+          "Cloud device registration and control",
+          "Payment requests on connected devices",
+          "Device prompts",
+          "Menu interactions",
+          "Signature capture",
+          "QR code display"
+        ]
+      }
+    ]
+  },
+  "keywords": [
+    "Payments",
+    "Payment Gateway",
+    "Payment Processing",
+    "Tokenization",
+    "Recurring Billing",
+    "Customer Vault",
+    "Fintech",
+    "Embedded Payments",
+    "Payment Facilitation",
+    "PCI Compliance"
+  ]
+}
