@@ -1,63 +1,21 @@
 {
-  "blog": "https://www.nmi.com/blog/",
-  "feedUrl": "https://www.nmi.com/feed/",
-  "fetched": "2026-06-14T20:42:17Z",
-  "posts": [
-    {
-      "title": "Why Bill Connect Premium Should Be Your First Choice for Invoice-Driven Merchants",
-      "url": "https://www.nmi.com/blog/why-bill-connect-premium-should-be-your-first-choice-for-invoice-driven-merchants/",
-      "published": "2026-06-12",
-      "description": "In our earlier post, we explained why NMI Bill Connect Premium, powered by Biller Genie, makes so much sense for merchants. Now, let\u2019s talk about why it makes so much sense for ISOs and software companies."
-    },
-    {
-      "title": "Fraud-as-a-Service Is Here and Your Merchants Are the Target",
-      "url": "https://www.nmi.com/blog/fraud-as-a-service-is-here-and-your-merchants-are-the-target/",
-      "published": "2026-05-29",
-      "description": "If you\u2019re a payment provider, the fraud threat facing your merchants is your threat too. What\u2019s more, it\u2019s evolving faster than most defenses can keep up. Increasing digitization and automated attack tooling have lowered the barrier to entry for fraud."
-    },
-    {
-      "title": "How to Solve Your Merchant\u2019s Most Pressing Invoicing Problems",
-      "url": "https://www.nmi.com/blog/how-to-solve-your-merchants-most-pressing-invoicing-problems/",
-      "published": "2026-05-21",
-      "description": "If you work with professionals, service providers, trades and contractors, or subscription sellers, you\u2019ve probably heard your merchants complain about the unique challenges that invoice-based payments bring."
-    },
-    {
-      "title": "Modular, Not Monolithic: Why Scaling Platforms Need Flexible Payments Architecture",
-      "url": "https://www.nmi.com/blog/modular-not-monolithic-why-scaling-platforms-need-flexible-payments-architecture/",
-      "published": "2026-05-08",
-      "description": "Scaling a payments stack is one of the most defining technical decisions you\u2019ll make for your software platform. Get it right, and your infrastructure grows with your business. Get it wrong, and you end up with compounding technical debt."
-    },
-    {
-      "title": "Automation Is the New Compliance Advantage",
-      "url": "https://www.nmi.com/blog/automation-is-the-new-compliance-advantage/",
-      "published": "2026-04-28",
-      "description": "In payments, compliance has traditionally been treated as a safeguard. A necessary layer of checks to manage risk, satisfy regulators and protect against fraud. But that view is starting to shift."
-    },
-    {
-      "title": "Scaling Up? 5 Ways SaaS Platforms Can Minimize Disruption When Switching Payment Partners",
-      "url": "https://www.nmi.com/blog/scaling-up-5-ways-saas-platforms-can-minimize-disruption-when-switching-payment-partners/",
-      "published": "2026-04-09",
-      "description": "At some point, most SaaS platforms outgrow their payments setup. What worked early on, when volumes were lower and requirements were simpler, can start to create friction as the business scales."
-    },
-    {
-      "title": "Better SaaS Payments with Recurring Apple Pay and Google Pay Subscriptions",
-      "url": "https://www.nmi.com/blog/better-saas-payments-with-recurring-apple-pay-and-google-pay-subscriptions/",
-      "published": "2026-03-20",
-      "description": "Recurring payments are woven into our everyday life. Streaming platforms renew in the background. Fitness apps bill each month. Cloud software keeps teams running. Utility providers, meal kits, accounting tools, and more all depend on seamless subscription billing."
-    },
-    {
-      "title": "Offering Your Merchants Better Ways To Process HSA and FSA Transactions",
-      "url": "https://www.nmi.com/blog/offering-your-merchants-better-ways-to-process-hsa-and-fsa-transactions/",
-      "published": "2026-03-06",
-      "description": "Health savings accounts (HSAs) are special tax-advantaged savings accounts that allow U.S. taxpayers to pay for eligible health expenses with pre-tax dollars."
-    }
-  ],
   "repo": "nmi",
   "feeds": [
     {
+      "source": "https://www.nmi.com/feed/",
+      "feed_url": "https://www.nmi.com/feed/",
+      "title": "",
+      "saved": 1,
+      "method": "feed"
+    },
+    {
       "source": "https://support.nmi.com",
-      "error": "HTTPError"
+      "feed_url": "https://support.nmi.com",
+      "title": "",
+      "saved": 0,
+      "method": "none"
     }
   ],
-  "post_count": 0
+  "fetched": "2026-06-27T12:03:07Z",
+  "post_count": 2
 }
