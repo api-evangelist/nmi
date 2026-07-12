@@ -175,6 +175,8 @@ apis:
         email: ''
 
 common:
+  - type: DomainSecurity
+    url: security/nmi-domain-security.yml
   - type: Portal
     url: https://docs.nmi.com
   - type: Developer Experience
