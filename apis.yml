@@ -35,6 +35,11 @@ apis:
     baseURL: https://secure.networkmerchants.com
     tags:
       - Payments
+      - Transaction
+      - Authorization
+      - Refunds
+    tags_raw:
+      - Payments
       - Transactions
       - Authorization
       - Refunds
@@ -77,6 +82,11 @@ apis:
     baseURL: https://secure.networkmerchants.com
     tags:
       - Recurring Billing
+      - Subscription
+      - Plans
+      - Billing
+    tags_raw:
+      - Recurring Billing
       - Subscriptions
       - Plans
       - Billing
@@ -96,6 +106,11 @@ apis:
     humanURL: https://docs.nmi.com/reference/getting-started
     baseURL: https://secure.networkmerchants.com
     tags:
+      - Reporting
+      - Transaction
+      - Analytics
+      - Query
+    tags_raw:
       - Reporting
       - Transactions
       - Analytics
@@ -136,6 +151,11 @@ apis:
     humanURL: https://docs.nmi.com/reference/getting-started
     baseURL: https://secure.networkmerchants.com
     tags:
+      - Webhook
+      - Event
+      - Notification
+      - Real-Time
+    tags_raw:
       - Webhooks
       - Events
       - Notifications
@@ -174,6 +194,11 @@ apis:
     humanURL: https://docs.nmi.com/docs/introduction-to-the-customer-present-cloud-api
     baseURL: https://secure.networkmerchants.com
     tags:
+      - In-Person Payments
+      - Point-of-Sale
+      - Device Management
+      - Cloud POS
+    tags_raw:
       - In-Person Payments
       - Point of Sale
       - Device Management
