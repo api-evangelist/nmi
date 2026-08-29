@@ -1,5 +1,16 @@
 name: NMI
 description: NMI is a global embedded payments enablement platform providing full-stack payment technology with REST APIs for payment processing, tokenization, recurring billing, customer vault management, and payment facilitation across ecommerce, in-person, mobile, and unattended acquisition channels. With over 20 years of operation, NMI connects 1.2 million active merchants, 6,000 channel partners, and 150+ processor connections, processing over $502 billion in annual payments volume.
+deliveryModel:
+  model: saas
+  open_source: false
+  commercial: true
+  callable_host: false
+  label: Hosted service · you call their endpoint
+  confidence: medium
+  source:
+  - pricing
+  generated: '2026-08-28'
+  method: derived
 accessModel:
   pricing: paid
   onboarding: unknown
