@@ -1,30 +1,28 @@
-# Kin Score artifact — nmi — 2026-08-30T220315
+# Kin Score artifact — nmi — 2026-09-25T210408
 # The API Evangelist rating (https://github.com/api-evangelist/kin-score). Generated; do not edit.
 ---
 kin_score:
   slug: nmi
-  schema_version: 0.17.2
-  scored_at: '2026-08-30'
-  run_ts: 2026-08-30T220315
-  composite: 25.9
+  schema_version: 0.23.0
+  scored_at: '2026-09-25'
+  run_ts: 2026-09-25T210408
+  composite: 25.8
   band: emerging
   facets:
-    discoverability: 74.1
-    contract_quality: 26.7
-    governance: 0.0
+    discoverability: 73.3
+    contract_quality: 24.0
+    contract_governance: 0.0
     operational_transparency: 0.0
     developer_ergonomics: 36.9
-    commercial_clarity: 39.5
-    contract_governance: 0.0
-    access_clarity: 39.5
+    access_clarity: 36.3
   agent_readiness:
-    score: 15.5
+    score: 17.6
     band: agent-aware
     dimensions:
       spec_presence: true
       agentic_access: false
       reversibility_documented: false
-      mcp_server: false
+      mcp_server: platform
       auth_clarity: false
       idempotency: false
       error_semantics: false
@@ -44,5 +42,7 @@ kin_score:
     applies: true
     regime: Payments
     regime_id: payments
-    score: 9.4
+    score: 5.4
     matched_via: tags
+  provenance:
+    mcp: first-party
