@@ -1,3 +1,7 @@
+# Provenance stamped 2026-10-07 (roadmap#943): written by an API Evangelist sweep (undated — the file carries no date and git cannot supply one), not
+# harvested from the provider. `method: generated` so the economics campaign may replace it with a
+# dated, verbatim transcription; every figure below is unverified until it does.
+method: generated
 name: NMI Payment Gateway Rate Limits
 description: NMI does not publicly disclose specific rate limit thresholds for its Payment API or associated APIs. Rate limiting policies are managed at the gateway level and may vary based on merchant account configuration, processing volume, and partner agreement. The NMI integration documentation references a Rate Limits appendix within the Payment API documentation, but specific numerical thresholds are not published. Merchants and integrators should contact NMI or their authorized reseller for rate limit details applicable to their specific account.
 url: https://docs.nmi.com/reference/getting-started
