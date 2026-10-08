@@ -65,3 +65,28 @@ plans:
       - description: Enterprise pricing is negotiated; contact NMI enterprise sales for custom quotes
         model: contact
         unit: custom
+x-canonical:
+  generated: '2026-10-08'
+  vocabulary: all/0-working/economics/plans-canonical.yml
+  models:
+  - negotiated
+  units: []
+  plans:
+  - name: Standard Gateway
+    access: other
+    model: negotiated
+    model_how: derived
+    units: []
+    periods: []
+  - name: Payment Facilitator (PayFac)
+    access: other
+    model: negotiated
+    model_how: derived
+    units: []
+    periods: []
+  - name: Enterprise / White-Label
+    access: other
+    model: negotiated
+    model_how: derived
+    units: []
+    periods: []
