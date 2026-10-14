@@ -1,0 +1,164 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/nmi/main/json-schema/nmi-full-application-schema.json",
+  "title": "full-application",
+  "description": "Full application object.\n",
+  "x-generated": "2026-10-14",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/nmi-payments-sign-up-api-openapi.yml#/components/schemas/full-application",
+  "type": "object",
+  "required": [
+    "id",
+    "package_id",
+    "status",
+    "fields",
+    "collections",
+    "created_at",
+    "updated_at"
+  ],
+  "properties": {
+    "id": {
+      "$ref": "#/$defs/application-id"
+    },
+    "package_id": {
+      "$ref": "#/$defs/package-id"
+    },
+    "status": {
+      "$ref": "#/$defs/application-status"
+    },
+    "fields": {
+      "$ref": "#/$defs/application-fields"
+    },
+    "collections": {
+      "$ref": "#/$defs/application-collections"
+    },
+    "created_at": {
+      "$ref": "#/$defs/application-created-at"
+    },
+    "updated_at": {
+      "$ref": "#/$defs/application-updated-at"
+    }
+  },
+  "$defs": {
+    "application-collections": {
+      "type": "array",
+      "description": "This field is used to store collections.\n",
+      "maxItems": 1000,
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "$ref": "#/$defs/collection-id"
+          },
+          "records": {
+            "type": "array",
+            "description": "This field is used to store all records of the same collection.\n",
+            "maxItems": 1000,
+            "items": {
+              "type": "object",
+              "required": [
+                "id",
+                "fields"
+              ],
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "description": "The unique identifier of the record.\n",
+                  "minLength": 1,
+                  "maxLength": 100
+                },
+                "fields": {
+                  "$ref": "#/$defs/application-fields"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "application-created-at": {
+      "type": "string",
+      "description": "The date and time when the application was created.\n",
+      "format": "date-time",
+      "maxLength": 32
+    },
+    "application-fields": {
+      "type": "array",
+      "description": "Application fields",
+      "maxItems": 1000,
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "value"
+        ],
+        "properties": {
+          "id": {
+            "$ref": "#/$defs/field-id"
+          },
+          "value": {
+            "$ref": "#/$defs/field-value-mixed"
+          }
+        }
+      }
+    },
+    "application-id": {
+      "type": "string",
+      "description": "The unique identifier of the application.",
+      "pattern": "^app_[a-f0-9]{16}$",
+      "minLength": 20,
+      "maxLength": 20
+    },
+    "application-status": {
+      "type": "string",
+      "enum": [
+        "draft",
+        "submitted",
+        "approved",
+        "rejected",
+        "underwriter_requested_information",
+        "requested_information_sent",
+        "boarded"
+      ]
+    },
+    "application-updated-at": {
+      "type": "string",
+      "description": "The date and time when the application was last updated.\n",
+      "format": "date-time",
+      "maxLength": 32
+    },
+    "collection-id": {
+      "type": "string",
+      "description": "The unique identifier of the collection.",
+      "pattern": "^col_[a-z0-9_]{3,46}$",
+      "minLength": 7,
+      "maxLength": 50
+    },
+    "field-id": {
+      "type": "string",
+      "description": "The unique identifier of the field.",
+      "pattern": "^fld_[a-z0-9_]{3,46}$",
+      "minLength": 7,
+      "maxLength": 50
+    },
+    "field-value-mixed": {
+      "type": [
+        "string",
+        "integer",
+        "number",
+        "boolean",
+        "array",
+        "null"
+      ],
+      "description": "Field value type depends on the field definition.\n"
+    },
+    "package-id": {
+      "type": "string",
+      "description": "The unique identifier of the package.",
+      "pattern": "^pkg_[a-z0-9_]{3,16}$",
+      "minLength": 7,
+      "maxLength": 20
+    }
+  }
+}

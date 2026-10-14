@@ -1,0 +1,77 @@
+generated: '2026-10-14'
+method: derived
+generator: derive-webhooks.py
+source:
+- openapi/nmi-payments-api-openapi.yml
+- openapi/nmi-payments-sign-up-api-openapi.yml
+description: 'Event surface derived from the provider''s own OpenAPI: webhooks. No AsyncAPI document is published by the provider; this catalog
+  lists the events the contract names.'
+management_operations:
+- create-subscription-v5
+- list-subscriptions-v5
+- get-subscription-v5
+- update-subscription-v5
+- delete-subscription-v5
+- getSubscriptions
+- createSubscription
+- getSubscription
+- updateSubscription
+- deleteSubscription
+events:
+- event: transaction
+  description: Transaction Event
+  declared_in: webhooks
+- event: recurring
+  description: Recurring Event
+  declared_in: webhooks
+- event: settlement
+  description: Settlement Event
+  declared_in: webhooks
+- event: acu
+  description: Automatic Card Updater Event
+  declared_in: webhooks
+- event: chargeback
+  description: Chargeback Event
+  declared_in: webhooks
+- event: application.updated.data.requested
+  description: Underwriter Requested Information
+  declared_in: webhooks
+- event: application.approved
+  description: Application is approved
+  declared_in: webhooks
+- event: application.declined
+  description: Application is declined
+  declared_in: webhooks
+- event: application.cancelled
+  description: Application is cancelled
+  declared_in: webhooks
+- event: application.merchant.closed
+  description: Merchant account is closed
+  declared_in: webhooks
+- event: application.merchant.boarded
+  description: Merchant is ready to process
+  declared_in: webhooks
+- event: merchant.chargeback.added
+  description: 'Merchant: New Chargeback'
+  declared_in: webhooks
+- event: merchant.deposit.new
+  description: 'Merchant: New Deposit'
+  declared_in: webhooks
+- event: merchant.first-batch
+  description: 'Merchant: First Batch'
+  declared_in: webhooks
+- event: merchant.processing.start
+  description: 'Merchant: Started Processing'
+  declared_in: webhooks
+- event: merchant.processing.stop
+  description: 'Merchant: Stopped Processing'
+  declared_in: webhooks
+- event: merchant.residuals.published
+  description: 'Merchant: Residual Report Published'
+  declared_in: webhooks
+- event: merchant.retrieval.added
+  description: 'Merchant: New Retrieval'
+  declared_in: webhooks
+- event: merchant.statement.new
+  description: 'Merchant: New Statement'
+  declared_in: webhooks

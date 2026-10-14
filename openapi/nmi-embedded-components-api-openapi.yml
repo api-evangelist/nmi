@@ -1,0 +1,174 @@
+openapi: 3.0.3
+info:
+  title: Embedded Components API
+  version: 1.0.0
+  description: API for creating sessions for embedded components.
+servers:
+- url: https://sandbox.nmi.com/api/v5/embedded-reporting
+paths:
+  /sessions:
+    post:
+      summary: Create a Session
+      description: This endpoint creates a short-lived session token that your embedded components can use to authenticate and fetch data. You must call this endpoint from your backend server to avoid exposing your API key.
+      operationId: create-embedded-component-session
+      tags:
+      - Component Sessions
+      requestBody:
+        description: An optional request body to specify constraints for the session.
+        required: false
+        content:
+          application/json:
+            schema:
+              anyOf:
+              - type: object
+                title: Gateway
+                properties:
+                  gateway:
+                    type: object
+                    description: Credentials and options required to create a session for Gateway components.
+                    properties:
+                      api_key:
+                        type: string
+                        description: The api key to retrieve the session token. MUST start with `v4_secret_`. Maximum 255 characters.
+                        example: '51123456'
+                      merchant_id:
+                        type: string
+                        description: The specific merchant ID to scope the session to. Maximum 20 digits.
+                      environment:
+                        type: string
+                        enum:
+                        - production
+                        - sandbox
+                        default: production
+                        description: Specifies the gateway environment.
+                    required:
+                    - merchant_id
+                    - api_key
+                required:
+                - gateway
+              - type: object
+                title: Merchant Central
+                properties:
+                  merchant-central:
+                    type: object
+                    description: Credentials and options required to create a session for Merchant Central components.
+                    properties:
+                      api_key:
+                        type: string
+                        description: Merchant Central API key. Maximum 255 characters.
+                      tenant_id:
+                        type: string
+                        description: Your Merchant Central subdomain, e.g., "XXX" for XXX.iriscrm.com. Maximum 200 characters.
+                      merchant_id:
+                        type: string
+                        description: The specific merchant ID to scope the session to. Maximum 20 digits.
+                    required:
+                    - api_key
+                    - tenant_id
+                    - merchant_id
+                required:
+                - merchant-central
+            examples:
+              Gateway:
+                summary: Gateway
+                value:
+                  gateway:
+                    api_key: CORRECT_API_KEY
+                    merchant_id: '12345'
+                    environment: sandbox
+              Merchant Central:
+                summary: Merchant Central
+                value:
+                  merchant-central:
+                    api_key: CORRECT_API_KEY
+                    tenant_id: mycentral
+                    merchant_id: '123456789'
+      responses:
+        '200':
+          description: Session created successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  session_token:
+                    type: string
+                    example: 8910cbad-eed7-ad6c-572b2be67201.69613616.ZrEjQlHsm-uj9Iy5DTfK5KqaKrtVWeNk4LrfcTVFXQ4ESLCkOi0zHwHVu_Bv8H_j
+                  expires_at:
+                    type: string
+                    example: '2025-12-20T17:13:38+00:00'
+              examples:
+                OK:
+                  summary: OK
+                  value:
+                    session_token: 8910cbad-eed7-ad6c-572b2be67201.69613616.ZrEjQlHsm-uj9Iy5DTfK5KqaKrtVWeNk4LrfcTVFXQ4ESLCkOi0zHwHVu_Bv8H_j
+                    expires_at: '2025-12-20T17:13:38+00:00'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Missing/Invalid Authentication
+              examples:
+                Unauthorized:
+                  summary: Unauthorized
+                  value:
+                    message: Missing/Invalid Authentication
+        '422':
+          description: Unprocessable Entity
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: The gateway.merchant_id field must be a numeric string
+                  errors:
+                    type: object
+                    properties:
+                      gateway.merchant_id:
+                        type: array
+                        items:
+                          type: string
+                          example: The gateway.merchant_id field must be a numeric string
+              examples:
+                Unprocessable Entity:
+                  summary: Unprocessable Entity
+                  value:
+                    message: The gateway.merchant_id field must be a numeric string
+                    errors:
+                      gateway.merchant_id:
+                      - The gateway.merchant_id field must be a numeric string
+      x-readme: {}
+      parameters:
+      - in: header
+        name: accept
+        schema:
+          type: string
+          default: ''
+        description: application/json
+        required: true
+      - in: header
+        name: content-type
+        schema:
+          type: string
+          default: ''
+        description: application/json
+        required: true
+x-provenance:
+  method: searched
+  source: https://docs.nmi.com/reference
+  harvested: '2026-10-14'
+  tool: harvest-readme-openapi.py
+  note: Assembled verbatim from the OpenAPI definition ReadMe embeds in each operation page of the provider's developer portal; paths and components merged by API title, nothing authored.
+  assembled_from:
+  - https://docs.nmi.com/reference/create-embedded-component-session.md
+  merge:
+    pages: 1
+    deduped: 0
+    conflicts_kept_first: 0

@@ -1,0 +1,836 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/nmi/main/json-schema/nmi-package-fields-schema.json",
+  "title": "package-fields",
+  "description": "Array of package fields",
+  "x-generated": "2026-10-14",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/nmi-payments-sign-up-api-openapi.yml#/components/schemas/package-fields",
+  "type": "array",
+  "maxItems": 1000,
+  "items": {
+    "oneOf": [
+      {
+        "$ref": "#/$defs/integer-field"
+      },
+      {
+        "$ref": "#/$defs/string-field"
+      },
+      {
+        "$ref": "#/$defs/choice-field"
+      },
+      {
+        "$ref": "#/$defs/multiselect-field"
+      },
+      {
+        "$ref": "#/$defs/boolean-field"
+      },
+      {
+        "$ref": "#/$defs/decimal-field"
+      },
+      {
+        "$ref": "#/$defs/date-field"
+      },
+      {
+        "$ref": "#/$defs/percent-field"
+      },
+      {
+        "$ref": "#/$defs/website-field"
+      },
+      {
+        "$ref": "#/$defs/account-number-field"
+      },
+      {
+        "$ref": "#/$defs/email-field"
+      },
+      {
+        "$ref": "#/$defs/phone-field"
+      },
+      {
+        "$ref": "#/$defs/routing-number-field"
+      },
+      {
+        "$ref": "#/$defs/tax-id-field"
+      },
+      {
+        "$ref": "#/$defs/postal-code-field"
+      }
+    ]
+  },
+  "$defs": {
+    "account-number-field": {
+      "type": "object",
+      "title": "String",
+      "summary": "Bank Account Number field.",
+      "description": "This field allows the user to set bank account number.",
+      "required": [
+        "id",
+        "name",
+        "type",
+        "required",
+        "default"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/field-id"
+        },
+        "name": {
+          "$ref": "#/$defs/field-name"
+        },
+        "required": {
+          "$ref": "#/$defs/field-required"
+        },
+        "type": {
+          "type": "string",
+          "description": "The type of the field.",
+          "enum": [
+            "account_number"
+          ]
+        },
+        "default": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "The default value for the field.",
+          "maxLength": 17
+        },
+        "min": {
+          "type": "integer",
+          "description": "The minimum length of the field."
+        },
+        "max": {
+          "type": "integer",
+          "description": "The maximum length of the field."
+        }
+      }
+    },
+    "boolean-field": {
+      "type": "object",
+      "title": "Boolean",
+      "summary": "Boolean field.",
+      "description": "This field allows the user to provide a boolean value.",
+      "required": [
+        "id",
+        "name",
+        "type",
+        "required",
+        "default"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/field-id"
+        },
+        "name": {
+          "$ref": "#/$defs/field-name"
+        },
+        "required": {
+          "$ref": "#/$defs/field-required"
+        },
+        "type": {
+          "type": "string",
+          "description": "Type of the field.",
+          "enum": [
+            "boolean"
+          ]
+        },
+        "default": {
+          "type": [
+            "boolean",
+            "null"
+          ],
+          "description": "Default value for the field."
+        }
+      }
+    },
+    "choice-field": {
+      "type": "object",
+      "title": "Choice",
+      "summary": "Single choice field.",
+      "description": "This field allows the user to select a single value from a list of options.",
+      "required": [
+        "id",
+        "name",
+        "type",
+        "required",
+        "default",
+        "choices"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/field-id"
+        },
+        "name": {
+          "$ref": "#/$defs/field-name"
+        },
+        "required": {
+          "$ref": "#/$defs/field-required"
+        },
+        "type": {
+          "type": "string",
+          "description": "Type of the field.",
+          "enum": [
+            "choice"
+          ]
+        },
+        "default": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Default value for the field.",
+          "maxLength": 1000
+        },
+        "choices": {
+          "type": "array",
+          "description": "List of choices.",
+          "maxItems": 1000,
+          "items": {
+            "type": "string",
+            "maxLength": 1000
+          }
+        }
+      }
+    },
+    "date-field": {
+      "type": "object",
+      "title": "Date",
+      "summary": "Date field.",
+      "description": "This field allows the user to set a date. Expected format: YYYY-MM-DD",
+      "required": [
+        "id",
+        "name",
+        "type",
+        "required",
+        "default"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/field-id"
+        },
+        "name": {
+          "$ref": "#/$defs/field-name"
+        },
+        "required": {
+          "$ref": "#/$defs/field-required"
+        },
+        "type": {
+          "type": "string",
+          "description": "The type of the field.",
+          "enum": [
+            "date"
+          ]
+        },
+        "default": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "The default value for the field.",
+          "minLength": 10,
+          "maxLength": 10
+        },
+        "min": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date",
+          "minLength": 10,
+          "maxLength": 10,
+          "description": "The minimum date that can be submitted."
+        },
+        "max": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date",
+          "minLength": 10,
+          "maxLength": 10,
+          "description": "The maximum date that can be submitted."
+        }
+      }
+    },
+    "decimal-field": {
+      "type": "object",
+      "title": "Decimal",
+      "summary": "Decimal field.",
+      "description": "This field allows the user to enter a decimal value.",
+      "required": [
+        "id",
+        "name",
+        "type",
+        "required",
+        "default",
+        "min",
+        "max"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/field-id"
+        },
+        "name": {
+          "$ref": "#/$defs/field-name"
+        },
+        "required": {
+          "$ref": "#/$defs/field-required"
+        },
+        "type": {
+          "type": "string",
+          "description": "The type of the field.",
+          "enum": [
+            "decimal"
+          ]
+        },
+        "default": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "format": "double",
+          "description": "The default value for the field if no value is provided."
+        },
+        "min": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "format": "double",
+          "description": "The minimum value allowed for the field."
+        },
+        "max": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "format": "double",
+          "description": "The maximum value allowed for the field."
+        }
+      }
+    },
+    "email-field": {
+      "type": "object",
+      "title": "String",
+      "summary": "Email field.",
+      "description": "This field allows the user to set an email.",
+      "required": [
+        "id",
+        "name",
+        "type",
+        "required",
+        "default"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/field-id"
+        },
+        "name": {
+          "$ref": "#/$defs/field-name"
+        },
+        "required": {
+          "$ref": "#/$defs/field-required"
+        },
+        "type": {
+          "type": "string",
+          "description": "The type of the field.",
+          "enum": [
+            "email"
+          ]
+        },
+        "default": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "The default value for the field.",
+          "maxLength": 1000
+        },
+        "min": {
+          "type": "integer",
+          "description": "The minimum length of the field."
+        },
+        "max": {
+          "type": "integer",
+          "description": "The maximum length of the field."
+        },
+        "regex": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "The regular expression that the field must match."
+        }
+      }
+    },
+    "field-id": {
+      "type": "string",
+      "description": "The unique identifier of the field.",
+      "pattern": "^fld_[a-z0-9_]{3,46}$",
+      "minLength": 7,
+      "maxLength": 50
+    },
+    "field-name": {
+      "type": "string",
+      "description": "Name of the field.",
+      "maxLength": 1000
+    },
+    "field-required": {
+      "type": "boolean",
+      "description": "Whether the field is required."
+    },
+    "integer-field": {
+      "type": "object",
+      "title": "Integer",
+      "summary": "Integer field.",
+      "description": "This field allows the user to enter an integer value.",
+      "required": [
+        "id",
+        "name",
+        "type",
+        "required",
+        "default",
+        "min",
+        "max"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/field-id"
+        },
+        "name": {
+          "$ref": "#/$defs/field-name"
+        },
+        "required": {
+          "$ref": "#/$defs/field-required"
+        },
+        "type": {
+          "type": "string",
+          "description": "The type of the field.",
+          "enum": [
+            "integer"
+          ]
+        },
+        "default": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "description": "The default value for the field if no value is provided."
+        },
+        "min": {
+          "type": "integer",
+          "description": "The minimum value that can be entered."
+        },
+        "max": {
+          "type": "integer",
+          "description": "The maximum value that can be entered."
+        }
+      }
+    },
+    "multiselect-field": {
+      "type": "object",
+      "title": "Multi Select",
+      "summary": "Multi select field.",
+      "description": "This field allows the user to select several values from a list of options.",
+      "required": [
+        "id",
+        "name",
+        "type",
+        "required",
+        "default",
+        "choices"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/field-id"
+        },
+        "name": {
+          "$ref": "#/$defs/field-name"
+        },
+        "required": {
+          "$ref": "#/$defs/field-required"
+        },
+        "type": {
+          "type": "string",
+          "description": "Type of the field.",
+          "enum": [
+            "multiselect"
+          ]
+        },
+        "default": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Default value for the field.",
+          "maxLength": 1000
+        },
+        "min": {
+          "type": "integer",
+          "description": "Minimum number of choices.",
+          "minimum": 0,
+          "maximum": 1000
+        },
+        "max": {
+          "type": "integer",
+          "description": "Maximum number of choices.",
+          "minimum": 0,
+          "maximum": 1000
+        },
+        "choices": {
+          "type": "array",
+          "description": "List of choices.",
+          "maxItems": 1000,
+          "items": {
+            "type": "string",
+            "maxLength": 1000
+          }
+        }
+      }
+    },
+    "percent-field": {
+      "type": "object",
+      "title": "Percent",
+      "summary": "Percent field.",
+      "description": "This field allows the user to set a percent amount",
+      "required": [
+        "id",
+        "name",
+        "type",
+        "required",
+        "default",
+        "min",
+        "max"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/field-id"
+        },
+        "name": {
+          "$ref": "#/$defs/field-name"
+        },
+        "required": {
+          "$ref": "#/$defs/field-required"
+        },
+        "type": {
+          "type": "string",
+          "description": "The type of the field.",
+          "enum": [
+            "percent"
+          ]
+        },
+        "default": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "The default value for the field.",
+          "maxLength": 9
+        },
+        "min": {
+          "type": "integer",
+          "description": "The minimum length of the field."
+        },
+        "max": {
+          "type": "integer",
+          "description": "The maximum length of the field."
+        }
+      }
+    },
+    "phone-field": {
+      "type": "object",
+      "title": "String",
+      "summary": "Phone field.",
+      "description": "This field allows the user to set an phone.",
+      "required": [
+        "id",
+        "name",
+        "type",
+        "required",
+        "default"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/field-id"
+        },
+        "name": {
+          "$ref": "#/$defs/field-name"
+        },
+        "required": {
+          "$ref": "#/$defs/field-required"
+        },
+        "type": {
+          "type": "string",
+          "description": "The type of the field.",
+          "enum": [
+            "phone"
+          ]
+        },
+        "default": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "The default value for the field.",
+          "maxLength": 15
+        }
+      }
+    },
+    "postal-code-field": {
+      "type": "object",
+      "title": "String",
+      "summary": "Postal Code field.",
+      "description": "This field allows the user to set a postal code field.",
+      "required": [
+        "id",
+        "name",
+        "type",
+        "required",
+        "default"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/field-id"
+        },
+        "name": {
+          "$ref": "#/$defs/field-name"
+        },
+        "required": {
+          "$ref": "#/$defs/field-required"
+        },
+        "type": {
+          "type": "string",
+          "description": "The type of the field.",
+          "enum": [
+            "postal_code"
+          ]
+        },
+        "default": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "The default value for the field.",
+          "maxLength": 5
+        }
+      }
+    },
+    "routing-number-field": {
+      "type": "object",
+      "title": "String",
+      "summary": "Bank Routing Number field.",
+      "description": "This field allows the user to enter USA bank routing number.",
+      "required": [
+        "id",
+        "name",
+        "type",
+        "required",
+        "default"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/field-id"
+        },
+        "name": {
+          "$ref": "#/$defs/field-name"
+        },
+        "required": {
+          "$ref": "#/$defs/field-required"
+        },
+        "type": {
+          "type": "string",
+          "description": "The type of the field.",
+          "enum": [
+            "routing_number"
+          ]
+        },
+        "default": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "The default value for the field.",
+          "maxLength": 9,
+          "minLength": 9
+        },
+        "min": {
+          "type": "integer",
+          "description": "The minimum length of the field.",
+          "maxLength": 9,
+          "minLength": 9
+        },
+        "max": {
+          "type": "integer",
+          "description": "The maximum length of the field.",
+          "maxLength": 9,
+          "minLength": 9
+        }
+      }
+    },
+    "string-field": {
+      "type": "object",
+      "title": "String",
+      "summary": "String field.",
+      "description": "This field allows the user to set a string.",
+      "required": [
+        "id",
+        "name",
+        "type",
+        "required",
+        "default",
+        "min",
+        "max",
+        "regex"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/field-id"
+        },
+        "name": {
+          "$ref": "#/$defs/field-name"
+        },
+        "required": {
+          "$ref": "#/$defs/field-required"
+        },
+        "type": {
+          "type": "string",
+          "description": "The type of the field.",
+          "enum": [
+            "string"
+          ]
+        },
+        "default": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "The default value for the field.",
+          "maxLength": 1000
+        },
+        "min": {
+          "type": "integer",
+          "description": "The minimum length of the field."
+        },
+        "max": {
+          "type": "integer",
+          "description": "The maximum length of the field."
+        },
+        "regex": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "The regular expression that the field must match."
+        }
+      }
+    },
+    "tax-id-field": {
+      "type": "object",
+      "title": "String",
+      "summary": "Tax ID field.",
+      "description": "This field allows the user to set a Tax ID.",
+      "required": [
+        "id",
+        "name",
+        "type",
+        "required",
+        "default"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/field-id"
+        },
+        "name": {
+          "$ref": "#/$defs/field-name"
+        },
+        "required": {
+          "$ref": "#/$defs/field-required"
+        },
+        "type": {
+          "type": "string",
+          "description": "The type of the field.",
+          "enum": [
+            "ssn",
+            "federal_tax_id"
+          ]
+        },
+        "default": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "The default value for the field.",
+          "maxLength": 9,
+          "minLength": 9
+        },
+        "min": {
+          "type": "integer",
+          "description": "The minimum length of the field.",
+          "maxLength": 9,
+          "minLength": 9
+        },
+        "max": {
+          "type": "integer",
+          "description": "The maximum length of the field.",
+          "maxLength": 9,
+          "minLength": 9
+        }
+      }
+    },
+    "website-field": {
+      "type": "object",
+      "title": "String",
+      "summary": "Website field.",
+      "description": "This field allows the user to set a website URL.",
+      "required": [
+        "id",
+        "name",
+        "type",
+        "required",
+        "default"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/field-id"
+        },
+        "name": {
+          "$ref": "#/$defs/field-name"
+        },
+        "required": {
+          "$ref": "#/$defs/field-required"
+        },
+        "type": {
+          "type": "string",
+          "description": "The type of the field.",
+          "enum": [
+            "website"
+          ]
+        },
+        "default": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "The default value for the field.",
+          "maxLength": 1000
+        },
+        "min": {
+          "type": "integer",
+          "description": "The minimum length of the field."
+        },
+        "max": {
+          "type": "integer",
+          "description": "The maximum length of the field."
+        },
+        "regex": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "The regular expression that the field must match."
+        }
+      }
+    }
+  }
+}

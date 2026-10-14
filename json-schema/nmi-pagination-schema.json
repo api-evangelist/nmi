@@ -1,0 +1,41 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/nmi/main/json-schema/nmi-pagination-schema.json",
+  "title": "pagination",
+  "x-generated": "2026-10-14",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/nmi-payments-sign-up-api-openapi.yml#/components/schemas/pagination",
+  "type": "object",
+  "summary": "Pagination information",
+  "required": [
+    "current_page",
+    "last_page",
+    "per_page",
+    "total"
+  ],
+  "properties": {
+    "current_page": {
+      "type": "integer",
+      "description": "The current page number"
+    },
+    "last_page": {
+      "type": "integer",
+      "description": "The last page number"
+    },
+    "per_page": {
+      "type": "integer",
+      "enum": [
+        10,
+        20,
+        50,
+        100
+      ],
+      "description": "The number of items per page (allowed values: 10, 20, 50, 100)"
+    },
+    "total": {
+      "type": "integer",
+      "description": "The total number of items"
+    }
+  }
+}

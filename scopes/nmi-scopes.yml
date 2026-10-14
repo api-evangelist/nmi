@@ -1,0 +1,46 @@
+generated: '2026-10-14'
+method: derived
+source: openapi/nmi-payments-sign-up-api-openapi.yml
+schemes:
+- name: oauth
+  source: openapi/nmi-payments-sign-up-api-openapi.yml
+  flows:
+  - flow: clientCredentials
+    tokenUrl: /oauth/token
+scopes:
+- scope: '*'
+  description: Full access
+  flows:
+  - clientCredentials
+  sources:
+  - openapi/nmi-payments-sign-up-api-openapi.yml
+- scope: applications:read
+  description: Read access to applications
+  flows:
+  - clientCredentials
+  sources:
+  - openapi/nmi-payments-sign-up-api-openapi.yml
+- scope: applications:write
+  description: Write access to applications
+  flows:
+  - clientCredentials
+  sources:
+  - openapi/nmi-payments-sign-up-api-openapi.yml
+- scope: packages:read
+  description: Read packages information
+  flows:
+  - clientCredentials
+  sources:
+  - openapi/nmi-payments-sign-up-api-openapi.yml
+- scope: subscriptions:read
+  description: Read access to subscriptions
+  flows:
+  - clientCredentials
+  sources:
+  - openapi/nmi-payments-sign-up-api-openapi.yml
+- scope: subscriptions:write
+  description: Write access to subscriptions (subscribe/updated/delete)
+  flows:
+  - clientCredentials
+  sources:
+  - openapi/nmi-payments-sign-up-api-openapi.yml

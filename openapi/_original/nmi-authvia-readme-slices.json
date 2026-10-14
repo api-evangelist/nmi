@@ -1,0 +1,833 @@
+[
+ {
+  "page": "https://docs.nmi.com/reference/post_v4-authvia-conversations.md",
+  "definition": {
+   "openapi": "3.0.0",
+   "info": {
+    "version": "1.0.0",
+    "title": "Authvia",
+    "description": "Authvia TXT2PAY® allows your merchants to request payments by text, with no download required. With NMI’s seamless Authvia integration, you can enable your merchants to create new text conversations, list and filter conversations, retrieve details for a specific conversation, and close conversations that are no longer needed."
+   },
+   "servers": [
+    {
+     "url": "https://sandbox.nmi.com/api"
+    }
+   ],
+   "paths": {
+    "/v4/authvia/conversations": {
+     "post": {
+      "tags": [
+       "Authvia TXT2PAY"
+      ],
+      "security": [
+       {
+        "v4ApiKey": []
+       }
+      ],
+      "summary": "Create a new conversation",
+      "requestBody": {
+       "description": "The new conversation request body.",
+       "required": true,
+       "content": {
+        "application/json": {
+         "schema": {
+          "type": "object",
+          "required": [
+           "phone",
+           "amount",
+           "firstName",
+           "lastName",
+           "expiration",
+           "instructions",
+           "topic"
+          ],
+          "properties": {
+           "merchantId": {
+            "$ref": "#/components/schemas/NmiMerchantId"
+           },
+           "phone": {
+            "$ref": "#/components/schemas/ConversationCustomerPhone"
+           },
+           "amount": {
+            "$ref": "#/components/schemas/ConversationAmountInput"
+           },
+           "firstName": {
+            "$ref": "#/components/schemas/ConversationCustomerFirstName"
+           },
+           "lastName": {
+            "$ref": "#/components/schemas/ConversationCustomerLastName"
+           },
+           "expiration": {
+            "$ref": "#/components/schemas/ConversationExpirationDateInput"
+           },
+           "instructions": {
+            "$ref": "#/components/schemas/ConversationInstructions"
+           },
+           "topic": {
+            "$ref": "#/components/schemas/ConversationTopic"
+           }
+          }
+         }
+        }
+       }
+      },
+      "responses": {
+       "200": {
+        "description": "The conversation was created successfully.",
+        "content": {
+         "application/json": {
+          "schema": {
+           "type": "object",
+           "required": [
+            "id",
+            "phone",
+            "date",
+            "status",
+            "firstName",
+            "lastName",
+            "recordId",
+            "expiration",
+            "amount",
+            "topic",
+            "instructions"
+           ],
+           "properties": {
+            "id": {
+             "$ref": "#/components/schemas/ConversationId"
+            },
+            "phone": {
+             "$ref": "#/components/schemas/ConversationCustomerPhoneWithDashes"
+            },
+            "date": {
+             "$ref": "#/components/schemas/ConversationCreationDate"
+            },
+            "status": {
+             "$ref": "#/components/schemas/ConversationStatus"
+            },
+            "firstName": {
+             "$ref": "#/components/schemas/ConversationCustomerFirstName"
+            },
+            "lastName": {
+             "$ref": "#/components/schemas/ConversationCustomerLastName"
+            },
+            "recordId": {
+             "$ref": "#/components/schemas/NmiRecordId"
+            },
+            "expiration": {
+             "$ref": "#/components/schemas/ConversationExpirationDate"
+            },
+            "amount": {
+             "$ref": "#/components/schemas/ConversationAmount"
+            },
+            "topic": {
+             "$ref": "#/components/schemas/ConversationTopic"
+            },
+            "instructions": {
+             "$ref": "#/components/schemas/ConversationInstructions"
+            }
+           }
+          }
+         }
+        }
+       }
+      },
+      "operationId": "post_v4-authvia-conversations"
+     }
+    }
+   },
+   "components": {
+    "schemas": {
+     "ConversationId": {
+      "type": "string",
+      "description": "The Authvia v4 UUID for the conversation.",
+      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+      "example": "7baf2306-4804-4aef-a55e-8cbfcb201ad1"
+     },
+     "ConversationTopic": {
+      "type": "string",
+      "description": "The resolution this conversation is trying to reach.",
+      "example": "Weasleys' Wizard Wheezes - Extendable Ear"
+     },
+     "ConversationInstructions": {
+      "type": "string",
+      "description": "A short intro or message to send along with the payment request to help provide more context.",
+      "maxLength": 50,
+      "example": "Thank you for your purchase! Please click the link below to make your payment."
+     },
+     "ConversationCreationDate": {
+      "type": "string",
+      "description": "The creation date for the conversation.",
+      "format": "date-time",
+      "example": "2023-11-16T20:28:51.990Z"
+     },
+     "ConversationExpirationDate": {
+      "type": "string",
+      "description": "The expiration date for the conversation.",
+      "format": "date-time",
+      "example": "2023-11-23T20:28:51.990Z"
+     },
+     "ConversationExpirationDateInput": {
+      "type": "string",
+      "description": "The time to wait for the payment to be completed before it is marked failed. A short time duration value is acceptable such as 30m, 1d, or 7d. If no unit is provided, seconds are used.",
+      "pattern": "^\\d+?([smhd])$",
+      "example": "7d"
+     },
+     "ConversationStatus": {
+      "type": "string",
+      "description": "The conversation status.",
+      "enum": [
+       "in progress",
+       "expired",
+       "completed"
+      ],
+      "example": "in progress"
+     },
+     "ConversationAmount": {
+      "type": "string",
+      "description": "The conversation amount in USD.",
+      "pattern": "^\\d+\\.\\d{2}$",
+      "example": "59.94"
+     },
+     "ConversationAmountInput": {
+      "oneOf": [
+       {
+        "type": "string",
+        "description": "The amount of the payment, in USD. Should qualify to two decimal places.",
+        "format": "float",
+        "example": "59.94"
+       },
+       {
+        "type": "integer",
+        "description": "The amount of the payment in fractional base currency (i.e., pennies).",
+        "example": 5994
+       }
+      ]
+     },
+     "ConversationCustomerPhone": {
+      "type": "string",
+      "description": "The conversation customer's ten-digit phone number. US and CA numbers only.",
+      "pattern": "^\\d{10}$",
+      "example": "1234567890"
+     },
+     "ConversationCustomerPhoneWithDashes": {
+      "type": "string",
+      "description": "The conversation customer's phone number separated with dashes.",
+      "pattern": "^\\d{3}-\\d{3}-\\d{4}$",
+      "example": "123-456-7890"
+     },
+     "ConversationCustomerFirstName": {
+      "type": "string",
+      "description": "The conversation customer's first name.",
+      "example": "Aberforth"
+     },
+     "ConversationCustomerLastName": {
+      "type": "string",
+      "description": "The conversation customer's last name.",
+      "example": "Dumbledore"
+     },
+     "NmiMerchantId": {
+      "type": "string",
+      "description": "The merchant ID from NMI. This is only required for partners; for merchants it is ignored.",
+      "format": "int32",
+      "example": "1"
+     },
+     "NmiRecordId": {
+      "type": "string",
+      "description": "The NMI marketplace v4 UUID for the conversation.",
+      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+      "example": "4eed6bef-7fd3-4780-9563-c0d2afa88c76"
+     }
+    },
+    "securitySchemes": {
+     "v4ApiKey": {
+      "type": "apiKey",
+      "in": "header",
+      "name": "Authorization",
+      "description": "API Security Key assigned to a partner or merchant account. New keys can be generated from Settings > Security Keys in the partner and merchant portals."
+     }
+    }
+   },
+   "security": [
+    {
+     "v4ApiKey": []
+    }
+   ],
+   "x-readme": {
+    "explorer-enabled": true,
+    "proxy-enabled": true,
+    "samples-enabled": true
+   },
+   "tags": [
+    {
+     "name": "Authvia TXT2PAY",
+     "description": "Authvia TXT2PAY® allows your merchants to request payments by text, with no download required. With NMI’s seamless Authvia integration, you can enable your merchants to create new text conversations, list and filter conversations, retrieve details for a specific conversation, and close conversations that are no longer needed."
+    }
+   ]
+  }
+ },
+ {
+  "page": "https://docs.nmi.com/reference/get_v4-authvia-conversations.md",
+  "definition": {
+   "openapi": "3.0.0",
+   "info": {
+    "version": "1.0.0",
+    "title": "Authvia",
+    "description": "Authvia TXT2PAY® allows your merchants to request payments by text, with no download required. With NMI’s seamless Authvia integration, you can enable your merchants to create new text conversations, list and filter conversations, retrieve details for a specific conversation, and close conversations that are no longer needed."
+   },
+   "servers": [
+    {
+     "url": "https://sandbox.nmi.com/api"
+    }
+   ],
+   "paths": {
+    "/v4/authvia/conversations": {
+     "get": {
+      "tags": [
+       "Authvia TXT2PAY"
+      ],
+      "security": [
+       {
+        "v4ApiKey": []
+       }
+      ],
+      "summary": "List and filter conversations",
+      "parameters": [
+       {
+        "in": "query",
+        "name": "merchantId",
+        "schema": {
+         "$ref": "#/components/schemas/NmiMerchantId"
+        }
+       },
+       {
+        "in": "query",
+        "name": "startDate",
+        "schema": {
+         "$ref": "#/components/schemas/FilterStartDate"
+        }
+       },
+       {
+        "in": "query",
+        "name": "endDate",
+        "schema": {
+         "$ref": "#/components/schemas/FilterEndDate"
+        }
+       },
+       {
+        "in": "query",
+        "name": "status[]",
+        "schema": {
+         "$ref": "#/components/schemas/FilterStatusArray"
+        }
+       },
+       {
+        "in": "query",
+        "name": "phone",
+        "schema": {
+         "$ref": "#/components/schemas/ConversationCustomerPhone"
+        }
+       },
+       {
+        "in": "query",
+        "name": "firstName",
+        "schema": {
+         "$ref": "#/components/schemas/ConversationCustomerFirstName"
+        }
+       },
+       {
+        "in": "query",
+        "name": "lastName",
+        "schema": {
+         "$ref": "#/components/schemas/ConversationCustomerLastName"
+        }
+       },
+       {
+        "in": "query",
+        "name": "minAmount",
+        "schema": {
+         "description": "The minimum conversation amount to include in the filter.",
+         "type": "number",
+         "format": "float",
+         "example": "10.00"
+        }
+       },
+       {
+        "in": "query",
+        "name": "maxAmount",
+        "schema": {
+         "description": "The maximum conversation amount to include in the filter.",
+         "type": "number",
+         "format": "float",
+         "example": "100.00"
+        }
+       }
+      ],
+      "responses": {
+       "200": {
+        "description": "The list of conversations with optional filters applied.",
+        "content": {
+         "application/json": {
+          "schema": {
+           "type": "array",
+           "items": {
+            "type": "object",
+            "properties": {
+             "id": {
+              "$ref": "#/components/schemas/ConversationId"
+             },
+             "phone": {
+              "$ref": "#/components/schemas/ConversationCustomerPhone"
+             },
+             "date": {
+              "$ref": "#/components/schemas/ConversationCreationDate"
+             },
+             "status": {
+              "$ref": "#/components/schemas/ConversationStatus"
+             },
+             "firstName": {
+              "$ref": "#/components/schemas/ConversationCustomerFirstName"
+             },
+             "lastName": {
+              "$ref": "#/components/schemas/ConversationCustomerLastName"
+             },
+             "recordId": {
+              "$ref": "#/components/schemas/NmiRecordId"
+             },
+             "expiration": {
+              "$ref": "#/components/schemas/ConversationExpirationDate"
+             },
+             "amount": {
+              "$ref": "#/components/schemas/ConversationAmount"
+             }
+            }
+           }
+          }
+         }
+        }
+       }
+      },
+      "operationId": "get_v4-authvia-conversations"
+     }
+    }
+   },
+   "components": {
+    "schemas": {
+     "ConversationId": {
+      "type": "string",
+      "description": "The Authvia v4 UUID for the conversation.",
+      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+      "example": "7baf2306-4804-4aef-a55e-8cbfcb201ad1"
+     },
+     "ConversationCreationDate": {
+      "type": "string",
+      "description": "The creation date for the conversation.",
+      "format": "date-time",
+      "example": "2023-11-16T20:28:51.990Z"
+     },
+     "ConversationExpirationDate": {
+      "type": "string",
+      "description": "The expiration date for the conversation.",
+      "format": "date-time",
+      "example": "2023-11-23T20:28:51.990Z"
+     },
+     "ConversationStatus": {
+      "type": "string",
+      "description": "The conversation status.",
+      "enum": [
+       "in progress",
+       "expired",
+       "completed"
+      ],
+      "example": "in progress"
+     },
+     "ConversationAmount": {
+      "type": "string",
+      "description": "The conversation amount in USD.",
+      "pattern": "^\\d+\\.\\d{2}$",
+      "example": "59.94"
+     },
+     "ConversationCustomerPhone": {
+      "type": "string",
+      "description": "The conversation customer's ten-digit phone number. US and CA numbers only.",
+      "pattern": "^\\d{10}$",
+      "example": "1234567890"
+     },
+     "ConversationCustomerFirstName": {
+      "type": "string",
+      "description": "The conversation customer's first name.",
+      "example": "Aberforth"
+     },
+     "ConversationCustomerLastName": {
+      "type": "string",
+      "description": "The conversation customer's last name.",
+      "example": "Dumbledore"
+     },
+     "FilterStartDate": {
+      "type": "string",
+      "description": "The start date to filter.",
+      "format": "date",
+      "example": "2023-11-01"
+     },
+     "FilterEndDate": {
+      "type": "string",
+      "description": "The end date to filter.",
+      "format": "date",
+      "example": "2029-12-31"
+     },
+     "FilterStatusArray": {
+      "type": "array",
+      "description": "The list of conversation statuses to filter.",
+      "items": {
+       "$ref": "#/components/schemas/ConversationStatus"
+      }
+     },
+     "NmiMerchantId": {
+      "type": "string",
+      "description": "The merchant ID from NMI. This is only required for partners; for merchants it is ignored.",
+      "format": "int32",
+      "example": "1"
+     },
+     "NmiRecordId": {
+      "type": "string",
+      "description": "The NMI marketplace v4 UUID for the conversation.",
+      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+      "example": "4eed6bef-7fd3-4780-9563-c0d2afa88c76"
+     }
+    },
+    "securitySchemes": {
+     "v4ApiKey": {
+      "type": "apiKey",
+      "in": "header",
+      "name": "Authorization",
+      "description": "API Security Key assigned to a partner or merchant account. New keys can be generated from Settings > Security Keys in the partner and merchant portals."
+     }
+    }
+   },
+   "security": [
+    {
+     "v4ApiKey": []
+    }
+   ],
+   "x-readme": {
+    "explorer-enabled": true,
+    "proxy-enabled": true,
+    "samples-enabled": true
+   },
+   "tags": [
+    {
+     "name": "Authvia TXT2PAY",
+     "description": "Authvia TXT2PAY® allows your merchants to request payments by text, with no download required. With NMI’s seamless Authvia integration, you can enable your merchants to create new text conversations, list and filter conversations, retrieve details for a specific conversation, and close conversations that are no longer needed."
+    }
+   ]
+  }
+ },
+ {
+  "page": "https://docs.nmi.com/reference/get-v4-authvia-conversations-conversation-id.md",
+  "definition": {
+   "openapi": "3.0.0",
+   "info": {
+    "version": "1.0.0",
+    "title": "Authvia",
+    "description": "Authvia TXT2PAY® allows your merchants to request payments by text, with no download required. With NMI’s seamless Authvia integration, you can enable your merchants to create new text conversations, list and filter conversations, retrieve details for a specific conversation, and close conversations that are no longer needed."
+   },
+   "servers": [
+    {
+     "url": "https://sandbox.nmi.com/api"
+    }
+   ],
+   "paths": {
+    "/v4/authvia/conversations/{conversationId}": {
+     "parameters": [
+      {
+       "name": "conversationId",
+       "description": "The Authvia v4 UUID for the conversation.",
+       "in": "path",
+       "required": true,
+       "schema": {
+        "$ref": "#/components/schemas/ConversationId"
+       }
+      },
+      {
+       "in": "query",
+       "name": "merchantId",
+       "schema": {
+        "$ref": "#/components/schemas/NmiMerchantId"
+       }
+      }
+     ],
+     "get": {
+      "tags": [
+       "Authvia TXT2PAY"
+      ],
+      "security": [
+       {
+        "v4ApiKey": []
+       }
+      ],
+      "summary": "Get a conversation",
+      "responses": {
+       "200": {
+        "description": "The conversation corresponding to the provided `conversationId`.",
+        "content": {
+         "application/json": {
+          "schema": {
+           "type": "object",
+           "properties": {
+            "id": {
+             "$ref": "#/components/schemas/ConversationId"
+            },
+            "phone": {
+             "$ref": "#/components/schemas/ConversationCustomerPhone"
+            },
+            "date": {
+             "$ref": "#/components/schemas/ConversationCreationDate"
+            },
+            "status": {
+             "$ref": "#/components/schemas/ConversationStatus"
+            },
+            "firstName": {
+             "$ref": "#/components/schemas/ConversationCustomerFirstName"
+            },
+            "lastName": {
+             "$ref": "#/components/schemas/ConversationCustomerLastName"
+            },
+            "recordId": {
+             "$ref": "#/components/schemas/NmiRecordId"
+            },
+            "expiration": {
+             "$ref": "#/components/schemas/ConversationExpirationDate"
+            },
+            "amount": {
+             "$ref": "#/components/schemas/ConversationAmount"
+            },
+            "topic": {
+             "$ref": "#/components/schemas/ConversationTopic"
+            },
+            "instructions": {
+             "$ref": "#/components/schemas/ConversationInstructions"
+            }
+           }
+          }
+         }
+        }
+       }
+      },
+      "operationId": "get_v4-authvia-conversations-conversationid"
+     }
+    }
+   },
+   "components": {
+    "schemas": {
+     "ConversationId": {
+      "type": "string",
+      "description": "The Authvia v4 UUID for the conversation.",
+      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+      "example": "7baf2306-4804-4aef-a55e-8cbfcb201ad1"
+     },
+     "ConversationTopic": {
+      "type": "string",
+      "description": "The resolution this conversation is trying to reach.",
+      "example": "Weasleys' Wizard Wheezes - Extendable Ear"
+     },
+     "ConversationInstructions": {
+      "type": "string",
+      "description": "A short intro or message to send along with the payment request to help provide more context.",
+      "maxLength": 50,
+      "example": "Thank you for your purchase! Please click the link below to make your payment."
+     },
+     "ConversationCreationDate": {
+      "type": "string",
+      "description": "The creation date for the conversation.",
+      "format": "date-time",
+      "example": "2023-11-16T20:28:51.990Z"
+     },
+     "ConversationExpirationDate": {
+      "type": "string",
+      "description": "The expiration date for the conversation.",
+      "format": "date-time",
+      "example": "2023-11-23T20:28:51.990Z"
+     },
+     "ConversationStatus": {
+      "type": "string",
+      "description": "The conversation status.",
+      "enum": [
+       "in progress",
+       "expired",
+       "completed"
+      ],
+      "example": "in progress"
+     },
+     "ConversationAmount": {
+      "type": "string",
+      "description": "The conversation amount in USD.",
+      "pattern": "^\\d+\\.\\d{2}$",
+      "example": "59.94"
+     },
+     "ConversationCustomerPhone": {
+      "type": "string",
+      "description": "The conversation customer's ten-digit phone number. US and CA numbers only.",
+      "pattern": "^\\d{10}$",
+      "example": "1234567890"
+     },
+     "ConversationCustomerFirstName": {
+      "type": "string",
+      "description": "The conversation customer's first name.",
+      "example": "Aberforth"
+     },
+     "ConversationCustomerLastName": {
+      "type": "string",
+      "description": "The conversation customer's last name.",
+      "example": "Dumbledore"
+     },
+     "NmiMerchantId": {
+      "type": "string",
+      "description": "The merchant ID from NMI. This is only required for partners; for merchants it is ignored.",
+      "format": "int32",
+      "example": "1"
+     },
+     "NmiRecordId": {
+      "type": "string",
+      "description": "The NMI marketplace v4 UUID for the conversation.",
+      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+      "example": "4eed6bef-7fd3-4780-9563-c0d2afa88c76"
+     }
+    },
+    "securitySchemes": {
+     "v4ApiKey": {
+      "type": "apiKey",
+      "in": "header",
+      "name": "Authorization",
+      "description": "API Security Key assigned to a partner or merchant account. New keys can be generated from Settings > Security Keys in the partner and merchant portals."
+     }
+    }
+   },
+   "security": [
+    {
+     "v4ApiKey": []
+    }
+   ],
+   "x-readme": {
+    "explorer-enabled": true,
+    "proxy-enabled": true,
+    "samples-enabled": true
+   },
+   "tags": [
+    {
+     "name": "Authvia TXT2PAY",
+     "description": "Authvia TXT2PAY® allows your merchants to request payments by text, with no download required. With NMI’s seamless Authvia integration, you can enable your merchants to create new text conversations, list and filter conversations, retrieve details for a specific conversation, and close conversations that are no longer needed."
+    }
+   ]
+  }
+ },
+ {
+  "page": "https://docs.nmi.com/reference/delete-v4-authvia-conversations-conversation-id.md",
+  "definition": {
+   "openapi": "3.0.0",
+   "info": {
+    "version": "1.0.0",
+    "title": "Authvia",
+    "description": "Authvia TXT2PAY® allows your merchants to request payments by text, with no download required. With NMI’s seamless Authvia integration, you can enable your merchants to create new text conversations, list and filter conversations, retrieve details for a specific conversation, and close conversations that are no longer needed."
+   },
+   "servers": [
+    {
+     "url": "https://sandbox.nmi.com/api"
+    }
+   ],
+   "paths": {
+    "/v4/authvia/conversations/{conversationId}": {
+     "parameters": [
+      {
+       "name": "conversationId",
+       "description": "The Authvia v4 UUID for the conversation.",
+       "in": "path",
+       "required": true,
+       "schema": {
+        "$ref": "#/components/schemas/ConversationId"
+       }
+      },
+      {
+       "in": "query",
+       "name": "merchantId",
+       "schema": {
+        "$ref": "#/components/schemas/NmiMerchantId"
+       }
+      }
+     ],
+     "delete": {
+      "tags": [
+       "Authvia TXT2PAY"
+      ],
+      "security": [
+       {
+        "v4ApiKey": []
+       }
+      ],
+      "summary": "Close a conversation",
+      "responses": {
+       "200": {
+        "description": "A success message.",
+        "content": {
+         "application/json": {
+          "schema": {
+           "type": "object",
+           "properties": {
+            "success": {
+             "$ref": "#/components/schemas/Success"
+            }
+           }
+          }
+         }
+        }
+       }
+      },
+      "operationId": "delete_v4-authvia-conversations-conversationid"
+     }
+    }
+   },
+   "components": {
+    "schemas": {
+     "ConversationId": {
+      "type": "string",
+      "description": "The Authvia v4 UUID for the conversation.",
+      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+      "example": "7baf2306-4804-4aef-a55e-8cbfcb201ad1"
+     },
+     "NmiMerchantId": {
+      "type": "string",
+      "description": "The merchant ID from NMI. This is only required for partners; for merchants it is ignored.",
+      "format": "int32",
+      "example": "1"
+     },
+     "Success": {
+      "type": "boolean",
+      "description": "Indicates the success of the request."
+     }
+    },
+    "securitySchemes": {
+     "v4ApiKey": {
+      "type": "apiKey",
+      "in": "header",
+      "name": "Authorization",
+      "description": "API Security Key assigned to a partner or merchant account. New keys can be generated from Settings > Security Keys in the partner and merchant portals."
+     }
+    }
+   },
+   "security": [
+    {
+     "v4ApiKey": []
+    }
+   ],
+   "x-readme": {
+    "explorer-enabled": true,
+    "proxy-enabled": true,
+    "samples-enabled": true
+   },
+   "tags": [
+    {
+     "name": "Authvia TXT2PAY",
+     "description": "Authvia TXT2PAY® allows your merchants to request payments by text, with no download required. With NMI’s seamless Authvia integration, you can enable your merchants to create new text conversations, list and filter conversations, retrieve details for a specific conversation, and close conversations that are no longer needed."
+    }
+   ]
+  }
+ }
+]

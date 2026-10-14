@@ -1,0 +1,12 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/nmi/main/json-schema/nmi-conversation-instructions-schema.json",
+  "title": "ConversationInstructions",
+  "description": "A short intro or message to send along with the payment request to help provide more context.",
+  "x-generated": "2026-10-14",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/nmi-authvia-openapi.yml#/components/schemas/ConversationInstructions",
+  "type": "string",
+  "maxLength": 50
+}

@@ -1,0 +1,90 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/nmi/main/json-schema/nmi-application-document-schema.json",
+  "title": "application-document",
+  "description": "Application document info.\n",
+  "x-generated": "2026-10-14",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/nmi-payments-sign-up-api-openapi.yml#/components/schemas/application-document",
+  "type": "object",
+  "required": [
+    "id",
+    "application_id",
+    "type",
+    "file_name",
+    "status",
+    "created_at",
+    "updated_at"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "The unique identifier of the document.",
+      "pattern": "^doc_[a-f0-9]{16}$",
+      "minLength": 20,
+      "maxLength": 20
+    },
+    "application_id": {
+      "$ref": "#/$defs/application-id"
+    },
+    "type": {
+      "$ref": "#/$defs/application-document-type"
+    },
+    "file_name": {
+      "type": "string",
+      "maxLength": 255
+    },
+    "status": {
+      "$ref": "#/$defs/application-document-status"
+    },
+    "created_at": {
+      "$ref": "#/$defs/datetime-created-at"
+    },
+    "updated_at": {
+      "$ref": "#/$defs/datetime-updated-at"
+    }
+  },
+  "$defs": {
+    "application-document-status": {
+      "type": "string",
+      "description": "The status of the document",
+      "enum": [
+        "draft",
+        "submitted"
+      ]
+    },
+    "application-document-type": {
+      "type": "string",
+      "description": "The type of the document",
+      "enum": [
+        "Void Check",
+        "Marketing Materials",
+        "3 Months of Statements",
+        "Driver License",
+        "SSN Card",
+        "Form SS4",
+        "Other"
+      ]
+    },
+    "application-id": {
+      "type": "string",
+      "description": "The unique identifier of the application.",
+      "pattern": "^app_[a-f0-9]{16}$",
+      "minLength": 20,
+      "maxLength": 20
+    },
+    "datetime-created-at": {
+      "type": "string",
+      "description": "The date and time when was created.\n",
+      "format": "date-time",
+      "maxLength": 32
+    },
+    "datetime-updated-at": {
+      "type": "string",
+      "description": "The date and time when was last updated.\n",
+      "format": "date-time",
+      "maxLength": 32
+    }
+  }
+}

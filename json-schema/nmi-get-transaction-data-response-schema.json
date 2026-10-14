@@ -1,0 +1,820 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/nmi/main/json-schema/nmi-get-transaction-data-response-schema.json",
+  "title": "Response",
+  "x-generated": "2026-10-14",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/nmi-payments-api-openapi.yml#/components/schemas/GetTransactionDataResponse",
+  "type": "object",
+  "properties": {
+    "objectType": {
+      "type": "string",
+      "enum": [
+        "serviceConfig"
+      ],
+      "description": "The type of object that was returned as a result of the request."
+    },
+    "reportId": {
+      "type": "number",
+      "description": "The ID of the report."
+    },
+    "offset": {
+      "type": "number",
+      "description": "The first N skipped results."
+    },
+    "maxResults": {
+      "type": "number",
+      "description": "The max number results."
+    },
+    "totalResults": {
+      "type": "number",
+      "description": "The total number of results."
+    },
+    "hasMore": {
+      "type": "boolean",
+      "description": "Indicates if there are more results available beyond the current page."
+    },
+    "links": {
+      "type": "object",
+      "title": "Links",
+      "description": "Pagination links for navigating through the report results.",
+      "properties": {
+        "first": {
+          "type": "string",
+          "format": "uri",
+          "description": "URL to the first page of results."
+        },
+        "last": {
+          "type": "string",
+          "format": "uri",
+          "description": "URL to the last page of results."
+        },
+        "next": {
+          "type": "string",
+          "format": "uri",
+          "description": "URL to the next page of results."
+        },
+        "previous": {
+          "type": "string",
+          "format": "uri",
+          "description": "URL to the previous page of results."
+        }
+      }
+    },
+    "results": {
+      "type": "array",
+      "description": "Results for the search.",
+      "items": {
+        "type": "object",
+        "properties": {
+          "objectType": {
+            "type": "string",
+            "description": "Type of the returned response object."
+          },
+          "id": {
+            "type": "string",
+            "description": "The ID for the transaction."
+          },
+          "created": {
+            "type": "string",
+            "format": "date-time",
+            "description": "The timestamp indicating when the transaction was created."
+          },
+          "updated": {
+            "type": "string",
+            "format": "date-time",
+            "description": "The timestamp indicating when the transaction was last updated."
+          },
+          "billingAddress": {
+            "type": "object",
+            "title": "Billing Address",
+            "description": "Billing Address details.",
+            "properties": {
+              "first_name": {
+                "type": "string",
+                "description": "The first name of the person associated with the billing address."
+              },
+              "last_name": {
+                "type": "string",
+                "description": "The last name of the person associated with the billing address."
+              },
+              "address_1": {
+                "type": "string",
+                "description": "The first line of the street address."
+              },
+              "address_2": {
+                "type": "string",
+                "description": "The second line of the street address."
+              },
+              "company": {
+                "type": "string",
+                "description": "The name of the company associated with the billing address."
+              },
+              "city": {
+                "type": "string",
+                "description": "The name of the city associated with the billing address."
+              },
+              "state": {
+                "type": "string",
+                "description": "The name of the state or province associated with the billing address.\n  \nFormat: `CC`."
+              },
+              "postal_code": {
+                "type": "string",
+                "description": "The postal code or zip code associated with the billing address."
+              },
+              "country": {
+                "type": "string",
+                "description": "The name of the country associated with the billing address. *Country codes are as shown in ISO 3166-1 alpha-2*.\n  \nFormat: `CC`."
+              },
+              "email": {
+                "type": "string",
+                "format": "email",
+                "description": "The email address associated with the billing address."
+              },
+              "phone": {
+                "type": "string",
+                "format": "phone",
+                "description": "The phone number associated with the billing address."
+              },
+              "cell_phone": {
+                "type": "string",
+                "format": "phone",
+                "description": "The cell phone number associated with the billing address."
+              },
+              "fax": {
+                "type": "string",
+                "format": "phone",
+                "description": "The fax number associated with the billing address."
+              }
+            }
+          },
+          "shippingAddress": {
+            "type": "object",
+            "title": "Shipping Address",
+            "description": "Shipping Address details.",
+            "properties": {
+              "first_name": {
+                "type": "string",
+                "description": "The first name of the person associated with the shipping address."
+              },
+              "last_name": {
+                "type": "string",
+                "description": "The last name of the person associated with the shipping address."
+              },
+              "address_1": {
+                "type": "string",
+                "description": "The first line of the street address."
+              },
+              "address_2": {
+                "type": "string",
+                "description": "The second line of the street address."
+              },
+              "company": {
+                "type": "string",
+                "description": "The name of the company associated with the shipping address."
+              },
+              "city": {
+                "type": "string",
+                "description": "The city of the shipping address."
+              },
+              "state": {
+                "type": "string",
+                "description": "The state or province of the shipping address.\n  \nFormat: `CC`."
+              },
+              "postal_code": {
+                "type": "string",
+                "description": "The postal or zip code of the shipping address."
+              },
+              "country": {
+                "type": "string",
+                "description": "The country of the shipping address. *Country codes are as shown in ISO 3166-1 alpha-2*.\n  \nFormat: `CC`."
+              },
+              "email": {
+                "type": "string",
+                "description": "The email address associated with the shipping address."
+              },
+              "phone": {
+                "type": "string",
+                "description": "The phone number associated with the shipping address."
+              },
+              "fax": {
+                "type": "string",
+                "description": "The fax number associated with the shipping address."
+              }
+            }
+          },
+          "shipping": {
+            "type": "object",
+            "title": "Shipping",
+            "properties": {
+              "objectType": {
+                "type": "string",
+                "description": "The type of the object, representing shipping details."
+              },
+              "carrier": {
+                "type": "string",
+                "description": "The carrier used for shipping."
+              },
+              "trackingNumber": {
+                "type": "string",
+                "description": "The tracking number provided by the shipping carrier."
+              },
+              "date": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "format": "date-time",
+                "description": "The date the item was shipped."
+              },
+              "fromPostalCode": {
+                "type": "string",
+                "description": "The postal code from where the item was shipped."
+              },
+              "amount": {
+                "type": "object",
+                "properties": {
+                  "objectType": {
+                    "type": "string",
+                    "description": "The type of the object, representing the shipping amount."
+                  },
+                  "amount": {
+                    "type": "string",
+                    "description": "The monetary amount for shipping."
+                  },
+                  "currency": {
+                    "type": "string",
+                    "description": "The currency of the shipping amount."
+                  }
+                },
+                "description": "The amount details for shipping."
+              }
+            },
+            "description": "The shipping details associated with the transaction."
+          },
+          "merchantId": {
+            "type": "string",
+            "description": "The ID for the merchant involved in the transaction."
+          },
+          "platformId": {
+            "type": "string",
+            "description": "The ID for the platform facilitating the transaction."
+          },
+          "customerId": {
+            "type": "string",
+            "description": "The ID for the customer involved in the transaction."
+          },
+          "orderId": {
+            "type": "string",
+            "description": "The order ID associated with the transaction."
+          },
+          "orderDescription": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "A description of the order associated with the transaction."
+          },
+          "processorId": {
+            "type": "string",
+            "description": "The ID for the payment processor handling the transaction."
+          },
+          "poNumber": {
+            "type": "string",
+            "description": "The purchase order number associated with the transaction."
+          },
+          "refId": {
+            "type": "string",
+            "description": "A reference identifier for the transaction."
+          },
+          "authorizationCode": {
+            "type": "string",
+            "description": "The authorization code for the transaction, provided by the payment processor."
+          },
+          "status": {
+            "type": "string",
+            "description": "The current status of the transaction."
+          },
+          "driversLicense": {
+            "type": "object",
+            "title": "Drivers License",
+            "properties": {
+              "objectType": {
+                "type": "string",
+                "description": "The type of the object, representing a driver's license."
+              },
+              "dateOfBirth": {
+                "type": "string",
+                "format": "date",
+                "description": "The birth date of the individual associated with the driver's license."
+              },
+              "number": {
+                "type": "string",
+                "description": "The unique number of the driver's license."
+              },
+              "state": {
+                "type": "string",
+                "description": "The state or province that issued the driver's license."
+              }
+            },
+            "description": "The driver's license details associated with the transaction."
+          },
+          "tax": {
+            "type": "object",
+            "title": "Tax",
+            "properties": {
+              "objectType": {
+                "type": "string",
+                "description": "The type of the object, representing the tax amount."
+              },
+              "amount": {
+                "type": "string",
+                "description": "The monetary amount for tax."
+              },
+              "currency": {
+                "type": "string",
+                "description": "The currency of the tax amount."
+              }
+            },
+            "description": "The tax details associated with the transaction."
+          },
+          "tip": {
+            "type": "object",
+            "title": "Tip",
+            "properties": {
+              "objectType": {
+                "type": "string",
+                "description": "The type of the object, representing the tip amount."
+              },
+              "amount": {
+                "type": "string",
+                "description": "The monetary amount for the tip."
+              },
+              "currency": {
+                "type": "string",
+                "description": "The currency of the tip amount."
+              }
+            },
+            "description": "The tip details associated with the transaction."
+          },
+          "merchantDefinedFields": {
+            "type": "object",
+            "title": "Merchant Defined Fields",
+            "description": "Custom fields defined by the merchant for additional information related to the transaction."
+          },
+          "vat": {
+            "type": "object",
+            "title": "VAT",
+            "properties": {
+              "objectType": {
+                "type": "string",
+                "description": "The type of the object, representing the VAT details."
+              },
+              "taxRate": {
+                "type": "object",
+                "properties": {
+                  "objectType": {
+                    "type": "string",
+                    "description": "The type of the object, representing the tax rate."
+                  },
+                  "amount": {
+                    "type": "string",
+                    "description": "The VAT rate applied."
+                  },
+                  "currency": {
+                    "type": "string",
+                    "description": "The currency of the VAT rate."
+                  }
+                },
+                "description": "The VAT rate details."
+              },
+              "invoiceReferenceNumber": {
+                "type": "string",
+                "description": "The reference number for the invoice related to the VAT."
+              },
+              "customerVatRegistration": {
+                "type": "string",
+                "description": "The VAT registration number of the customer."
+              },
+              "merchantVatRegistration": {
+                "type": "string",
+                "description": "The VAT registration number of the merchant."
+              }
+            },
+            "description": "The VAT details associated with the transaction."
+          },
+          "summaryCommodityCode": {
+            "type": "string",
+            "description": "The summary commodity code related to the transaction."
+          },
+          "orderDate": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time",
+            "description": "The date when the order was placed."
+          },
+          "installmentBilling": {
+            "type": "object",
+            "title": "Installment Billing",
+            "properties": {
+              "objectType": {
+                "type": "string",
+                "description": "The type of the object, representing installment billing details."
+              },
+              "billingNumber": {
+                "type": "string",
+                "description": "The current installment number being billed."
+              },
+              "billingTotal": {
+                "type": "object",
+                "properties": {
+                  "objectType": {
+                    "type": "string",
+                    "description": "The type of the object, representing the total billing amount for the installment."
+                  },
+                  "amount": {
+                    "type": "string",
+                    "description": "The monetary amount for the total installment billing."
+                  },
+                  "currency": {
+                    "type": "string",
+                    "description": "The currency of the installment billing amount."
+                  }
+                },
+                "description": "The total billing amount details for the installment."
+              }
+            },
+            "description": "The installment billing details associated with the transaction."
+          },
+          "alternateTaxId": {
+            "type": "string",
+            "description": "An alternate tax identifier for the transaction."
+          },
+          "customerTaxId": {
+            "type": "string",
+            "description": "The tax identifier for the customer associated with the transaction."
+          },
+          "website": {
+            "type": "string",
+            "description": "The website associated with the transaction."
+          },
+          "socialSecurityNumber": {
+            "type": "string",
+            "description": "The social security number of the individual involved in the transaction."
+          },
+          "serviceId": {
+            "type": "string",
+            "description": "The ID for the service used in the transaction."
+          },
+          "surcharge": {
+            "type": "object",
+            "title": "Surcharge",
+            "properties": {
+              "objectType": {
+                "type": "string",
+                "description": "The type of the object, representing the surcharge amount."
+              },
+              "amount": {
+                "type": "string",
+                "description": "The monetary amount for the surcharge."
+              },
+              "currency": {
+                "type": "string",
+                "description": "The currency of the surcharge amount."
+              }
+            },
+            "description": "The surcharge details associated with the transaction."
+          },
+          "partialPayment": {
+            "type": "object",
+            "title": "Partial Payment",
+            "properties": {
+              "objectType": {
+                "type": "string",
+                "description": "The type of the object, representing partial payment details."
+              },
+              "id": {
+                "type": "string",
+                "description": "The ID for the partial payment."
+              },
+              "balance": {
+                "type": "object",
+                "title": "Balance",
+                "properties": {
+                  "objectType": {
+                    "type": "string",
+                    "description": "The type of the object, representing the balance amount."
+                  },
+                  "amount": {
+                    "type": "string",
+                    "description": "The remaining balance for the partial payment."
+                  },
+                  "currency": {
+                    "type": "string",
+                    "description": "The currency of the remaining balance amount."
+                  }
+                },
+                "description": "The balance details for the partial payment."
+              }
+            },
+            "description": "The partial payment details associated with the transaction."
+          },
+          "refundableBalance": {
+            "type": "object",
+            "title": "Refundable Balance",
+            "properties": {
+              "objectType": {
+                "type": "string",
+                "description": "The type of the object, representing the refundable balance."
+              },
+              "amount": {
+                "type": "string",
+                "description": "The monetary amount available for refund."
+              },
+              "currency": {
+                "type": "string",
+                "description": "The currency of the refundable balance."
+              }
+            },
+            "description": "The refundable balance details for the transaction."
+          },
+          "actions": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "objectType": {
+                  "type": "string",
+                  "description": "The type of the object, representing an action."
+                },
+                "amount": {
+                  "type": "object",
+                  "title": "Amount",
+                  "properties": {
+                    "objectType": {
+                      "type": "string",
+                      "description": "The type of the object, representing the action amount."
+                    },
+                    "amount": {
+                      "type": "string",
+                      "description": "The monetary amount for the action."
+                    },
+                    "currency": {
+                      "type": "string",
+                      "description": "The currency of the action amount."
+                    }
+                  },
+                  "description": "The amount details for the action."
+                },
+                "actionType": {
+                  "type": "string",
+                  "description": "The type of action performed, such as 'sale' or 'refund'."
+                },
+                "date": {
+                  "type": "string",
+                  "format": "date-time",
+                  "description": "The timestamp when the action was performed."
+                },
+                "success": {
+                  "type": "boolean",
+                  "description": "Indicates whether the action was successful."
+                },
+                "ipAddress": {
+                  "type": "string",
+                  "description": "The IP address from where the action was initiated."
+                },
+                "source": {
+                  "type": "string",
+                  "description": "The source from which the action was performed, such as 'virtualTerminal'."
+                },
+                "apiMethod": {
+                  "type": "string",
+                  "description": "The API method used to perform the action."
+                },
+                "username": {
+                  "type": "string",
+                  "description": "The username of the individual who performed the action."
+                },
+                "responseText": {
+                  "type": "string",
+                  "description": "The response text returned by the system for the action."
+                },
+                "batchId": {
+                  "type": "string",
+                  "description": "The identifier for the batch in which the action was included."
+                },
+                "platformBatchId": {
+                  "type": "string",
+                  "description": "The platform-specific batch identifier for the action."
+                },
+                "responseCode": {
+                  "type": "string",
+                  "description": "The response code returned by the system for the action."
+                },
+                "platformResponseText": {
+                  "type": "string",
+                  "description": "The platform-specific response text for the action."
+                },
+                "platformResponseCode": {
+                  "type": "string",
+                  "description": "The platform-specific response code for the action."
+                },
+                "deviceLicenseNumber": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "description": "The license number of the device used for the action."
+                },
+                "deviceNickname": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "description": "The nickname of the device used for the action."
+                }
+              },
+              "description": "The details of actions performed within the transaction."
+            },
+            "description": "A list of actions associated with the transaction."
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "description": "Details of individual items related to the transaction."
+            },
+            "description": "A list of items associated with the transaction."
+          },
+          "emv": {
+            "type": "object",
+            "title": "EMV",
+            "properties": {
+              "objectType": {
+                "type": "string",
+                "description": "The type of the object, representing EMV (Europay, Mastercard, and Visa) details."
+              },
+              "applicationId": {
+                "type": "string",
+                "description": "The ID for the EMV application."
+              },
+              "applicationPreferredName": {
+                "type": "string",
+                "description": "The preferred name of the EMV application."
+              },
+              "applicationLabels": {
+                "type": "string",
+                "description": "Labels associated with the EMV application."
+              },
+              "terminalStatusId": {
+                "type": "string",
+                "description": "The status identifier of the terminal processing the EMV transaction."
+              }
+            },
+            "description": "The EMV details associated with the transaction."
+          },
+          "paymentInfo": {
+            "type": "object",
+            "title": "Payment Info",
+            "properties": {
+              "objectType": {
+                "type": "string",
+                "description": "The type of the object, representing payment card information."
+              },
+              "cardNumber": {
+                "type": "string",
+                "description": "The masked card number used for the transaction."
+              },
+              "cardExp": {
+                "type": "string",
+                "description": "The expiration date of the card used for the transaction."
+              },
+              "cardHash": {
+                "type": "string",
+                "description": "A hash value of the card information used for transaction security."
+              },
+              "avsResponse": {
+                "type": "string",
+                "description": "The response from the Address Verification System (AVS) for the card."
+              },
+              "cardholderAuth": {
+                "type": "string",
+                "description": "The authentication response for the cardholder."
+              },
+              "cscResponse": {
+                "type": "string",
+                "description": "The response from the Card Security Code (CSC) verification."
+              },
+              "cardStartDate": {
+                "type": "string",
+                "description": "The start date of the card, if applicable."
+              },
+              "cardIssueNumber": {
+                "type": "string",
+                "description": "The issue number of the card, if applicable."
+              },
+              "cardBalance": {
+                "type": "string",
+                "description": "The balance available on the card, if applicable."
+              },
+              "cardAvailableBalance": {
+                "type": "string",
+                "description": "The available balance on the card, if applicable."
+              },
+              "entryMode": {
+                "type": "string",
+                "description": "The mode used to enter the card information, such as 'swiped' or 'keyed'."
+              },
+              "cardBin": {
+                "type": "string",
+                "description": "The Bank Identification Number (BIN) of the card used for the transaction."
+              },
+              "cardType": {
+                "type": "string",
+                "description": "The type of card used, such as 'visa' or 'mastercard'."
+              },
+              "cardHolderAuthentication": {
+                "type": "object",
+                "title": "Card Holder Authentication",
+                "properties": {
+                  "objectType": {
+                    "type": "string",
+                    "description": "The type of the object, representing cardholder authentication details."
+                  },
+                  "xid": {
+                    "type": "string",
+                    "description": "The transaction identifier for cardholder authentication."
+                  },
+                  "eci": {
+                    "type": "string",
+                    "description": "The electronic commerce indicator for cardholder authentication."
+                  },
+                  "cavv": {
+                    "type": "string",
+                    "description": "The cardholder authentication verification value."
+                  },
+                  "cavvResult": {
+                    "type": "string",
+                    "description": "The result of the cardholder authentication verification."
+                  },
+                  "directoryServerId": {
+                    "type": [
+                      "string",
+                      "null"
+                    ],
+                    "description": "The identifier for the directory server involved in cardholder authentication."
+                  },
+                  "threeDsVersion": {
+                    "type": [
+                      "string",
+                      "null"
+                    ],
+                    "description": "The version of the 3D Secure protocol used for authentication."
+                  }
+                }
+              }
+            }
+          },
+          "storedCredentials": {
+            "type": "object",
+            "title": "Stored Credentials",
+            "properties": {
+              "objectType": {
+                "type": "string",
+                "description": "The type of the object, representing stored credentials."
+              },
+              "initiatedBy": {
+                "type": "string",
+                "description": "The initiator of the transaction, indicating whether it was 'merchant' or 'cardholder' initiated."
+              },
+              "initialTransactionId": {
+                "type": "string",
+                "description": "The ID of the initial transaction for stored credentials."
+              },
+              "storedIndicator": {
+                "type": "string",
+                "description": "Indicates whether the credentials are stored, typically 'true' or 'false'."
+              },
+              "credentialOnFileSupported": {
+                "type": "boolean",
+                "description": "Indicates whether the system supports storing credentials on file."
+              }
+            },
+            "description": "The stored credentials details associated with the transaction."
+          },
+          "authorizationState": {
+            "type": "string",
+            "description": "The state of authorization for the transaction."
+          },
+          "cardholderVerificationMethod": {
+            "type": "string",
+            "description": "The method used for cardholder verification during the transaction."
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,53 @@
+generated: '2026-10-14'
+method: derived
+generator: derive-problem-types.py
+source:
+- openapi/nmi-authvia-openapi.yml
+- openapi/nmi-ctv-onboarding-openapi.yml
+- openapi/nmi-embedded-components-api-openapi.yml
+- openapi/nmi-payments-api-openapi.yml
+- openapi/nmi-payments-openapi.yml
+- openapi/nmi-payments-sign-up-api-openapi.yml
+format: custom
+envelope:
+  media_type: application/json
+  schema: ErrorResponse
+coverage:
+  operations: 108
+  statuses_declared: 5
+problems:
+- status: 400
+  title: Bad Request
+  description: Bad Request - Validation Error
+  operations: 40
+  media_types:
+  - application/json
+  schema: ErrorResponse
+- status: 401
+  title: Unauthorized
+  description: Unauthorized
+  operations: 63
+  media_types:
+  - application/json
+  schema: null
+- status: 404
+  title: Not Found
+  description: Device not found
+  operations: 54
+  media_types:
+  - application/json
+  schema: ErrorResponse
+- status: 422
+  title: Unprocessable Content
+  description: Validation error
+  operations: 12
+  media_types:
+  - application/json
+  schema: validation-error
+- status: 500
+  title: Internal Server Error
+  description: Internal Server Error - An unexpected error occurred on the server
+  operations: 5
+  media_types:
+  - application/json
+  schema: null

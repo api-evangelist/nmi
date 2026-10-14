@@ -1,0 +1,433 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/nmi/main/json-schema/nmi-get-specific-merchant-information-response-schema.json",
+  "title": "Response",
+  "x-generated": "2026-10-14",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/nmi-payments-api-openapi.yml#/components/schemas/GetSpecificMerchantInformationResponse",
+  "type": "object",
+  "properties": {
+    "objectType": {
+      "type": "string",
+      "enum": [
+        "serviceConfig"
+      ],
+      "description": "The type of object that was returned as a result of the request."
+    },
+    "id": {
+      "type": "string",
+      "description": "The ID for the transaction."
+    },
+    "created": {
+      "type": "string",
+      "format": "date-time",
+      "description": "The timestamp indicating when the transaction was created."
+    },
+    "updated": {
+      "type": "string",
+      "format": "date-time",
+      "description": "The timestamp indicating when the transaction was last updated."
+    },
+    "firstName": {
+      "type": "string",
+      "description": "The first name of the merchant's company contact."
+    },
+    "lastName": {
+      "type": "string",
+      "description": "The last name of the merchant's company contact."
+    },
+    "company": {
+      "type": "string",
+      "description": "The merchant's company name."
+    },
+    "email": {
+      "type": "string",
+      "description": "The email of the merchant's company contact."
+    },
+    "phone": {
+      "type": "string",
+      "description": "The phone number of the merchant's company contact."
+    },
+    "fax": {
+      "type": "string",
+      "description": "The fax number of the merchant's company contact."
+    },
+    "address1": {
+      "type": "string",
+      "description": "The first line of the merchant's address."
+    },
+    "address2": {
+      "type": "string",
+      "description": "The second line of the merchant's address."
+    },
+    "city": {
+      "type": "string",
+      "description": "The city associated with the merchant's address."
+    },
+    "state": {
+      "type": "string",
+      "description": "The state associated with the merchant's address."
+    },
+    "zip": {
+      "type": "string",
+      "description": "The postal code associated with the merchant's address."
+    },
+    "country": {
+      "type": "string",
+      "description": "The country associated with the merchant's address."
+    },
+    "timezone": {
+      "type": "string",
+      "description": "The merchant's timezone."
+    },
+    "costPlan": {
+      "type": "string",
+      "description": "The cost plan assigned to the merchant."
+    },
+    "status": {
+      "type": "string",
+      "description": "The status of the merchant."
+    },
+    "externalIdentifier": {
+      "type": "string",
+      "description": "A description to further describe or identify the merchant."
+    },
+    "lastTransactionDate": {
+      "type": "string",
+      "description": "The date of the last transaction on the merchant."
+    },
+    "parentAffiliateId": {
+      "type": "string",
+      "description": "The ID of the affiliate directly above the merchant."
+    },
+    "accountInfo": {
+      "type": "object",
+      "description": "Banking information for merchant billing.",
+      "properties": {
+        "checkAba": {
+          "type": "string",
+          "description": "The routing/ABA number used to bill the merchant."
+        },
+        "checkAccount": {
+          "type": "string",
+          "description": "The account number used to bill the merchant."
+        },
+        "accountType": {
+          "type": "string",
+          "description": "The type of bank account being used."
+        },
+        "accountHolderType": {
+          "type": "string",
+          "description": "The type of holder for the bank account being used."
+        }
+      }
+    },
+    "features": {
+      "type": "object",
+      "description": "A collection of various merchant feature flags.",
+      "properties": {
+        "forceTos": {
+          "type": "boolean",
+          "description": "Whether or not the merchant is forced to accept the Terms of Service."
+        },
+        "forceBillingAuth": {
+          "type": "boolean",
+          "description": "Whether or not the merchant is forced to accept the Billing Auth."
+        },
+        "allowBlindCredits": {
+          "type": "boolean",
+          "description": "Whether or not the merchant is allowed to issue blind credits for Credit Cards."
+        },
+        "allowBlindCheckCredits": {
+          "type": "boolean",
+          "description": "Whether or not the merchant is allowed to issue blind credits for Checks."
+        },
+        "advancedTransactionRouting": {
+          "type": "boolean",
+          "description": "Whether or not the merchant has advanced transaction routing enabled."
+        },
+        "sendBillingEmail": {
+          "type": "boolean",
+          "description": "Whether or not the merchant receives an email for their billing."
+        },
+        "braspag": {
+          "type": "object",
+          "description": "Feature flags specifically related to the braspag processor.",
+          "properties": {
+            "advancedTransactionRouting": {
+              "type": "boolean",
+              "description": "Whether or not the braspag processor has advanced transaction routing enabled."
+            }
+          }
+        },
+        "verifi": {
+          "type": "object",
+          "description": "Feature flags specifically related to the verifi service.",
+          "properties": {
+            "enabled": {
+              "type": "boolean",
+              "description": "Whether or not the verifi service is enabled for the merchant."
+            }
+          }
+        },
+        "viewBillingStatement": {
+          "type": "boolean",
+          "description": "Whether or not the merchant can view their billing statement."
+        },
+        "litle": {
+          "type": "object",
+          "description": "Feature flags specifically related to the litle processor.",
+          "properties": {
+            "reportGroup": {
+              "type": "string",
+              "description": "The merchant's litle report group. Returns false if not configured."
+            },
+            "prePaidIndicator": {
+              "type": "string",
+              "description": "The merchant's litle prepaid indicator. Returns false if not configured."
+            },
+            "affluentIndicator": {
+              "type": "string",
+              "description": "The merchant's litle affluent indicator. Returns false if not configured."
+            },
+            "recycleAdvice": {
+              "type": "string",
+              "description": "The merchant's litle recycle advice. Returns false if not configured."
+            },
+            "campaign": {
+              "type": "string",
+              "description": "The merchant's litle campaign. Returns false if not configured."
+            },
+            "affiliate": {
+              "type": "string",
+              "description": "The merchant's litle affiliate. Returns false if not configured."
+            },
+            "merchantGroupId": {
+              "type": "string",
+              "description": "The merchant's litle group ID. Returns false if not configured."
+            }
+          }
+        },
+        "allowEmptyCcExp": {
+          "type": "boolean",
+          "description": "Whether or not the merchant is allowed to pass empty Credit Card Expiration Dates."
+        },
+        "pastDue": {
+          "type": "boolean",
+          "description": "Whether or not the merchant's bill is past due."
+        },
+        "apiReceipt": {
+          "type": "boolean",
+          "description": "Whether or not the merchant's API transactions send receipts."
+        },
+        "batchReceipt": {
+          "type": "boolean",
+          "description": "Whether or not the merchant can batch receipts."
+        },
+        "delinquent": {
+          "type": "boolean",
+          "description": "Whether or not the merchant is in a delinquent state."
+        },
+        "commercialCardIndicator": {
+          "type": "string",
+          "description": "The merchant's commercial card indicator. Returns false if not configured."
+        },
+        "customDescription": {
+          "type": "string",
+          "description": "The merchant's custom description. Returns false if not configured."
+        },
+        "apiAllowOnlyUsername": {
+          "type": "boolean",
+          "description": "Whether or not the merchant can authenticate with the APIs using only a username."
+        },
+        "orderIdDuplicateCheck": {
+          "type": "boolean",
+          "description": "Whether or not the merchant has duplicate checking for the Order ID field."
+        },
+        "cardLevelResult": {
+          "type": "string",
+          "description": "The merchant's card level result. Returns false if not configured."
+        },
+        "pmsalem": {
+          "type": "object",
+          "description": "Feature flags specifically related to the pmsalem processor.",
+          "properties": {
+            "ignoreAmexCvv": {
+              "type": "boolean",
+              "description": "Whether or not the merchant's pmsalem processor ignores the Amex CVV field."
+            },
+            "allowNovusVerify": {
+              "type": "boolean",
+              "description": "Whether or not the merchant's pmsalem processor can verify Novus cards schemes."
+            },
+            "idInMdf11": {
+              "type": "boolean",
+              "description": "Whether or not the merchant's pmsalem processor can pass the ID in MDF11."
+            }
+          }
+        },
+        "credorax": {
+          "type": "object",
+          "description": "Feature flags specifically related to the credorax processor.",
+          "properties": {
+            "bankNet": {
+              "type": "string",
+              "description": "The merchant's bank net value for credorax. Returns false if not configured."
+            },
+            "z5Risk": {
+              "type": "string",
+              "description": "The merchant's z5 risk value for credorax. Returns false if not configured."
+            }
+          }
+        },
+        "vantiv": {
+          "type": "object",
+          "description": "Feature flags specifically related to the vantiv processor.",
+          "properties": {
+            "remainingBalance": {
+              "type": "string",
+              "description": "The merchant's remaining balance for vantiv. Returns false if not configured."
+            }
+          }
+        },
+        "prosa": {
+          "type": "object",
+          "description": "Feature flags specifically related to the prosa processor.",
+          "properties": {
+            "deferredPayment": {
+              "type": "boolean",
+              "description": "Whether or not the merchant has deferred payments enabled for the prosa processor."
+            }
+          }
+        },
+        "cronopay": {
+          "type": "object",
+          "description": "Feature flags specifically related to the cronopay processor.",
+          "properties": {
+            "customerId": {
+              "type": "string",
+              "description": "The merchant's cronopay customer ID. Returns false if not configured."
+            }
+          }
+        },
+        "captureHigher": {
+          "type": "boolean",
+          "description": "Whether or not the merchant is allowed to capture higher than the preceding auth."
+        },
+        "moneris": {
+          "type": "object",
+          "description": "Feature flags related specifically to the moneris processor.",
+          "properties": {
+            "orderId": {
+              "type": "string",
+              "description": "The merchant's order ID for moneris transactions. Returns false if not configured."
+            }
+          }
+        },
+        "extendedFileBatchResponse": {
+          "type": "boolean",
+          "description": "Whether or not the merchant receives and extended file batch response."
+        },
+        "credov3": {
+          "type": "object",
+          "description": "Feature flags related specifically to the credov3 processor.",
+          "properties": {
+            "ignoreAmexCvv": {
+              "type": "boolean",
+              "description": "Whether or not the merchant's credov3 processor ignores the Amex CVV field."
+            }
+          }
+        },
+        "enforceRequiredFieldsForSwiped": {
+          "type": "boolean",
+          "description": "Whether or not the merchant must continue to pass required fields when using Swipe."
+        },
+        "preventDuplicateCvRecords": {
+          "type": "boolean",
+          "description": "Whether or not the merchant is prevented from making duplicate Customer Vault records."
+        },
+        "preventConfiguringSurcharge": {
+          "type": "boolean",
+          "description": "Whether or not the merchant is prevented from configuring settings for surcharge."
+        },
+        "tsys": {
+          "type": "object",
+          "description": "Feature flags related specifically to the tsys processor.",
+          "properties": {
+            "paymentFacilitatorFields": {
+              "type": "string",
+              "description": "The merchant's tsys payment facilitator fields. Returns false if not configured."
+            },
+            "allowCustomReport": {
+              "type": "boolean",
+              "description": "Whether or not the merchant is allowed to do a custom report with tsys."
+            },
+            "alternativePostData": {
+              "type": "boolean",
+              "description": "Whether or not the merchant is allowed to add alternative post data with tsys."
+            }
+          }
+        },
+        "requireProcessorFieldOnVt": {
+          "type": "string",
+          "description": "Require a processor be specified on all transactions in the Virtual Terminal."
+        },
+        "isCardTesting": {
+          "type": "string",
+          "description": "Is merchant's card testing."
+        },
+        "allowTipOnVtKeyedTransactions": {
+          "type": "string",
+          "description": "Allow merchant to enter tips in the virtual terminal on keyed transactions."
+        },
+        "transitForceAcceptance": {
+          "type": "string",
+          "description": "Merchant is approved for Force Acceptance."
+        },
+        "level3": {
+          "type": "object",
+          "description": "Merchant's level III template data.",
+          "properties": {
+            "autoLoadTemplate": {
+              "type": "boolean",
+              "description": "Automatically add my Level III template data to the merchant's credit card transactions."
+            }
+          }
+        },
+        "emvPartialApprovals": {
+          "type": "string",
+          "description": "Allow Merchant to accept Partial Approvals for EMV transactions."
+        },
+        "supportsGooglePay": {
+          "type": "string",
+          "description": "Merchant supports Google Pay."
+        },
+        "supportsApplePay": {
+          "type": "string",
+          "description": "Merchant supports Apple Pay."
+        },
+        "isApplePayEnabled": {
+          "type": "string",
+          "description": "Is Apple Pay enabled."
+        },
+        "useDeviceRecognition": {
+          "type": "string",
+          "description": "Enable device recognition for all merchant users when logging into the control panel (users with two-factor enabled are exempt)."
+        }
+      }
+    },
+    "needsPendingServicesActivated": {
+      "type": "string",
+      "description": "Merchant needs pending services activated."
+    },
+    "payFacBillingPeriod": {
+      "type": "string",
+      "description": "Payment Facilitator Billing Period."
+    },
+    "rejectedCertificates": {
+      "type": "string",
+      "description": "Number of rejected certificates."
+    }
+  }
+}

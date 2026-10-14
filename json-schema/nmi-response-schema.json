@@ -1,0 +1,112 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/nmi/main/json-schema/nmi-response-schema.json",
+  "title": "Response",
+  "x-generated": "2026-10-14",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/nmi-payments-openapi.yml#/components/schemas/Response",
+  "type": "object",
+  "properties": {
+    "response": {
+      "type": "string",
+      "enum": [
+        "1",
+        "2",
+        "3"
+      ],
+      "description": "Status code for the operation. (1) - success, (2) - failed, (3) system error"
+    },
+    "responsetext": {
+      "type": "string",
+      "description": "Textual description of the operation's result."
+    },
+    "authcode": {
+      "type": "string",
+      "description": "Authorization code for the operation."
+    },
+    "amount_authorized": {
+      "type": "string",
+      "description": "(Conditional) This will optionally come back when requesting partial payment. Authorization amount."
+    },
+    "transactionid": {
+      "type": "string",
+      "description": "(Conditional - Payment) Payment gateway transaction id."
+    },
+    "invoice_id": {
+      "type": "string",
+      "description": "(Conditional - Invoice) Identifier for the invoice."
+    },
+    "avsresponse": {
+      "type": "string",
+      "description": "Address Verification Service response code."
+    },
+    "cvvresponse": {
+      "type": "string",
+      "description": "Card Verification Value response."
+    },
+    "orderid": {
+      "type": "string",
+      "description": "Identifier for an order related to this invoice."
+    },
+    "type": {
+      "type": "string",
+      "enum": [
+        "sale",
+        "auth",
+        "validate",
+        "credit",
+        "offline",
+        "capture",
+        "void",
+        "refund",
+        "complete_partial_payment",
+        "add_invoice",
+        "update_invoice",
+        "send_invoice",
+        "close_invoice",
+        "add_plan",
+        "edit_plan",
+        "add_subscription",
+        ""
+      ],
+      "description": "Type of operation that this response is for."
+    },
+    "partial_payment_id": {
+      "type": "string",
+      "description": "(Conditional) This will optionally come back when requesting partial payment. A numeric identifier which is used when submitting subsequent transactions."
+    },
+    "partial_payment_balance": {
+      "type": "string",
+      "description": "(Conditional) This will optionally come back when requesting partial payment. The payment's remaining balance."
+    },
+    "platform_id": {
+      "type": "string",
+      "description": "Platform ID associated with the transaction."
+    },
+    "response_code": {
+      "type": "string",
+      "description": "Another status or result code for the operation. See [Response Code Table](#section/Appendixes/Payment-API-Response-Codes)"
+    },
+    "subscription_id": {
+      "type": "string",
+      "description": "(Conditional - Subscription) The subscription ID that was created"
+    },
+    "emv_auth_response_data": {
+      "type": "string",
+      "description": "(Conditional) This will optionally come back when any chip card data is provided on the authorization. This data needs to be sent back to the SDK after an authorization."
+    },
+    "payment_terms": {
+      "type": "string",
+      "description": "(Conditional - Invoice) The terms of payment for the invoice."
+    },
+    "customer_vault_id": {
+      "type": "string",
+      "description": "(Conditional - Customer Vault) The original customer_vault_id passed in the transaction request or the resulting customer_vault_id created on an approved transaction.\n\nNote: Only returned when the \"Customer Vault\" service is active."
+    },
+    "kount_score": {
+      "type": "string",
+      "description": "The Kount \"Omniscore\" indicating the level of risk on a given transaction. The higher the score, the lower the risk.\n\nNote: Only returned when the \"Kount\" service is active."
+    }
+  }
+}

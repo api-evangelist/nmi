@@ -1,0 +1,1812 @@
+{
+  "@context": {
+    "@vocab": "https://nmi.com/schema#",
+    "schema": "https://schema.org/",
+    "xsd": "http://www.w3.org/2001/XMLSchema#",
+    "dcterms": "http://purl.org/dc/terms/",
+    "nmi": "https://nmi.com/schema#",
+    "ConversationStatus": "nmi:ConversationStatus",
+    "MerchantDefinedFields": "nmi:MerchantDefinedFields",
+    "field_1": {
+      "@id": "nmi:field_1",
+      "@type": "xsd:string"
+    },
+    "field_2": {
+      "@id": "nmi:field_2",
+      "@type": "xsd:string"
+    },
+    "field_3": {
+      "@id": "nmi:field_3",
+      "@type": "xsd:string"
+    },
+    "field_4": {
+      "@id": "nmi:field_4",
+      "@type": "xsd:string"
+    },
+    "field_5": {
+      "@id": "nmi:field_5",
+      "@type": "xsd:string"
+    },
+    "field_6": {
+      "@id": "nmi:field_6",
+      "@type": "xsd:string"
+    },
+    "field_7": {
+      "@id": "nmi:field_7",
+      "@type": "xsd:string"
+    },
+    "field_8": {
+      "@id": "nmi:field_8",
+      "@type": "xsd:string"
+    },
+    "field_9": {
+      "@id": "nmi:field_9",
+      "@type": "xsd:string"
+    },
+    "field_10": {
+      "@id": "nmi:field_10",
+      "@type": "xsd:string"
+    },
+    "field_11": {
+      "@id": "nmi:field_11",
+      "@type": "xsd:string"
+    },
+    "field_12": {
+      "@id": "nmi:field_12",
+      "@type": "xsd:string"
+    },
+    "field_13": {
+      "@id": "nmi:field_13",
+      "@type": "xsd:string"
+    },
+    "field_14": {
+      "@id": "nmi:field_14",
+      "@type": "xsd:string"
+    },
+    "field_15": {
+      "@id": "nmi:field_15",
+      "@type": "xsd:string"
+    },
+    "field_16": {
+      "@id": "nmi:field_16",
+      "@type": "xsd:string"
+    },
+    "field_17": {
+      "@id": "nmi:field_17",
+      "@type": "xsd:string"
+    },
+    "field_18": {
+      "@id": "nmi:field_18",
+      "@type": "xsd:string"
+    },
+    "field_19": {
+      "@id": "nmi:field_19",
+      "@type": "xsd:string"
+    },
+    "field_20": {
+      "@id": "nmi:field_20",
+      "@type": "xsd:string"
+    },
+    "TransactionResponse": "nmi:TransactionResponse",
+    "object": {
+      "@id": "nmi:object",
+      "@type": "xsd:string"
+    },
+    "id": {
+      "@id": "nmi:id",
+      "@type": "xsd:string"
+    },
+    "type": {
+      "@id": "nmi:type",
+      "@type": "xsd:string"
+    },
+    "amount": {
+      "@id": "nmi:amount",
+      "@type": "xsd:string"
+    },
+    "currency": {
+      "@id": "nmi:currency",
+      "@type": "xsd:string"
+    },
+    "auth_code": {
+      "@id": "nmi:auth_code",
+      "@type": "xsd:string"
+    },
+    "avs_response": {
+      "@id": "nmi:avs_response",
+      "@type": "xsd:string"
+    },
+    "cvv_response": {
+      "@id": "nmi:cvv_response",
+      "@type": "xsd:string"
+    },
+    "customer_vault_id": {
+      "@id": "nmi:customer_vault_id",
+      "@type": "xsd:string"
+    },
+    "status": {
+      "@id": "nmi:status",
+      "@type": "xsd:string"
+    },
+    "response": {
+      "@id": "nmi:response",
+      "@type": "xsd:string"
+    },
+    "response_text": {
+      "@id": "nmi:response_text",
+      "@type": "xsd:string"
+    },
+    "response_code": {
+      "@id": "nmi:response_code",
+      "@type": "xsd:string"
+    },
+    "processor_id": {
+      "@id": "nmi:processor_id",
+      "@type": "xsd:string"
+    },
+    "created_date": {
+      "@id": "nmi:created_date",
+      "@type": "xsd:dateTime"
+    },
+    "updated_date": {
+      "@id": "nmi:updated_date",
+      "@type": "xsd:dateTime"
+    },
+    "signature_image": {
+      "@id": "nmi:signature_image",
+      "@type": "xsd:string"
+    },
+    "merchant_defined_fields": {
+      "@id": "nmi:merchant_defined_fields",
+      "@type": "@id"
+    },
+    "payment_details": {
+      "@id": "nmi:payment_details"
+    },
+    "billing_address": {
+      "@id": "nmi:billing_address"
+    },
+    "shipping_address": {
+      "@id": "nmi:shipping_address"
+    },
+    "order_details": {
+      "@id": "nmi:order_details"
+    },
+    "actions": {
+      "@id": "nmi:actions",
+      "@container": "@list"
+    },
+    "RetailUnencryptedMagneticStripe": "nmi:RetailUnencryptedMagneticStripe",
+    "track_1": {
+      "@id": "nmi:track_1",
+      "@type": "xsd:string"
+    },
+    "track_2": {
+      "@id": "nmi:track_2",
+      "@type": "xsd:string"
+    },
+    "track_3": {
+      "@id": "nmi:track_3",
+      "@type": "xsd:string"
+    },
+    "RetailMagTekMagensaEncryptedSwipe": "nmi:RetailMagTekMagensaEncryptedSwipe",
+    "magnesafe_track_1": {
+      "@id": "nmi:magnesafe_track_1",
+      "@type": "xsd:string"
+    },
+    "magnesafe_track_2": {
+      "@id": "nmi:magnesafe_track_2",
+      "@type": "xsd:string"
+    },
+    "magnesafe_magneprint": {
+      "@id": "nmi:magnesafe_magneprint",
+      "@type": "xsd:string"
+    },
+    "magnesafe_ksn": {
+      "@id": "nmi:magnesafe_ksn",
+      "@type": "xsd:string"
+    },
+    "magnesafe_magneprint_status": {
+      "@id": "nmi:magnesafe_magneprint_status",
+      "@type": "xsd:string"
+    },
+    "RetailIdTechEncryptedSwipe": "nmi:RetailIdTechEncryptedSwipe",
+    "encrypted_track_1": {
+      "@id": "nmi:encrypted_track_1",
+      "@type": "xsd:string"
+    },
+    "encrypted_track_2": {
+      "@id": "nmi:encrypted_track_2",
+      "@type": "xsd:string"
+    },
+    "encrypted_track_3": {
+      "@id": "nmi:encrypted_track_3",
+      "@type": "xsd:string"
+    },
+    "encrypted_ksn": {
+      "@id": "nmi:encrypted_ksn",
+      "@type": "xsd:string"
+    },
+    "RetailIdTechEncryptedKeyed": "nmi:RetailIdTechEncryptedKeyed",
+    "encrypted_data": {
+      "@id": "nmi:encrypted_data",
+      "@type": "xsd:string"
+    },
+    "RetailIngenicoChip": "nmi:RetailIngenicoChip",
+    "entry_mode": {
+      "@id": "nmi:entry_mode",
+      "@type": "xsd:string"
+    },
+    "emv_auth_request_data": {
+      "@id": "nmi:emv_auth_request_data",
+      "@type": "xsd:string"
+    },
+    "emv_device": {
+      "@id": "nmi:emv_device",
+      "@type": "xsd:string"
+    },
+    "verification_method": {
+      "@id": "nmi:verification_method",
+      "@type": "xsd:string"
+    },
+    "RetailIngenicoSwipe": "nmi:RetailIngenicoSwipe",
+    "RetailIngenicoNfc": "nmi:RetailIngenicoNfc",
+    "RetailIngenicoKeyed": "nmi:RetailIngenicoKeyed",
+    "RetailMobileSdkEncryptedPayment": "nmi:RetailMobileSdkEncryptedPayment",
+    "encrypted_payment": {
+      "@id": "nmi:encrypted_payment",
+      "@type": "xsd:string"
+    },
+    "BillingAddressRest": "nmi:BillingAddressRest",
+    "method": {
+      "@id": "nmi:method",
+      "@type": "xsd:string"
+    },
+    "number": {
+      "@id": "nmi:number",
+      "@type": "xsd:integer"
+    },
+    "total": {
+      "@id": "nmi:total",
+      "@type": "xsd:decimal"
+    },
+    "first_name": {
+      "@id": "nmi:first_name",
+      "@type": "xsd:string"
+    },
+    "last_name": {
+      "@id": "nmi:last_name",
+      "@type": "xsd:string"
+    },
+    "company": {
+      "@id": "nmi:company",
+      "@type": "xsd:string"
+    },
+    "address1": {
+      "@id": "nmi:address1",
+      "@type": "xsd:string"
+    },
+    "address2": {
+      "@id": "nmi:address2",
+      "@type": "xsd:string"
+    },
+    "city": {
+      "@id": "nmi:city",
+      "@type": "xsd:string"
+    },
+    "state": {
+      "@id": "nmi:state",
+      "@type": "xsd:string"
+    },
+    "zip": {
+      "@id": "nmi:zip",
+      "@type": "xsd:string"
+    },
+    "country": {
+      "@id": "nmi:country",
+      "@type": "xsd:string"
+    },
+    "phone": {
+      "@id": "nmi:phone",
+      "@type": "xsd:string"
+    },
+    "email": {
+      "@id": "nmi:email",
+      "@type": "xsd:string"
+    },
+    "fax": {
+      "@id": "nmi:fax",
+      "@type": "xsd:string"
+    },
+    "cell_phone": {
+      "@id": "nmi:cell_phone",
+      "@type": "xsd:string"
+    },
+    "website": {
+      "@id": "nmi:website",
+      "@type": "xsd:string"
+    },
+    "drivers_license_number": {
+      "@id": "nmi:drivers_license_number",
+      "@type": "xsd:string"
+    },
+    "drivers_license_dob": {
+      "@id": "nmi:drivers_license_dob",
+      "@type": "xsd:string"
+    },
+    "drivers_license_state": {
+      "@id": "nmi:drivers_license_state",
+      "@type": "xsd:string"
+    },
+    "cardholder_auth": {
+      "@id": "nmi:cardholder_auth",
+      "@type": "@id"
+    },
+    "ShippingAddressRest": "nmi:ShippingAddressRest",
+    "carrier": {
+      "@id": "nmi:carrier",
+      "@type": "xsd:string"
+    },
+    "LineItem": "nmi:LineItem",
+    "product_code": {
+      "@id": "nmi:product_code",
+      "@type": "xsd:string"
+    },
+    "description": {
+      "@id": "nmi:description",
+      "@type": "xsd:string"
+    },
+    "commodity_code": {
+      "@id": "nmi:commodity_code",
+      "@type": "xsd:string"
+    },
+    "unit_of_measure": {
+      "@id": "nmi:unit_of_measure",
+      "@type": "xsd:string"
+    },
+    "unit_cost": {
+      "@id": "nmi:unit_cost",
+      "@type": "xsd:decimal"
+    },
+    "quantity": {
+      "@id": "nmi:quantity",
+      "@type": "xsd:integer"
+    },
+    "total_amount": {
+      "@id": "nmi:total_amount",
+      "@type": "xsd:decimal"
+    },
+    "tax_amount": {
+      "@id": "nmi:tax_amount",
+      "@type": "xsd:decimal"
+    },
+    "tax_rate": {
+      "@id": "nmi:tax_rate",
+      "@type": "xsd:decimal"
+    },
+    "discount_amount": {
+      "@id": "nmi:discount_amount",
+      "@type": "xsd:decimal"
+    },
+    "discount_rate": {
+      "@id": "nmi:discount_rate",
+      "@type": "xsd:decimal"
+    },
+    "tax_type": {
+      "@id": "nmi:tax_type",
+      "@type": "xsd:string"
+    },
+    "alternate_tax_id": {
+      "@id": "nmi:alternate_tax_id",
+      "@type": "xsd:string"
+    },
+    "OrderDetailsRest": "nmi:OrderDetailsRest",
+    "template_id": {
+      "@id": "nmi:template_id",
+      "@type": "xsd:string"
+    },
+    "order_id": {
+      "@id": "nmi:order_id",
+      "@type": "xsd:string"
+    },
+    "customer_id": {
+      "@id": "nmi:customer_id",
+      "@type": "xsd:string"
+    },
+    "customer_tax_id": {
+      "@id": "nmi:customer_tax_id",
+      "@type": "xsd:string"
+    },
+    "tax": {
+      "@id": "nmi:tax",
+      "@type": "xsd:decimal"
+    },
+    "shipping": {
+      "@id": "nmi:shipping",
+      "@type": "xsd:decimal"
+    },
+    "po_number": {
+      "@id": "nmi:po_number",
+      "@type": "xsd:string"
+    },
+    "shipping_postal_code": {
+      "@id": "nmi:shipping_postal_code",
+      "@type": "xsd:string"
+    },
+    "ship_from_postal_code": {
+      "@id": "nmi:ship_from_postal_code",
+      "@type": "xsd:string"
+    },
+    "summary_commodity_code": {
+      "@id": "nmi:summary_commodity_code",
+      "@type": "xsd:string"
+    },
+    "duty_amount": {
+      "@id": "nmi:duty_amount",
+      "@type": "xsd:decimal"
+    },
+    "national_tax_amount": {
+      "@id": "nmi:national_tax_amount",
+      "@type": "xsd:decimal"
+    },
+    "alternate_tax_amount": {
+      "@id": "nmi:alternate_tax_amount",
+      "@type": "xsd:decimal"
+    },
+    "vat_tax_amount": {
+      "@id": "nmi:vat_tax_amount",
+      "@type": "xsd:decimal"
+    },
+    "vat_tax_rate": {
+      "@id": "nmi:vat_tax_rate",
+      "@type": "xsd:decimal"
+    },
+    "vat_invoice_reference_number": {
+      "@id": "nmi:vat_invoice_reference_number",
+      "@type": "xsd:string"
+    },
+    "customer_vat_registration": {
+      "@id": "nmi:customer_vat_registration",
+      "@type": "xsd:string"
+    },
+    "merchant_vat_registration": {
+      "@id": "nmi:merchant_vat_registration",
+      "@type": "xsd:string"
+    },
+    "order_date": {
+      "@id": "nmi:order_date",
+      "@type": "xsd:date"
+    },
+    "order_description": {
+      "@id": "nmi:order_description",
+      "@type": "xsd:string"
+    },
+    "ip_address": {
+      "@id": "nmi:ip_address",
+      "@type": "xsd:string"
+    },
+    "line_items": {
+      "@id": "nmi:line_items",
+      "@container": "@list"
+    },
+    "PaymentFacilitator": "nmi:PaymentFacilitator",
+    "submerchant_id": {
+      "@id": "nmi:submerchant_id",
+      "@type": "xsd:string"
+    },
+    "submerchant_name": {
+      "@id": "nmi:submerchant_name",
+      "@type": "xsd:string"
+    },
+    "submerchant_address": {
+      "@id": "nmi:submerchant_address",
+      "@type": "xsd:string"
+    },
+    "submerchant_city": {
+      "@id": "nmi:submerchant_city",
+      "@type": "xsd:string"
+    },
+    "submerchant_state": {
+      "@id": "nmi:submerchant_state",
+      "@type": "xsd:string"
+    },
+    "submerchant_postal": {
+      "@id": "nmi:submerchant_postal",
+      "@type": "xsd:string"
+    },
+    "submerchant_country": {
+      "@id": "nmi:submerchant_country",
+      "@type": "xsd:string"
+    },
+    "submerchant_phone": {
+      "@id": "nmi:submerchant_phone",
+      "@type": "xsd:string"
+    },
+    "submerchant_email": {
+      "@id": "nmi:submerchant_email",
+      "@type": "xsd:string"
+    },
+    "PaymentDescriptor": "nmi:PaymentDescriptor",
+    "descriptor": {
+      "@id": "nmi:descriptor",
+      "@type": "xsd:string"
+    },
+    "address": {
+      "@id": "nmi:address",
+      "@type": "xsd:string"
+    },
+    "postal_code": {
+      "@id": "nmi:postal_code",
+      "@type": "xsd:string"
+    },
+    "mcc": {
+      "@id": "nmi:mcc",
+      "@type": "xsd:string"
+    },
+    "merchant_id": {
+      "@id": "nmi:merchant_id",
+      "@type": "xsd:string"
+    },
+    "url": {
+      "@id": "nmi:url",
+      "@type": "@id"
+    },
+    "CitMit": "nmi:CitMit",
+    "initiated_by": {
+      "@id": "nmi:initiated_by",
+      "@type": "xsd:string"
+    },
+    "initial_transaction_id": {
+      "@id": "nmi:initial_transaction_id",
+      "@type": "xsd:string"
+    },
+    "stored_credential_indicator": {
+      "@id": "nmi:stored_credential_indicator",
+      "@type": "xsd:string"
+    },
+    "PaymentSaleBase": "nmi:PaymentSaleBase",
+    "surcharge": {
+      "@id": "nmi:surcharge",
+      "@type": "xsd:decimal"
+    },
+    "convenience_fee": {
+      "@id": "nmi:convenience_fee",
+      "@type": "xsd:decimal"
+    },
+    "misc_fee": {
+      "@id": "nmi:misc_fee",
+      "@type": "xsd:decimal"
+    },
+    "misc_fee_name": {
+      "@id": "nmi:misc_fee_name",
+      "@type": "xsd:string"
+    },
+    "tip": {
+      "@id": "nmi:tip",
+      "@type": "xsd:decimal"
+    },
+    "dup_seconds": {
+      "@id": "nmi:dup_seconds",
+      "@type": "xsd:integer"
+    },
+    "transaction_session_id": {
+      "@id": "nmi:transaction_session_id",
+      "@type": "xsd:string"
+    },
+    "customer_receipt": {
+      "@id": "nmi:customer_receipt",
+      "@type": "xsd:boolean"
+    },
+    "pinless_debit_override": {
+      "@id": "nmi:pinless_debit_override",
+      "@type": "xsd:boolean"
+    },
+    "industry": {
+      "@id": "nmi:industry",
+      "@type": "xsd:string"
+    },
+    "network_tokenize": {
+      "@id": "nmi:network_tokenize",
+      "@type": "xsd:boolean"
+    },
+    "partial_payments": {
+      "@id": "nmi:partial_payments",
+      "@type": "xsd:string"
+    },
+    "partial_payment_id": {
+      "@id": "nmi:partial_payment_id",
+      "@type": "xsd:string"
+    },
+    "payment_facilitator": {
+      "@id": "nmi:payment_facilitator",
+      "@type": "@id"
+    },
+    "payment_descriptor": {
+      "@id": "nmi:payment_descriptor",
+      "@type": "@id"
+    },
+    "cit_mit": {
+      "@id": "nmi:cit_mit",
+      "@type": "@id"
+    },
+    "CustomerVaultAdd": "nmi:CustomerVaultAdd",
+    "add_to_vault": {
+      "@id": "nmi:add_to_vault",
+      "@type": "xsd:boolean"
+    },
+    "CustomerVaultCharge": "nmi:CustomerVaultCharge",
+    "billing_id": {
+      "@id": "nmi:billing_id",
+      "@type": "xsd:string"
+    },
+    "shipping_id": {
+      "@id": "nmi:shipping_id",
+      "@type": "xsd:string"
+    },
+    "ValidationErrorDetail": "nmi:ValidationErrorDetail",
+    "fieldName": {
+      "@id": "nmi:fieldName",
+      "@type": "xsd:string"
+    },
+    "message": {
+      "@id": "nmi:message",
+      "@type": "xsd:string"
+    },
+    "ErrorResponse": "nmi:ErrorResponse",
+    "error_code": {
+      "@id": "nmi:error_code",
+      "@type": "xsd:string"
+    },
+    "ref_id": {
+      "@id": "nmi:ref_id",
+      "@type": "xsd:string"
+    },
+    "details": {
+      "@id": "nmi:details",
+      "@container": "@list"
+    },
+    "Merchant": "nmi:Merchant",
+    "name": {
+      "@id": "nmi:name",
+      "@type": "xsd:string"
+    },
+    "Features": "nmi:Features",
+    "is_test_mode": {
+      "@id": "nmi:is_test_mode",
+      "@type": "xsd:boolean"
+    },
+    "BillingAddress": "nmi:BillingAddress",
+    "address_1": {
+      "@id": "nmi:address_1",
+      "@type": "xsd:string"
+    },
+    "address_2": {
+      "@id": "nmi:address_2",
+      "@type": "xsd:string"
+    },
+    "ShippingAddress": "nmi:ShippingAddress",
+    "CardDetails": "nmi:CardDetails",
+    "cc_number": {
+      "@id": "nmi:cc_number",
+      "@type": "xsd:string"
+    },
+    "cc_exp": {
+      "@id": "nmi:cc_exp",
+      "@type": "xsd:string"
+    },
+    "cavv": {
+      "@id": "nmi:cavv",
+      "@type": "xsd:string"
+    },
+    "cavv_result": {
+      "@id": "nmi:cavv_result",
+      "@type": "xsd:string"
+    },
+    "xid": {
+      "@id": "nmi:xid",
+      "@type": "xsd:string"
+    },
+    "eci": {
+      "@id": "nmi:eci",
+      "@type": "xsd:string"
+    },
+    "csc_response": {
+      "@id": "nmi:csc_response",
+      "@type": "xsd:string"
+    },
+    "cc_start_date": {
+      "@id": "nmi:cc_start_date",
+      "@type": "xsd:string"
+    },
+    "cc_issue_number": {
+      "@id": "nmi:cc_issue_number",
+      "@type": "xsd:string"
+    },
+    "card_balance": {
+      "@id": "nmi:card_balance",
+      "@type": "xsd:string"
+    },
+    "card_available_balance": {
+      "@id": "nmi:card_available_balance",
+      "@type": "xsd:string"
+    },
+    "cc_bin": {
+      "@id": "nmi:cc_bin",
+      "@type": "xsd:string"
+    },
+    "cc_type": {
+      "@id": "nmi:cc_type",
+      "@type": "xsd:string"
+    },
+    "feature_token": {
+      "@id": "nmi:feature_token",
+      "@type": "xsd:string"
+    },
+    "ACHAccountHolderType": "nmi:ACHAccountHolderType",
+    "ACHAccountType": "nmi:ACHAccountType",
+    "ACHSecCode": "nmi:ACHSecCode",
+    "CheckDetails": "nmi:CheckDetails",
+    "check_account": {
+      "@id": "nmi:check_account",
+      "@type": "xsd:string"
+    },
+    "check_aba": {
+      "@id": "nmi:check_aba",
+      "@type": "xsd:string"
+    },
+    "check_name": {
+      "@id": "nmi:check_name",
+      "@type": "xsd:string"
+    },
+    "account_holder_type": {
+      "@id": "nmi:account_holder_type",
+      "@type": "@id"
+    },
+    "account_type": {
+      "@id": "nmi:account_type",
+      "@type": "@id"
+    },
+    "sec_code": {
+      "@id": "nmi:sec_code",
+      "@type": "@id"
+    },
+    "EmvMetaData": "nmi:EmvMetaData",
+    "application_id": {
+      "@id": "nmi:application_id",
+      "@type": "xsd:string"
+    },
+    "application_label": {
+      "@id": "nmi:application_label",
+      "@type": "xsd:string"
+    },
+    "application_preferred_name": {
+      "@id": "nmi:application_preferred_name",
+      "@type": "xsd:string"
+    },
+    "transaction_status_info": {
+      "@id": "nmi:transaction_status_info",
+      "@type": "xsd:string"
+    },
+    "application_pan_sequence_number": {
+      "@id": "nmi:application_pan_sequence_number",
+      "@type": "xsd:string"
+    },
+    "customer_verification_method": {
+      "@id": "nmi:customer_verification_method",
+      "@type": "xsd:string"
+    },
+    "TransactionAction": "nmi:TransactionAction",
+    "action_type": {
+      "@id": "nmi:action_type",
+      "@type": "xsd:string"
+    },
+    "date": {
+      "@id": "nmi:date",
+      "@type": "xsd:dateTime"
+    },
+    "success": {
+      "@id": "nmi:success",
+      "@type": "xsd:string"
+    },
+    "source": {
+      "@id": "nmi:source",
+      "@type": "xsd:string"
+    },
+    "api_method": {
+      "@id": "nmi:api_method",
+      "@type": "xsd:string"
+    },
+    "username": {
+      "@id": "nmi:username",
+      "@type": "xsd:string"
+    },
+    "processor_response_text": {
+      "@id": "nmi:processor_response_text",
+      "@type": "xsd:string"
+    },
+    "processor_response_code": {
+      "@id": "nmi:processor_response_code",
+      "@type": "xsd:string"
+    },
+    "tap_to_mobile": {
+      "@id": "nmi:tap_to_mobile",
+      "@type": "xsd:boolean"
+    },
+    "device_license_number": {
+      "@id": "nmi:device_license_number",
+      "@type": "xsd:string"
+    },
+    "device_nickname": {
+      "@id": "nmi:device_nickname",
+      "@type": "xsd:string"
+    },
+    "RecurringCardDetails": "nmi:RecurringCardDetails",
+    "RecurringEventBody": "nmi:RecurringEventBody",
+    "merchant": {
+      "@id": "nmi:merchant",
+      "@type": "@id"
+    },
+    "features": {
+      "@id": "nmi:features",
+      "@type": "@id"
+    },
+    "subscription_id": {
+      "@id": "nmi:subscription_id",
+      "@type": "xsd:string"
+    },
+    "subscription_type": {
+      "@id": "nmi:subscription_type",
+      "@type": "xsd:string"
+    },
+    "next_charge_date": {
+      "@id": "nmi:next_charge_date",
+      "@type": "xsd:date"
+    },
+    "completed_payments": {
+      "@id": "nmi:completed_payments",
+      "@type": "xsd:string"
+    },
+    "attempted_payments": {
+      "@id": "nmi:attempted_payments",
+      "@type": "xsd:string"
+    },
+    "remaining_payments": {
+      "@id": "nmi:remaining_payments",
+      "@type": "xsd:string"
+    },
+    "ponumber": {
+      "@id": "nmi:ponumber",
+      "@type": "xsd:string"
+    },
+    "plan": {
+      "@id": "nmi:plan"
+    },
+    "card": {
+      "@id": "nmi:card",
+      "@type": "@id"
+    },
+    "check": {
+      "@id": "nmi:check",
+      "@type": "@id"
+    },
+    "TransactionSummary": "nmi:TransactionSummary",
+    "count": {
+      "@id": "nmi:count",
+      "@type": "xsd:integer"
+    },
+    "SettlementEventBody": "nmi:SettlementEventBody",
+    "batch_id": {
+      "@id": "nmi:batch_id",
+      "@type": "xsd:string"
+    },
+    "processor": {
+      "@id": "nmi:processor"
+    },
+    "transaction_ids": {
+      "@id": "nmi:transaction_ids",
+      "@container": "@list"
+    },
+    "by_card_type": {
+      "@id": "nmi:by_card_type"
+    },
+    "AcuCustomerVaultDetails": "nmi:AcuCustomerVaultDetails",
+    "AcuSubscriptionDetails": "nmi:AcuSubscriptionDetails",
+    "AcuAutoUpdatedEventBody": "nmi:AcuAutoUpdatedEventBody",
+    "cards_checked": {
+      "@id": "nmi:cards_checked"
+    },
+    "vault_count_updated_cards": {
+      "@id": "nmi:vault_count_updated_cards",
+      "@type": "xsd:integer"
+    },
+    "vault_updated_cards": {
+      "@id": "nmi:vault_updated_cards",
+      "@container": "@list"
+    },
+    "vault_count_updated_expiration_dates": {
+      "@id": "nmi:vault_count_updated_expiration_dates",
+      "@type": "xsd:integer"
+    },
+    "vault_updated_expiration_dates": {
+      "@id": "nmi:vault_updated_expiration_dates",
+      "@container": "@list"
+    },
+    "recurring_count_updated_cards": {
+      "@id": "nmi:recurring_count_updated_cards",
+      "@type": "xsd:integer"
+    },
+    "recurring_updated_cards": {
+      "@id": "nmi:recurring_updated_cards",
+      "@container": "@list"
+    },
+    "recurring_count_updated_expiration_dates": {
+      "@id": "nmi:recurring_count_updated_expiration_dates",
+      "@type": "xsd:integer"
+    },
+    "recurring_updated_expiration_dates": {
+      "@id": "nmi:recurring_updated_expiration_dates",
+      "@container": "@list"
+    },
+    "AcuClosedAccountEventBody": "nmi:AcuClosedAccountEventBody",
+    "vault_count_updated_closed_account": {
+      "@id": "nmi:vault_count_updated_closed_account",
+      "@type": "xsd:integer"
+    },
+    "vault_updates": {
+      "@id": "nmi:vault_updates",
+      "@container": "@list"
+    },
+    "recurring_count_updated_closed_account": {
+      "@id": "nmi:recurring_count_updated_closed_account",
+      "@type": "xsd:integer"
+    },
+    "recurring_updates": {
+      "@id": "nmi:recurring_updates",
+      "@container": "@list"
+    },
+    "AcuContactCustomerEventBody": "nmi:AcuContactCustomerEventBody",
+    "vault_count_updated_contact_customer": {
+      "@id": "nmi:vault_count_updated_contact_customer",
+      "@type": "xsd:integer"
+    },
+    "recurring_count_updated_contact_customer": {
+      "@id": "nmi:recurring_count_updated_contact_customer",
+      "@type": "xsd:integer"
+    },
+    "PaymentCaptureRequest": "nmi:PaymentCaptureRequest",
+    "tracking_number": {
+      "@id": "nmi:tracking_number",
+      "@type": "xsd:string"
+    },
+    "PaymentVoidRequest": "nmi:PaymentVoidRequest",
+    "void_reason": {
+      "@id": "nmi:void_reason",
+      "@type": "xsd:string"
+    },
+    "PaymentRefundRequest": "nmi:PaymentRefundRequest",
+    "payment": {
+      "@id": "nmi:payment",
+      "@type": "xsd:string"
+    },
+    "InvoiceResponse": "nmi:InvoiceResponse",
+    "subtotal": {
+      "@id": "nmi:subtotal",
+      "@type": "xsd:decimal"
+    },
+    "payment_terms": {
+      "@id": "nmi:payment_terms",
+      "@type": "xsd:string"
+    },
+    "payment_methods_allowed": {
+      "@id": "nmi:payment_methods_allowed",
+      "@container": "@list"
+    },
+    "CreateInvoiceRequest": "nmi:CreateInvoiceRequest",
+    "UpdateInvoiceRequest": "nmi:UpdateInvoiceRequest",
+    "PlanCreateRequest": "nmi:PlanCreateRequest",
+    "plan_amount": {
+      "@id": "nmi:plan_amount",
+      "@type": "xsd:decimal"
+    },
+    "plan_payments": {
+      "@id": "nmi:plan_payments",
+      "@type": "xsd:integer"
+    },
+    "plan_name": {
+      "@id": "nmi:plan_name",
+      "@type": "xsd:string"
+    },
+    "SubscriptionResponse": "nmi:SubscriptionResponse",
+    "start_date": {
+      "@id": "nmi:start_date",
+      "@type": "xsd:dateTime"
+    },
+    "next_billing_date": {
+      "@id": "nmi:next_billing_date",
+      "@type": "xsd:dateTime"
+    },
+    "delayed_condition": {
+      "@id": "nmi:delayed_condition",
+      "@type": "xsd:string"
+    },
+    "paused_subscription": {
+      "@id": "nmi:paused_subscription",
+      "@type": "xsd:integer"
+    },
+    "SubscriptionUpdateRequest": "nmi:SubscriptionUpdateRequest",
+    "day_frequency": {
+      "@id": "nmi:day_frequency",
+      "@type": "xsd:integer"
+    },
+    "month_frequency": {
+      "@id": "nmi:month_frequency",
+      "@type": "xsd:integer"
+    },
+    "day_of_month": {
+      "@id": "nmi:day_of_month",
+      "@type": "xsd:integer"
+    },
+    "customer_vault": {
+      "@id": "nmi:customer_vault",
+      "@type": "@id"
+    },
+    "PlanResponse": "nmi:PlanResponse",
+    "CustomerResponse": "nmi:CustomerResponse",
+    "created": {
+      "@id": "nmi:created",
+      "@type": "xsd:dateTime"
+    },
+    "billing": {
+      "@id": "nmi:billing",
+      "@container": "@list"
+    },
+    "CreateCustomerBilling": "nmi:CreateCustomerBilling",
+    "priority": {
+      "@id": "nmi:priority",
+      "@type": "xsd:integer"
+    },
+    "CreateCustomerRequest": "nmi:CreateCustomerRequest",
+    "UpdateCustomerRequest": "nmi:UpdateCustomerRequest",
+    "BillingAddressResponse": "nmi:BillingAddressResponse",
+    "UpdateCustomerVaultBillingRequest": "nmi:UpdateCustomerVaultBillingRequest",
+    "ProductResponseV5": "nmi:ProductResponseV5",
+    "product_sku": {
+      "@id": "nmi:product_sku",
+      "@type": "xsd:string"
+    },
+    "product_description": {
+      "@id": "nmi:product_description",
+      "@type": "xsd:string"
+    },
+    "product_category": {
+      "@id": "nmi:product_category",
+      "@type": "xsd:string"
+    },
+    "product_commodity_code": {
+      "@id": "nmi:product_commodity_code",
+      "@type": "xsd:string"
+    },
+    "product_unit_of_measure": {
+      "@id": "nmi:product_unit_of_measure",
+      "@type": "xsd:string"
+    },
+    "product_cost": {
+      "@id": "nmi:product_cost",
+      "@type": "xsd:string"
+    },
+    "product_currency": {
+      "@id": "nmi:product_currency",
+      "@type": "xsd:string"
+    },
+    "product_tax_amount": {
+      "@id": "nmi:product_tax_amount",
+      "@type": "xsd:string"
+    },
+    "product_discount_amount": {
+      "@id": "nmi:product_discount_amount",
+      "@type": "xsd:string"
+    },
+    "product_image_name": {
+      "@id": "nmi:product_image_name",
+      "@type": "xsd:string"
+    },
+    "product_image_url": {
+      "@id": "nmi:product_image_url",
+      "@type": "xsd:string"
+    },
+    "ProductCreateRequest": "nmi:ProductCreateRequest",
+    "product_image_data": {
+      "@id": "nmi:product_image_data",
+      "@type": "xsd:string"
+    },
+    "ProductUpdateRequest": "nmi:ProductUpdateRequest",
+    "DeviceResponse": "nmi:DeviceResponse",
+    "make": {
+      "@id": "nmi:make",
+      "@type": "xsd:string"
+    },
+    "model": {
+      "@id": "nmi:model",
+      "@type": "xsd:string"
+    },
+    "serial_number": {
+      "@id": "nmi:serial_number",
+      "@type": "xsd:string"
+    },
+    "registration_status": {
+      "@id": "nmi:registration_status",
+      "@type": "xsd:string"
+    },
+    "last_transaction_date": {
+      "@id": "nmi:last_transaction_date",
+      "@type": "xsd:dateTime"
+    },
+    "date_registered": {
+      "@id": "nmi:date_registered",
+      "@type": "xsd:dateTime"
+    },
+    "date_deregistered": {
+      "@id": "nmi:date_deregistered",
+      "@type": "xsd:dateTime"
+    },
+    "connection_status": {
+      "@id": "nmi:connection_status",
+      "@type": "xsd:boolean"
+    },
+    "last_connected_date": {
+      "@id": "nmi:last_connected_date",
+      "@type": "xsd:dateTime"
+    },
+    "last_disconnected_date": {
+      "@id": "nmi:last_disconnected_date",
+      "@type": "xsd:dateTime"
+    },
+    "battery_info": {
+      "@id": "nmi:battery_info"
+    },
+    "wifi_info": {
+      "@id": "nmi:wifi_info"
+    },
+    "DeviceListResponse": "nmi:DeviceListResponse",
+    "devices": {
+      "@id": "nmi:devices",
+      "@container": "@list"
+    },
+    "total_count": {
+      "@id": "nmi:total_count",
+      "@type": "xsd:integer"
+    },
+    "limit": {
+      "@id": "nmi:limit",
+      "@type": "xsd:integer"
+    },
+    "offset": {
+      "@id": "nmi:offset",
+      "@type": "xsd:integer"
+    },
+    "has_more": {
+      "@id": "nmi:has_more",
+      "@type": "xsd:boolean"
+    },
+    "RegisterDeviceRequest": "nmi:RegisterDeviceRequest",
+    "registration_code": {
+      "@id": "nmi:registration_code",
+      "@type": "xsd:string"
+    },
+    "nickname": {
+      "@id": "nmi:nickname",
+      "@type": "xsd:string"
+    },
+    "default": {
+      "@id": "nmi:default",
+      "@type": "xsd:boolean"
+    },
+    "UpdateDeviceRequest": "nmi:UpdateDeviceRequest",
+    "PromptRequestStatusResponse": "nmi:PromptRequestStatusResponse",
+    "result": {
+      "@id": "nmi:result",
+      "@type": "xsd:string"
+    },
+    "signature": {
+      "@id": "nmi:signature",
+      "@type": "xsd:string"
+    },
+    "signature_format": {
+      "@id": "nmi:signature_format",
+      "@type": "xsd:string"
+    },
+    "PoiDevicePromptFields": "nmi:PoiDevicePromptFields",
+    "poi_prompt_tip": {
+      "@id": "nmi:poi_prompt_tip",
+      "@type": "xsd:string"
+    },
+    "poi_prompt_quicktip_amounts": {
+      "@id": "nmi:poi_prompt_quicktip_amounts",
+      "@type": "xsd:string"
+    },
+    "poi_prompt_quicktip_percentages": {
+      "@id": "nmi:poi_prompt_quicktip_percentages",
+      "@type": "xsd:string"
+    },
+    "poi_enable_keyed": {
+      "@id": "nmi:poi_enable_keyed",
+      "@type": "xsd:string"
+    },
+    "poi_require_keyed": {
+      "@id": "nmi:poi_require_keyed",
+      "@type": "xsd:string"
+    },
+    "poi_keyed_type": {
+      "@id": "nmi:poi_keyed_type",
+      "@type": "xsd:string"
+    },
+    "poi_prompt_cvv": {
+      "@id": "nmi:poi_prompt_cvv",
+      "@type": "xsd:string"
+    },
+    "poi_prompt_zip": {
+      "@id": "nmi:poi_prompt_zip",
+      "@type": "xsd:string"
+    },
+    "poi_prompt_signature": {
+      "@id": "nmi:poi_prompt_signature",
+      "@type": "xsd:string"
+    },
+    "poi_prompt_amount_confirmation": {
+      "@id": "nmi:poi_prompt_amount_confirmation",
+      "@type": "xsd:string"
+    },
+    "poi_automatic_fall_forward": {
+      "@id": "nmi:poi_automatic_fall_forward",
+      "@type": "xsd:string"
+    },
+    "poi_enable_void": {
+      "@id": "nmi:poi_enable_void",
+      "@type": "xsd:string"
+    },
+    "PaymentRequestStatusResponse": "nmi:PaymentRequestStatusResponse",
+    "transaction": {
+      "@id": "nmi:transaction"
+    },
+    "error": {
+      "@id": "nmi:error"
+    },
+    "PaymentRequestCancellationResponse": "nmi:PaymentRequestCancellationResponse",
+    "GetSubAffiliatesListResponse": "nmi:GetSubAffiliatesListResponse",
+    "objectType": {
+      "@id": "nmi:objectType",
+      "@type": "xsd:string"
+    },
+    "reportId": {
+      "@id": "nmi:reportId",
+      "@type": "xsd:integer"
+    },
+    "maxResults": {
+      "@id": "nmi:maxResults",
+      "@type": "xsd:integer"
+    },
+    "totalResults": {
+      "@id": "nmi:totalResults",
+      "@type": "xsd:integer"
+    },
+    "hasMore": {
+      "@id": "nmi:hasMore",
+      "@type": "xsd:boolean"
+    },
+    "links": {
+      "@id": "nmi:links"
+    },
+    "results": {
+      "@id": "nmi:results",
+      "@container": "@list"
+    },
+    "CreateMerchantResponse": "nmi:CreateMerchantResponse",
+    "updated": {
+      "@id": "nmi:updated",
+      "@type": "xsd:string"
+    },
+    "firstName": {
+      "@id": "nmi:firstName",
+      "@type": "xsd:string"
+    },
+    "lastName": {
+      "@id": "nmi:lastName",
+      "@type": "xsd:string"
+    },
+    "timezone": {
+      "@id": "nmi:timezone",
+      "@type": "xsd:string"
+    },
+    "costPlan": {
+      "@id": "nmi:costPlan",
+      "@type": "xsd:string"
+    },
+    "externalIdentifier": {
+      "@id": "nmi:externalIdentifier",
+      "@type": "xsd:string"
+    },
+    "lastTransactionDate": {
+      "@id": "nmi:lastTransactionDate",
+      "@type": "xsd:string"
+    },
+    "parentAffiliateId": {
+      "@id": "nmi:parentAffiliateId",
+      "@type": "xsd:string"
+    },
+    "accountInfo": {
+      "@id": "nmi:accountInfo"
+    },
+    "needsPendingServicesActivated": {
+      "@id": "nmi:needsPendingServicesActivated",
+      "@type": "xsd:string"
+    },
+    "payFacBillingPeriod": {
+      "@id": "nmi:payFacBillingPeriod",
+      "@type": "xsd:string"
+    },
+    "rejectedCertificates": {
+      "@id": "nmi:rejectedCertificates",
+      "@type": "xsd:string"
+    },
+    "AssignFeeScheduleToMerchantResponse": "nmi:AssignFeeScheduleToMerchantResponse",
+    "GetSpecificMerchantInformationResponse": "nmi:GetSpecificMerchantInformationResponse",
+    "GetMerchantListResponse": "nmi:GetMerchantListResponse",
+    "GetSettlementTimeResponse": "nmi:GetSettlementTimeResponse",
+    "processorType": {
+      "@id": "nmi:processorType",
+      "@type": "xsd:string"
+    },
+    "processorId": {
+      "@id": "nmi:processorId",
+      "@type": "xsd:string"
+    },
+    "processorName": {
+      "@id": "nmi:processorName",
+      "@type": "xsd:string"
+    },
+    "serviceId": {
+      "@id": "nmi:serviceId",
+      "@type": "xsd:string"
+    },
+    "merchantId": {
+      "@id": "nmi:merchantId",
+      "@type": "xsd:string"
+    },
+    "accountClassification": {
+      "@id": "nmi:accountClassification",
+      "@type": "xsd:string"
+    },
+    "maxTicketAmount": {
+      "@id": "nmi:maxTicketAmount",
+      "@type": "xsd:string"
+    },
+    "maxMonthlyVolume": {
+      "@id": "nmi:maxMonthlyVolume",
+      "@type": "xsd:string"
+    },
+    "applyToAllCardType": {
+      "@id": "nmi:applyToAllCardType",
+      "@type": "xsd:boolean"
+    },
+    "enableDuplicateChecking": {
+      "@id": "nmi:enableDuplicateChecking",
+      "@type": "xsd:boolean"
+    },
+    "allowMerchantOverride": {
+      "@id": "nmi:allowMerchantOverride",
+      "@type": "xsd:boolean"
+    },
+    "duplicateTime": {
+      "@id": "nmi:duplicateTime",
+      "@type": "xsd:string"
+    },
+    "condition": {
+      "@id": "nmi:condition",
+      "@type": "xsd:string"
+    },
+    "extraDetails": {
+      "@id": "nmi:extraDetails"
+    },
+    "freeTrialEndDate": {
+      "@id": "nmi:freeTrialEndDate",
+      "@type": "xsd:string"
+    },
+    "freeTrialDaysLeft": {
+      "@id": "nmi:freeTrialDaysLeft",
+      "@type": "xsd:string"
+    },
+    "hasBeenActive": {
+      "@id": "nmi:hasBeenActive",
+      "@type": "xsd:boolean"
+    },
+    "supportsReroutedRefunds": {
+      "@id": "nmi:supportsReroutedRefunds",
+      "@type": "xsd:boolean"
+    },
+    "shouldDisableFields": {
+      "@id": "nmi:shouldDisableFields",
+      "@type": "xsd:boolean"
+    },
+    "disabled": {
+      "@id": "nmi:disabled",
+      "@type": "xsd:boolean"
+    },
+    "refundProcessor": {
+      "@id": "nmi:refundProcessor",
+      "@type": "xsd:string"
+    },
+    "avsCvvPreCheck": {
+      "@id": "nmi:avsCvvPreCheck",
+      "@type": "xsd:string"
+    },
+    "skipAvsCvv": {
+      "@id": "nmi:skipAvsCvv",
+      "@type": "xsd:boolean"
+    },
+    "processorFields": {
+      "@id": "nmi:processorFields"
+    },
+    "paymentTypes": {
+      "@id": "nmi:paymentTypes",
+      "@container": "@list"
+    },
+    "currencies": {
+      "@id": "nmi:currencies",
+      "@container": "@list"
+    },
+    "requiredFields": {
+      "@id": "nmi:requiredFields"
+    },
+    "faceConfiguration": {
+      "@id": "nmi:faceConfiguration"
+    },
+    "disabledFields": {
+      "@id": "nmi:disabledFields"
+    },
+    "settlementTime": {
+      "@id": "nmi:settlementTime",
+      "@type": "xsd:string"
+    },
+    "settlementTimezone": {
+      "@id": "nmi:settlementTimezone",
+      "@type": "xsd:string"
+    },
+    "UpdatingSettlementTimeResponse": "nmi:UpdatingSettlementTimeResponse",
+    "billingType": {
+      "@id": "nmi:billingType",
+      "@type": "xsd:string"
+    },
+    "PullAllFeeSchedulesResponse": "nmi:PullAllFeeSchedulesResponse",
+    "AddProcessorServiceResponse": "nmi:AddProcessorServiceResponse",
+    "GetMerchantProcessorsAndValueAddedServicesDetailsResponse": "nmi:GetMerchantProcessorsAndValueAddedServicesDetailsResponse",
+    "GetProcessorConfigResponse": "nmi:GetProcessorConfigResponse",
+    "allowedCurrencies": {
+      "@id": "nmi:allowedCurrencies",
+      "@container": "@list"
+    },
+    "allowedClassifications": {
+      "@id": "nmi:allowedClassifications",
+      "@container": "@list"
+    },
+    "defaultCurrency": {
+      "@id": "nmi:defaultCurrency",
+      "@type": "xsd:string"
+    },
+    "singleCurrencyMode": {
+      "@id": "nmi:singleCurrencyMode",
+      "@type": "xsd:boolean"
+    },
+    "shouldShowMccField": {
+      "@id": "nmi:shouldShowMccField",
+      "@type": "xsd:boolean"
+    },
+    "level3Support": {
+      "@id": "nmi:level3Support",
+      "@type": "xsd:boolean"
+    },
+    "checkVerification": {
+      "@id": "nmi:checkVerification",
+      "@type": "xsd:boolean"
+    },
+    "avsCvvPreCheckSupport": {
+      "@id": "nmi:avsCvvPreCheckSupport",
+      "@type": "xsd:boolean"
+    },
+    "skipAvsCvvSupport": {
+      "@id": "nmi:skipAvsCvvSupport",
+      "@type": "xsd:boolean"
+    },
+    "canBeOffered": {
+      "@id": "nmi:canBeOffered",
+      "@type": "xsd:boolean"
+    },
+    "QueryResponse": "nmi:QueryResponse",
+    "nm_response": {
+      "@id": "nmi:nm_response"
+    },
+    "QueryCustomerVaultResponse": "nmi:QueryCustomerVaultResponse",
+    "QueryRecurringResponse": "nmi:QueryRecurringResponse",
+    "QueryRecurringPlanResponse": "nmi:QueryRecurringPlanResponse",
+    "QueryInvoicingResponse": "nmi:QueryInvoicingResponse",
+    "QueryGatewayProcessorResponse": "nmi:QueryGatewayProcessorResponse",
+    "QueryProfileWithProcessorDetailsResponse": "nmi:QueryProfileWithProcessorDetailsResponse",
+    "GetTransactionDataResponse": "nmi:GetTransactionDataResponse",
+    "SeeMerchantBillingResponse": "nmi:SeeMerchantBillingResponse",
+    "SeeYourCommissionResponse": "nmi:SeeYourCommissionResponse",
+    "CheckUsernameAvailabilityResponse": "nmi:CheckUsernameAvailabilityResponse",
+    "available": {
+      "@id": "nmi:available",
+      "@type": "xsd:boolean"
+    },
+    "CreateMerchantKeysResponse": "nmi:CreateMerchantKeysResponse",
+    "keyText": {
+      "@id": "nmi:keyText",
+      "@type": "xsd:string"
+    },
+    "userId": {
+      "@id": "nmi:userId",
+      "@type": "xsd:string"
+    },
+    "permissions": {
+      "@id": "nmi:permissions",
+      "@container": "@list"
+    },
+    "PartialPaymentInfo": "nmi:PartialPaymentInfo",
+    "CreditCard": "nmi:CreditCard",
+    "ccnumber": {
+      "@id": "nmi:ccnumber",
+      "@type": "xsd:string"
+    },
+    "ccexp": {
+      "@id": "nmi:ccexp",
+      "@type": "xsd:string"
+    },
+    "Amount": "nmi:Amount",
+    "Descriptor": "nmi:Descriptor",
+    "descriptor_phone": {
+      "@id": "nmi:descriptor_phone",
+      "@type": "xsd:string"
+    },
+    "descriptor_address": {
+      "@id": "nmi:descriptor_address",
+      "@type": "xsd:string"
+    },
+    "descriptor_city": {
+      "@id": "nmi:descriptor_city",
+      "@type": "xsd:string"
+    },
+    "descriptor_state": {
+      "@id": "nmi:descriptor_state",
+      "@type": "xsd:string"
+    },
+    "descriptor_postal": {
+      "@id": "nmi:descriptor_postal",
+      "@type": "xsd:string"
+    },
+    "descriptor_country": {
+      "@id": "nmi:descriptor_country",
+      "@type": "xsd:string"
+    },
+    "descriptor_mcc": {
+      "@id": "nmi:descriptor_mcc",
+      "@type": "xsd:string"
+    },
+    "descriptor_merchant_id": {
+      "@id": "nmi:descriptor_merchant_id",
+      "@type": "xsd:string"
+    },
+    "descriptor_url": {
+      "@id": "nmi:descriptor_url",
+      "@type": "xsd:string"
+    },
+    "DriversLicense": "nmi:DriversLicense",
+    "Shipping": "nmi:Shipping",
+    "shipping_firstname": {
+      "@id": "nmi:shipping_firstname",
+      "@type": "xsd:string"
+    },
+    "shipping_lastname": {
+      "@id": "nmi:shipping_lastname",
+      "@type": "xsd:string"
+    },
+    "shipping_company": {
+      "@id": "nmi:shipping_company",
+      "@type": "xsd:string"
+    },
+    "shipping_address1": {
+      "@id": "nmi:shipping_address1",
+      "@type": "xsd:string"
+    },
+    "shipping_address2": {
+      "@id": "nmi:shipping_address2",
+      "@type": "xsd:string"
+    },
+    "shipping_city": {
+      "@id": "nmi:shipping_city",
+      "@type": "xsd:string"
+    },
+    "shipping_state": {
+      "@id": "nmi:shipping_state",
+      "@type": "xsd:string"
+    },
+    "shipping_zip": {
+      "@id": "nmi:shipping_zip",
+      "@type": "xsd:string"
+    },
+    "shipping_country": {
+      "@id": "nmi:shipping_country",
+      "@type": "xsd:string"
+    },
+    "shipping_email": {
+      "@id": "nmi:shipping_email",
+      "@type": "xsd:string"
+    },
+    "MerchantDefinedField": "nmi:MerchantDefinedField",
+    "merchant_defined_field_1": {
+      "@id": "nmi:merchant_defined_field_1",
+      "@type": "xsd:string"
+    },
+    "CustomerVaultFields": "nmi:CustomerVaultFields",
+    "StoredCredentialsFields": "nmi:StoredCredentialsFields",
+    "LevelThreeOrderFields": "nmi:LevelThreeOrderFields",
+    "orderid": {
+      "@id": "nmi:orderid",
+      "@type": "xsd:string"
+    },
+    "shipping_postal": {
+      "@id": "nmi:shipping_postal",
+      "@type": "xsd:string"
+    },
+    "ship_from_postal": {
+      "@id": "nmi:ship_from_postal",
+      "@type": "xsd:string"
+    },
+    "LevelThreeLineItemDetailFields": "nmi:LevelThreeLineItemDetailFields",
+    "item_product_code_1": {
+      "@id": "nmi:item_product_code_1",
+      "@type": "xsd:string"
+    },
+    "item_description_1": {
+      "@id": "nmi:item_description_1",
+      "@type": "xsd:string"
+    },
+    "item_commodity_code_1": {
+      "@id": "nmi:item_commodity_code_1",
+      "@type": "xsd:string"
+    },
+    "item_unit_of_measure_1": {
+      "@id": "nmi:item_unit_of_measure_1",
+      "@type": "xsd:string"
+    },
+    "item_unit_cost_1": {
+      "@id": "nmi:item_unit_cost_1",
+      "@type": "xsd:decimal"
+    },
+    "item_quantity_1": {
+      "@id": "nmi:item_quantity_1",
+      "@type": "xsd:integer"
+    },
+    "item_total_amount_1": {
+      "@id": "nmi:item_total_amount_1",
+      "@type": "xsd:decimal"
+    },
+    "item_tax_amount_1": {
+      "@id": "nmi:item_tax_amount_1",
+      "@type": "xsd:decimal"
+    },
+    "item_tax_rate_1": {
+      "@id": "nmi:item_tax_rate_1",
+      "@type": "xsd:decimal"
+    },
+    "item_discount_amount_1": {
+      "@id": "nmi:item_discount_amount_1",
+      "@type": "xsd:decimal"
+    },
+    "item_discount_rate_1": {
+      "@id": "nmi:item_discount_rate_1",
+      "@type": "xsd:decimal"
+    },
+    "item_tax_type_1": {
+      "@id": "nmi:item_tax_type_1",
+      "@type": "xsd:string"
+    },
+    "item_alternate_tax_id_1": {
+      "@id": "nmi:item_alternate_tax_id_1",
+      "@type": "xsd:string"
+    },
+    "PaymentFacilitatorFields": "nmi:PaymentFacilitatorFields",
+    "payment_facilitator_id": {
+      "@id": "nmi:payment_facilitator_id",
+      "@type": "xsd:string"
+    },
+    "Industry": "nmi:Industry",
+    "SignatureImage": "nmi:SignatureImage",
+    "CustomerTokenVaultFields": "nmi:CustomerTokenVaultFields",
+    "RefundAmount": "nmi:RefundAmount",
+    "ACH": "nmi:ACH",
+    "checkname": {
+      "@id": "nmi:checkname",
+      "@type": "xsd:string"
+    },
+    "checkaba": {
+      "@id": "nmi:checkaba",
+      "@type": "xsd:string"
+    },
+    "checkaccount": {
+      "@id": "nmi:checkaccount",
+      "@type": "xsd:string"
+    },
+    "BaseUpdateTransaction": "nmi:BaseUpdateTransaction",
+    "transactionid": {
+      "@id": "nmi:transactionid",
+      "@type": "xsd:string"
+    },
+    "shipping_carrier": {
+      "@id": "nmi:shipping_carrier",
+      "@type": "xsd:string"
+    },
+    "shipping_date": {
+      "@id": "nmi:shipping_date",
+      "@type": "xsd:date"
+    },
+    "Tax": "nmi:Tax",
+    "Response": "nmi:Response",
+    "responsetext": {
+      "@id": "nmi:responsetext",
+      "@type": "xsd:string"
+    },
+    "authcode": {
+      "@id": "nmi:authcode",
+      "@type": "xsd:string"
+    },
+    "amount_authorized": {
+      "@id": "nmi:amount_authorized",
+      "@type": "xsd:string"
+    },
+    "invoice_id": {
+      "@id": "nmi:invoice_id",
+      "@type": "xsd:string"
+    },
+    "avsresponse": {
+      "@id": "nmi:avsresponse",
+      "@type": "xsd:string"
+    },
+    "cvvresponse": {
+      "@id": "nmi:cvvresponse",
+      "@type": "xsd:string"
+    },
+    "partial_payment_balance": {
+      "@id": "nmi:partial_payment_balance",
+      "@type": "xsd:string"
+    },
+    "platform_id": {
+      "@id": "nmi:platform_id",
+      "@type": "xsd:string"
+    },
+    "emv_auth_response_data": {
+      "@id": "nmi:emv_auth_response_data",
+      "@type": "xsd:string"
+    },
+    "kount_score": {
+      "@id": "nmi:kount_score",
+      "@type": "xsd:string"
+    },
+    "ProductInformation": "nmi:ProductInformation",
+    "RecurringFields": "nmi:RecurringFields",
+    "RecurringMonthlyFields": "nmi:RecurringMonthlyFields",
+    "RecurringDailyFields": "nmi:RecurringDailyFields",
+    "OrderDetails": "nmi:OrderDetails",
+    "BillingDetails": "nmi:BillingDetails"
+  },
+  "@type": "schema:Dataset",
+  "schema:name": "NMI API JSON-LD context",
+  "schema:description": "A JSON-LD @context for the objects NMI's own API contract declares: one class per component schema, one property per declared field, typed from the contract. Derived by script (derive-json-ld.py, 2026-10-14) from openapi/nmi-authvia-openapi.yml, openapi/nmi-ctv-onboarding-openapi.yml, openapi/nmi-embedded-components-api-openapi.yml.",
+  "dcterms:created": "2026-10-14",
+  "dcterms:source": [
+    "openapi/nmi-authvia-openapi.yml",
+    "openapi/nmi-ctv-onboarding-openapi.yml",
+    "openapi/nmi-embedded-components-api-openapi.yml",
+    "openapi/nmi-payments-api-openapi.yml",
+    "openapi/nmi-payments-openapi.yml"
+  ]
+}

@@ -1,0 +1,16 @@
+generated: '2026-10-14'
+method: none
+source:
+- https://zapier.com/apps/nmi/integrations
+- https://n8n.io/integrations/nmi/
+- https://composio.dev/toolkits/nmi
+- https://monid.ai/tools/nmi
+checked:
+- https://composio.dev/toolkits/nmi
+- https://monid.ai/tools/nmi
+- https://n8n.io/integrations/nmi/
+- https://zapier.com/apps/nmi/integrations
+summary: null
+marketplace_apps: []
+edges: []
+templates: []

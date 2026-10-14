@@ -1,0 +1,464 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/nmi/main/json-schema/nmi-get-merchant-processors-and-value-added-services-details-response-schema.json",
+  "title": "Report Response",
+  "x-generated": "2026-10-14",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/nmi-payments-api-openapi.yml#/components/schemas/GetMerchantProcessorsAndValueAddedServicesDetailsResponse",
+  "type": "object",
+  "properties": {
+    "objectType": {
+      "type": "string",
+      "enum": [
+        "report"
+      ],
+      "description": "The type of object that was returned as a result of the request."
+    },
+    "reportId": {
+      "type": "integer",
+      "description": "The report's ID."
+    },
+    "offset": {
+      "type": "integer",
+      "description": "The offset for paginated results."
+    },
+    "maxResults": {
+      "type": "integer",
+      "description": "The maximum number of results."
+    },
+    "totalResults": {
+      "type": "integer",
+      "description": "The total number of results."
+    },
+    "hasMore": {
+      "type": "boolean",
+      "description": "Indicates if there are more results to be fetched."
+    },
+    "links": {
+      "type": "object",
+      "description": "Links for navigating the paginated results.",
+      "properties": {
+        "first": {
+          "type": "string",
+          "description": "Link to the first page of results."
+        },
+        "last": {
+          "type": "string",
+          "description": "Link to the last page of results."
+        },
+        "next": {
+          "type": "string",
+          "description": "Link to the next page of results."
+        },
+        "previous": {
+          "type": "string",
+          "description": "Link to the previous page of results."
+        }
+      }
+    },
+    "results": {
+      "type": "array",
+      "description": "Array of processor objects.",
+      "items": {
+        "type": "object",
+        "properties": {
+          "objectType": {
+            "type": "string",
+            "description": "The type of object that was returned as a result of the request."
+          },
+          "id": {
+            "type": "integer",
+            "description": "The unique identifier of the processor or service instance added."
+          },
+          "processorType": {
+            "type": "string",
+            "description": "The type of the processor added."
+          },
+          "processorId": {
+            "type": "string",
+            "description": "The ID of the processor added."
+          },
+          "processorName": {
+            "type": "string",
+            "description": "The name of the processor added."
+          },
+          "serviceId": {
+            "type": "string",
+            "description": "The code name of the processor platform or service added."
+          },
+          "merchantId": {
+            "type": "string",
+            "description": "The merchant's Gateway ID."
+          },
+          "mcc": {
+            "type": "string",
+            "description": "The Merchant Category Code."
+          },
+          "accountClassification": {
+            "type": "string",
+            "description": "The account classification of the processor added."
+          },
+          "maxTicketAmount": {
+            "type": "string",
+            "description": "The maximum amount for a single transaction run through the added processor."
+          },
+          "maxMonthlyVolume": {
+            "type": "string",
+            "description": "The maximum total amount that can be run through the processor in a single month."
+          },
+          "applyToAllCardType": {
+            "type": "boolean",
+            "description": "Whether the maxMonthlyVolume and maxTicketAmount apply to all payment methods through the added processor or not."
+          },
+          "enableDuplicateChecking": {
+            "type": "boolean",
+            "description": "Whether duplicate checking is enabled or not."
+          },
+          "allowMerchantOverride": {
+            "type": "boolean",
+            "description": "Whether the merchant is allowed to ignore the duplicate check on a per-transaction basis or not."
+          },
+          "freeTrialEndDate": {
+            "type": "string",
+            "description": "End date of free trial."
+          },
+          "freeTrialDaysLeft": {
+            "type": "string",
+            "description": "Days left of free trial."
+          },
+          "duplicateTime": {
+            "type": "string",
+            "description": "The amount of time in seconds to look back to check if a transaction is a duplicate."
+          },
+          "status": {
+            "type": "string",
+            "description": "The status of the added processor or service, depending on the processor/billing authorization status.",
+            "enum": [
+              "active",
+              "pending"
+            ]
+          },
+          "condition": {
+            "type": "string",
+            "description": "The condition of the added processor or service.",
+            "enum": [
+              "offered",
+              "notOffered",
+              "mandatory"
+            ]
+          },
+          "extraDetails": {
+            "type": "object",
+            "description": "Any extra details about the added processor."
+          },
+          "created": {
+            "type": "string",
+            "description": "The date and time of when the processor or service was added."
+          },
+          "updated": {
+            "type": "string",
+            "description": "The date and time of when the processor or service was last updated."
+          },
+          "supportsReroutedRefunds": {
+            "type": "boolean",
+            "description": "Whether the added processor supports rerouted refunds or not."
+          },
+          "shouldDisableFields": {
+            "type": "boolean",
+            "description": "Whether the added processor should disable fields or not."
+          },
+          "disabled": {
+            "type": "boolean",
+            "description": "Whether the processor is disabled or not."
+          },
+          "refundProcessor": {
+            "type": "string",
+            "description": "The specified processor to reroute future refunds to, if this processor is disabled."
+          },
+          "billingType": {
+            "type": "string",
+            "description": "The billing type of the added processor or service."
+          },
+          "avsCvvPreCheck": {
+            "type": "string",
+            "description": "The AVS/CVV precheck method for the added processor."
+          },
+          "skipAvsCvv": {
+            "type": "boolean",
+            "description": "Whether skipping AVS/CVV is enabled for the added processor or not."
+          },
+          "processorFields": {
+            "type": "object",
+            "description": "The processor-dependent fields for the added processor."
+          },
+          "paymentTypes": {
+            "type": "array",
+            "description": "The allowed payment types for the added processor.",
+            "items": {
+              "type": "string",
+              "enum": [
+                "visa",
+                "mastercard",
+                "amex",
+                "discover",
+                "diners",
+                "jcb",
+                "maestro"
+              ]
+            }
+          },
+          "descriptor": {
+            "type": "object",
+            "description": "The descriptor fields for the added processor.",
+            "properties": {
+              "descriptor": {
+                "type": "string",
+                "description": "The descriptor for the added processor."
+              },
+              "phone": {
+                "type": "string",
+                "description": "The descriptor phone number for the added processor."
+              },
+              "city": {
+                "type": "string",
+                "description": "The descriptor city for the added processor."
+              },
+              "state": {
+                "type": "string",
+                "description": "The descriptor state for the added processor."
+              },
+              "url": {
+                "type": "string",
+                "description": "The descriptor URL for the added processor."
+              }
+            }
+          },
+          "currencies": {
+            "type": "array",
+            "description": "The allowed currencies for the added processor.",
+            "items": {
+              "type": "string"
+            }
+          },
+          "requiredFields": {
+            "type": "object",
+            "description": "The fields that are required to be populated for each transaction.",
+            "properties": {
+              "name": {
+                "type": "boolean",
+                "description": "Whether the name is a required field or not."
+              },
+              "company": {
+                "type": "boolean",
+                "description": "Whether the company is a required field or not."
+              },
+              "address": {
+                "type": "boolean",
+                "description": "Whether the address is a required field or not."
+              },
+              "city": {
+                "type": "boolean",
+                "description": "Whether the city is required field or not."
+              },
+              "state": {
+                "type": "boolean",
+                "description": "Whether the state is a required field or not."
+              },
+              "zip": {
+                "type": "boolean",
+                "description": "Whether the ZIP code is a required field or not."
+              },
+              "country": {
+                "type": "boolean",
+                "description": "Whether the country is a required field or not."
+              },
+              "phone": {
+                "type": "boolean",
+                "description": "Whether the phone is a required field or not."
+              },
+              "email": {
+                "type": "boolean",
+                "description": "Whether the email is a required field or not."
+              },
+              "driversLicense": {
+                "type": "boolean",
+                "description": "Whether the driver's license is a required field or not."
+              },
+              "driversLicenseState": {
+                "type": "boolean",
+                "description": "Whether the driver's license state is a required field or not."
+              },
+              "driversLicenseDob": {
+                "type": "boolean",
+                "description": "Whether the driver's license date of birth is a required field or not."
+              },
+              "ssn": {
+                "type": "boolean",
+                "description": "Whether the SSN is a required field or not."
+              },
+              "cvv": {
+                "type": "string",
+                "description": "The CVV requirement setting."
+              },
+              "fax": {
+                "type": "boolean",
+                "description": "Whether the fax is a required field or not."
+              },
+              "url": {
+                "type": "boolean",
+                "description": "Whether the URL is a required field or not."
+              },
+              "orderId": {
+                "type": "boolean",
+                "description": "Whether the order ID is a required field or not."
+              },
+              "orderDescription": {
+                "type": "boolean",
+                "description": "Whether the order description is a required field or not."
+              },
+              "poNumber": {
+                "type": "boolean",
+                "description": "Whether the PO number is a required field or not."
+              },
+              "shipping": {
+                "type": "boolean",
+                "description": "Whether shipping is a required field or not."
+              },
+              "tax": {
+                "type": "boolean",
+                "description": "Whether tax is a required field or not."
+              },
+              "shippingName": {
+                "type": "boolean",
+                "description": "Whether the shipping name is a required field or not."
+              },
+              "shippingAddress": {
+                "type": "boolean",
+                "description": "Whether the shipping address is a required field or not."
+              },
+              "shippingCity": {
+                "type": "boolean",
+                "description": "Whether the shipping city is a required field or not."
+              },
+              "shippingState": {
+                "type": "boolean",
+                "description": "Whether the shipping state is a required field or not."
+              },
+              "shippingZip": {
+                "type": "boolean",
+                "description": "Whether the shipping ZIP code is a required field or not."
+              },
+              "shippingCountry": {
+                "type": "boolean",
+                "description": "Whether the shipping country is a required field or not."
+              },
+              "mdf1": {
+                "type": "boolean",
+                "description": "Whether Merchant Defined Field 1 is a required field or not."
+              },
+              "mdf2": {
+                "type": "boolean",
+                "description": "Whether Merchant Defined Field 2 is a required field or not."
+              },
+              "mdf3": {
+                "type": "boolean",
+                "description": "Whether Merchant Defined Field 3 is a required field or not."
+              },
+              "mdf4": {
+                "type": "boolean",
+                "description": "Whether Merchant Defined Field 4 is a required field or not."
+              },
+              "mdf5": {
+                "type": "boolean",
+                "description": "Whether Merchant Defined Field 5 is a required field or not."
+              },
+              "mdf6": {
+                "type": "boolean",
+                "description": "Whether Merchant Defined Field 6 is a required field or not."
+              },
+              "mdf7": {
+                "type": "boolean",
+                "description": "Whether Merchant Defined Field 7 is a required field or not."
+              },
+              "mdf8": {
+                "type": "boolean",
+                "description": "Whether Merchant Defined Field 8 is a required field or not."
+              },
+              "mdf9": {
+                "type": "boolean",
+                "description": "Whether Merchant Defined Field 9 is a required field or not."
+              },
+              "mdf10": {
+                "type": "boolean",
+                "description": "Whether Merchant Defined Field 10 is a required field or not."
+              },
+              "mdf11": {
+                "type": "boolean",
+                "description": "Whether Merchant Defined Field 11 is a required field or not."
+              },
+              "mdf12": {
+                "type": "boolean",
+                "description": "Whether Merchant Defined Field 12 is a required field or not."
+              },
+              "mdf13": {
+                "type": "boolean",
+                "description": "Whether Merchant Defined Field 13 is a required field or not."
+              },
+              "mdf14": {
+                "type": "boolean",
+                "description": "Whether Merchant Defined Field 14 is a required field or not."
+              },
+              "mdf15": {
+                "type": "boolean",
+                "description": "Whether Merchant Defined Field 15 is a required field or not."
+              },
+              "mdf16": {
+                "type": "boolean",
+                "description": "Whether Merchant Defined Field 16 is a required field or not."
+              },
+              "mdf17": {
+                "type": "boolean",
+                "description": "Whether Merchant Defined Field 17 is a required field or not."
+              },
+              "mdf18": {
+                "type": "boolean",
+                "description": "Whether Merchant Defined Field 18 is a required field or not."
+              },
+              "mdf19": {
+                "type": "boolean",
+                "description": "Whether Merchant Defined Field 19 is a required field or not."
+              },
+              "mdf20": {
+                "type": "boolean",
+                "description": "Whether Merchant Defined Field 20 is a required field or not."
+              }
+            }
+          },
+          "faceConfiguration": {
+            "type": "object",
+            "description": "The FACe configuration for the added processor."
+          },
+          "disabledFields": {
+            "type": "object",
+            "description": "The disabled fields for the added processor.",
+            "properties": {
+              "processorFields": {
+                "type": "object",
+                "description": "The processor-dependent fields and whether they are disabled or not."
+              }
+            }
+          },
+          "settlementTime": {
+            "type": "string",
+            "description": "The time settlement occurs."
+          },
+          "settlementTimezone": {
+            "type": "string",
+            "description": "The timezone of the configured settlement time."
+          }
+        }
+      }
+    }
+  }
+}

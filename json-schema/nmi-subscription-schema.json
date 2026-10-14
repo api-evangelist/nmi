@@ -1,0 +1,102 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/nmi/main/json-schema/nmi-subscription-schema.json",
+  "title": "subscription",
+  "description": "Subscription object.\n",
+  "x-generated": "2026-10-14",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/nmi-payments-sign-up-api-openapi.yml#/components/schemas/subscription",
+  "type": "object",
+  "required": [
+    "id",
+    "status",
+    "events",
+    "created_at",
+    "updated_at"
+  ],
+  "properties": {
+    "id": {
+      "$ref": "#/$defs/subscription-id"
+    },
+    "callback_url": {
+      "$ref": "#/$defs/subscription-callback-url"
+    },
+    "status": {
+      "$ref": "#/$defs/subscription-status"
+    },
+    "events": {
+      "$ref": "#/$defs/subscription-events"
+    },
+    "created_at": {
+      "$ref": "#/$defs/application-created-at"
+    },
+    "updated_at": {
+      "$ref": "#/$defs/application-updated-at"
+    }
+  },
+  "$defs": {
+    "application-created-at": {
+      "type": "string",
+      "description": "The date and time when the application was created.\n",
+      "format": "date-time",
+      "maxLength": 32
+    },
+    "application-updated-at": {
+      "type": "string",
+      "description": "The date and time when the application was last updated.\n",
+      "format": "date-time",
+      "maxLength": 32
+    },
+    "event-types": {
+      "type": "string",
+      "enum": [
+        "application.updated.data.requested",
+        "application.approved",
+        "application.declined",
+        "application.cancelled",
+        "application.merchant.closed",
+        "application.merchant.boarded",
+        "merchant.chargeback.added",
+        "merchant.deposit.new",
+        "merchant.first-batch",
+        "merchant.processing.start",
+        "merchant.processing.stop",
+        "merchant.residuals.published",
+        "merchant.retrieval.added",
+        "merchant.statement.new"
+      ]
+    },
+    "subscription-callback-url": {
+      "type": "string",
+      "description": "The callback URL of the subscription.",
+      "maxLength": 1024
+    },
+    "subscription-events": {
+      "type": "array",
+      "description": "Subscription events",
+      "maxItems": 1000,
+      "items": {
+        "allOf": [
+          {
+            "$ref": "#/$defs/event-types"
+          }
+        ]
+      }
+    },
+    "subscription-id": {
+      "type": "string",
+      "description": "The unique identifier of the subscription.",
+      "pattern": "^sub_[a-f0-9]{16}$",
+      "minLength": 20,
+      "maxLength": 20
+    },
+    "subscription-status": {
+      "type": "string",
+      "enum": [
+        "active",
+        "inactive"
+      ]
+    }
+  }
+}

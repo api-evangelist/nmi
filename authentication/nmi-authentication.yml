@@ -1,0 +1,29 @@
+generated: '2026-10-14'
+method: derived
+source: openapi/nmi-authvia-openapi.yml, openapi/nmi-payments-api-openapi.yml, openapi/nmi-payments-sign-up-api-openapi.yml
+summary:
+  types:
+  - apiKey
+  - oauth2
+  api_key_in:
+  - header
+  oauth2_flows:
+  - clientCredentials
+schemes:
+- name: v4ApiKey
+  type: apiKey
+  in: header
+  parameter: Authorization
+  description: API Security Key assigned to a partner or merchant account. New keys can be generated
+    from Settings > Security Keys in the partner and merchant portals.
+  sources:
+  - openapi/nmi-authvia-openapi.yml
+  - openapi/nmi-payments-api-openapi.yml
+- name: oauth
+  type: oauth2
+  flows:
+  - flow: clientCredentials
+    tokenUrl: /oauth/token
+    scopes: 6
+  sources:
+  - openapi/nmi-payments-sign-up-api-openapi.yml

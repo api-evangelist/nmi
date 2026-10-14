@@ -1,0 +1,391 @@
+# NMI Developer Documentation Documentation
+
+> Build and monetize your payment solutions faster with NMI’s Developer Documentation. Designed for software platforms, our components, APIs, SDKs, and integration guides help you embed payments seamlessly, reduce time to first transaction, and deliver a unified commerce experience across every channel. For new integrations, start with the Payment Component and NMI REST API guides, API reference, SDKs, and recipes. Collect.js and the Classic transact.php API are documented for existing integrations. A hosted MCP server is provided to allow AI coding assistants (Claude Code, Cursor, VS Code) to query these docs directly.
+
+## Guides: Get Started
+- [Explore Payment Solutions](https://docs.nmi.com/docs/quick-start.md)
+- [Developer Docs MCP](https://docs.nmi.com/docs/mcp.md)
+- [MCP Server](https://docs.nmi.com/docs/mcp-api.md)
+- [Get Your API Keys](https://docs.nmi.com/docs/getting-your-api-keys.md)
+- [Third Party Integrations](https://docs.nmi.com/docs/third-party-integrations.md)
+- [Classic API Migration Playbook](https://docs.nmi.com/docs/payment-migration-playbook.md)
+  - [Code Examples](https://docs.nmi.com/docs/payment-code-examples.md)
+
+## Guides: Design Toolkits for Developers
+- [Online Checkout Flow](https://docs.nmi.com/docs/online-checkout-design.md)
+- [Customer-Friendly Surcharge](https://docs.nmi.com/docs/compliant-surcharge-toolkit.md)
+- [Merchant Sign-Up](https://docs.nmi.com/docs/toolkit-merchant-signup.md)
+
+## Guides: Online Payments
+- [Online Payments Overview](https://docs.nmi.com/docs/online-payments-overview.md): Build secure, scalable payment solutions with our comprehensive online payments platform. Whether you're creating a custom checkout experience or need a quick-to-deploy solution, our flexible tools…
+- [Payment Component](https://docs.nmi.com/docs/payment-component.md): Secure payment processing using our tokenization system
+  - [Integrating the Frontend Component](https://docs.nmi.com/docs/integration-guide-implement-frontend.md)
+  - [Implement Backend](https://docs.nmi.com/docs/integration-guide-implement-backend.md)
+  - [Test and Deploy](https://docs.nmi.com/docs/integration-guide-test-and-deploy.md): Test cards and methods for development
+  - [Customize Styling](https://docs.nmi.com/docs/integration-guide-customize-styling.md)
+  - [Surcharging with Card Type Detection](https://docs.nmi.com/docs/card-type-detection.md)
+- [Customer Vault](https://docs.nmi.com/docs/customer-vault.md): Secure storage and tokenization of customer payment information
+  - [Adding Customers to Vault](https://docs.nmi.com/docs/adding-customers-to-vault.md): Add a new customer to the vault with their payment information by calling the Payments API.
+  - [Managing Entries](https://docs.nmi.com/docs/managing-entries.md): Update existing customer information and delete entries as needed.
+  - [Using for Transactions](https://docs.nmi.com/docs/using-for-transactions.md): Process one-time sales for recurring customers using vault tokens with your merchant API key
+  - [Credential on File Best Practices](https://docs.nmi.com/docs/credential-on-file.md)
+- [Hosted Checkout](https://docs.nmi.com/docs/hosted-checkout.md): Collect Checkout is the no code checkout solution
+  - [Quick Start Guide](https://docs.nmi.com/docs/quick-start-guide-copy.md): Use a prebuilt checkout page to accept payments in minutes.
+  - [Advanced Integration](https://docs.nmi.com/docs/advanced-integration.md)
+- [Custom Checkout](https://docs.nmi.com/docs/custom-checkout.md)
+  - [Adding Digital Wallet Data to the Customer Vault](https://docs.nmi.com/docs/adding-digital-wallet-data-to-the-customer-vault.md)
+    - [Full Transaction Lifecycle Example](https://docs.nmi.com/docs/full-transaction-lifecycle-example.md)
+  - [Preparing Subscriptions using Digital Wallet Data](https://docs.nmi.com/docs/preparing-subscriptions-using-digital-wallet-data.md)
+    - [Full Transaction Lifecycle Example](https://docs.nmi.com/docs/full-transaction-lifecycle-example-1.md)
+  - [Account Funding Transactions](https://docs.nmi.com/docs/account-funding-transactions.md)
+  - [FSA/HSA](https://docs.nmi.com/docs/fsahsa.md)
+- [Collect.js](https://docs.nmi.com/docs/collectjs.md): Collect payments on your website securely, and beautifully
+  - [Quick Start Guide](https://docs.nmi.com/docs/quick-start-tutorial.md): Accept payments online in four easy steps
+  - [Advanced Integrations](https://docs.nmi.com/docs/advanced-integrations.md): Customize the appearance of your checkout page.
+  - [Digital Wallet Setup](https://docs.nmi.com/docs/digital-wallet-setup.md): Accept ApplePay and GooglePay payments
+  - [Surcharging with Card Type Detection (Collect.js)](https://docs.nmi.com/docs/surcharge-with-card-type-detection-collectjs.md)
+
+## Guides: In-Person Payments
+- [In-Person Payments Overview](https://docs.nmi.com/docs/in-person-payments-overview.md): Flexible in-person payments, built your way
+  - [Android All in One SmartPOS: Ingenico Axium](https://docs.nmi.com/docs/android-all-in-one-smartpos-ingenico-axium.md): Your integration. Upgraded.
+- [Enabling Test Mode](https://docs.nmi.com/docs/enable-test-mode-1.md): Test your integration by accessing our sandbox environment
+  - [EMV Sandbox Environment](https://docs.nmi.com/docs/emv-sandbox-environment.md)
+    - [Getting Started](https://docs.nmi.com/docs/getting-started.md)
+    - [Requests & Responses](https://docs.nmi.com/docs/requests-responses.md)
+    - [Validation Errors](https://docs.nmi.com/docs/validation-errors.md)
+- [Tap to Pay on iPhone](https://docs.nmi.com/docs/mobile-point-of-sale-tap-to-pay-on-iphone.md): Bring Tap to Pay to your app—no extra hardware required
+  - [Enable Tap to Pay ](https://docs.nmi.com/docs/enable-tap-to-pay-on-iphone-to-do.md)
+  - [Downloading the SDK](https://docs.nmi.com/docs/downloading-the-ios-sdk.md)
+  - [Unboxing the iOS SDK](https://docs.nmi.com/docs/unboxing-the-ios-sdk.md)
+  - [Creating and Managing Security Keys](https://docs.nmi.com/docs/creating-and-managing-security-keys-1.md)
+  - [Preparing for Development](https://docs.nmi.com/docs/preparing-for-development-1.md)
+  - [Firewall Configuration](https://docs.nmi.com/docs/firewall-configuration-1.md)
+  - [Transaction Flow](https://docs.nmi.com/docs/transaction-flow-2.md)
+  - [Sequence Diagrams](https://docs.nmi.com/docs/sequence-diagrams.md)
+  - [Modes of Operation](https://docs.nmi.com/docs/modes-of-operation-2.md)
+  - [Configuration](https://docs.nmi.com/docs/configuration-2.md)
+  - [Configuration and Utility Methods](https://docs.nmi.com/docs/configuration-and-utility-methods-2.md)
+  - [Configuration and Utility Events](https://docs.nmi.com/docs/configuration-and-utility-events-2.md)
+  - [Start Transaction](https://docs.nmi.com/docs/start-transaction.md)
+  - [Transaction Events](https://docs.nmi.com/docs/transaction-events.md)
+  - [Receipts](https://docs.nmi.com/docs/receipts-1.md)
+  - [Supported Features](https://docs.nmi.com/docs/supported-features.md)
+  - [User Experience Requirements](https://docs.nmi.com/docs/user-experience-requirements.md)
+  - [Regional Requirements](https://docs.nmi.com/docs/regional-requirements.md)
+  - [Preparing for Release](https://docs.nmi.com/docs/preparing-for-release-1.md)
+  - [Entitlement Review](https://docs.nmi.com/docs/entitlement-review.md)
+  - [Frequently Asked Questions](https://docs.nmi.com/docs/frequently-asked-questions.md): For merchants, partners, and integrators
+- [Tap to Pay on Android](https://docs.nmi.com/docs/mobile-point-of-sale-tap-to-pay-on-android.md): Bring Tap to Pay to your app—no extra hardware required
+  - [Enable Tap to Pay](https://docs.nmi.com/docs/enable-tap-to-pay-android.md)
+  - [Downloading the Android SDK](https://docs.nmi.com/docs/downloading-the-sdk-android.md)
+  - [Unboxing the Android SDK](https://docs.nmi.com/docs/unboxing-the-sdk-android.md)
+  - [Creating and Managing Security Keys](https://docs.nmi.com/docs/creating-and-managing-security-keys-android.md)
+  - [Preparing for Development](https://docs.nmi.com/docs/preparing-for-development-android.md)
+  - [App Onboarding](https://docs.nmi.com/docs/app-onboarding-android.md)
+  - [Firewall Configuration](https://docs.nmi.com/docs/firewall-configuration-android.md)
+  - [Transaction Flow](https://docs.nmi.com/docs/transaction-flow-android.md)
+  - [Sequence Diagrams](https://docs.nmi.com/docs/sequence-diagrams-android.md)
+  - [Modes of Operation](https://docs.nmi.com/docs/modes-of-operation-android.md)
+  - [Configuration](https://docs.nmi.com/docs/configuration-android.md)
+  - [Configuration and Utility Methods](https://docs.nmi.com/docs/configuration-and-utility-methods-android.md)
+  - [Configuration and Utility Events](https://docs.nmi.com/docs/configuration-and-utility-events-android.md)
+  - [Start Transaction](https://docs.nmi.com/docs/start-transaction-android.md)
+  - [Transaction Events](https://docs.nmi.com/docs/transaction-events-android.md)
+  - [Receipts](https://docs.nmi.com/docs/receipts-android.md)
+  - [Supported Features](https://docs.nmi.com/docs/supported-features-android.md)
+  - [Contactless Symbol Reproduction Requirements](https://docs.nmi.com/docs/contactless-symbol-reproduction-requirements-android.md)
+  - [Frequently Asked Questions](https://docs.nmi.com/docs/frequently-asked-questions-android.md): For merchants, partners, and integrators
+- [VP3350](https://docs.nmi.com/docs/mobile-point-of-sale-vp3350.md): Everything you need to build and test in-person payments fast
+  - [Unboxing your VP3350 device](https://docs.nmi.com/docs/unboxing-your-vp3350-device.md)
+  - [Enable Test Mode](https://docs.nmi.com/docs/enable-test-mode.md)
+  - [Downloading the Android/iOS SDK](https://docs.nmi.com/docs/downloading-the-sdk.md)
+  - [Unboxing the Android/iOS SDK ](https://docs.nmi.com/docs/unboxing-the-sdk.md)
+  - [Creating and Managing Security Keys](https://docs.nmi.com/docs/creating-and-managing-security-keys.md)
+  - [Platform Specific Requirements](https://docs.nmi.com/docs/platform-specific-requirements-1.md)
+  - [Firewall Configuration](https://docs.nmi.com/docs/firewall-configuration.md)
+  - [Transaction Flow](https://docs.nmi.com/docs/transaction-flow-1.md)
+  - [Configuration](https://docs.nmi.com/docs/configuration-1.md)
+  - [Configuration and Utility Methods](https://docs.nmi.com/docs/configuration-and-utility-methods-1.md)
+  - [Configuration and Utility Events](https://docs.nmi.com/docs/configuration-and-utility-events-1.md)
+  - [Payment Methods](https://docs.nmi.com/docs/payment-methods-1.md)
+  - [Payment Events](https://docs.nmi.com/docs/payment-events-1.md)
+  - [Deferred Authorizations](https://docs.nmi.com/docs/deferred-authorizations-1.md)
+  - [Surcharging](https://docs.nmi.com/docs/surcharging.md): Apply compliant, gateway-verified surcharges to VP3350 card-present transactions in real time.
+  - [TMS Properties ](https://docs.nmi.com/docs/tms-properties.md)
+  - [Receipts](https://docs.nmi.com/docs/receipts.md)
+  - [App Submission](https://docs.nmi.com/docs/app-submission.md)
+  - [Appendix: Quick Reference Tables](https://docs.nmi.com/docs/quick-reference-tables.md)
+- [Axium SmartPOS](https://docs.nmi.com/docs/smart-pos-ingenico-axium.md): Axium SmartPOS. Powerful hardware, developer-first.
+  - [Unboxing your Axium device](https://docs.nmi.com/docs/unboxing-your-axium-device.md)
+  - [Device setup](https://docs.nmi.com/docs/device-setup.md)
+  - [Platform-specific requirements](https://docs.nmi.com/docs/platform-specific-requirements-axium.md)
+  - [Configuration](https://docs.nmi.com/docs/configuration-axium.md)
+  - [Transaction flow](https://docs.nmi.com/docs/transaction-flow-axium.md)
+  - [Configuration and utility events](https://docs.nmi.com/docs/configuration-and-utility-events-axium.md)
+  - [Offline transactions](https://docs.nmi.com/docs/offline-transactions.md)
+  - [Device disconnection](https://docs.nmi.com/docs/device-disconnection.md)
+  - [OTA updates](https://docs.nmi.com/docs/ota-updates.md)
+  - [Retrieving log files](https://docs.nmi.com/docs/retrieving-log-files.md)
+  - [All-in-One Development](https://docs.nmi.com/docs/all-in-one.md)
+    - [Setup for development](https://docs.nmi.com/docs/setup-for-development.md)
+    - [Hosted Estate Manager (HEM)](https://docs.nmi.com/docs/hem-overview.md)
+    - [Partner onboarding with a Partner Code](https://docs.nmi.com/docs/partner-code-onboarding.md)
+    - [Managing devices & estates](https://docs.nmi.com/docs/managing-devices-and-estates.md)
+    - [Software library & campaigns](https://docs.nmi.com/docs/software-and-campaigns.md)
+    - [MDM profiles](https://docs.nmi.com/docs/mdm-profiles.md)
+    - [User management & access](https://docs.nmi.com/docs/user-management.md)
+    - [Application Review and Signing for Axium SmartPOS](https://docs.nmi.com/docs/application-signing.md)
+  - [Appendix 1 — Supported API methods](https://docs.nmi.com/docs/appendix-1-supported-api-methods.md)
+  - [Appendix 2 — Unsupported features](https://docs.nmi.com/docs/appendix-2-unsupported-features.md)
+- [Lane/Series](https://docs.nmi.com/docs/countertop-point-of-sale-lane3600.md): Everything you need to build and test in-person payments fast
+  - [Unboxing your Lane device](https://docs.nmi.com/docs/unboxing-your-lane3600-device.md)
+  - [Enabling Encrypted Devices](https://docs.nmi.com/docs/enabling-encrypted-devices-1.md)
+  - [Introduction to the Customer Present Cloud API](https://docs.nmi.com/docs/introduction-to-the-customer-present-cloud-api.md)
+  - [Registering Your Device](https://docs.nmi.com/docs/registering-your-device.md)
+  - [Device Estate Management](https://docs.nmi.com/docs/device-estate-management.md)
+  - [Standalone Device Inputs](https://docs.nmi.com/docs/standalone-device-inputs.md)
+  - [Processing](https://docs.nmi.com/docs/processing.md)
+  - [AsyncStatus Polling](https://docs.nmi.com/docs/asyncstatus-polling.md)
+  - [POI Device Prompts](https://docs.nmi.com/docs/poi-device-prompts.md)
+  - [FSA Support](https://docs.nmi.com/docs/fsa-support.md): Pass through healthcare specific fields to your processor to benefit from preferred transaction rates.
+  - [Virtual PIN Pad](https://docs.nmi.com/docs/virtual-pin-pad.md)
+  - [Error Recovery Tips](https://docs.nmi.com/docs/error-recovery-tips-1.md)
+- [Self/Series](https://docs.nmi.com/docs/unattended-point-of-sale-selfseries.md): The fastest way to add secure unattended card payments to your machines
+  - [Enable Encrypted Devices](https://docs.nmi.com/docs/enable-encrypted-devices.md)
+  - [Downloading the Windows & Linux SDK ](https://docs.nmi.com/docs/downloading-the-windows-linux-sdk.md)
+  - [Enable Allowlisting on Your Payment Device](https://docs.nmi.com/docs/enabling-allowlisting-on-your-payment-device.md): How to enable allowlisting when collecting non-payment card data.
+- [Test Card Simulator ](https://docs.nmi.com/docs/test-card-simulator.md): Test contactless. No cards required
+- [Device SDKs & APIs](https://docs.nmi.com/docs/device-sdks-apis.md): From code to checkout—devices made simple
+  - [SDKs for Android & iOS](https://docs.nmi.com/docs/device-sdk-ios-android.md): Payments in your pocket—powered by our SDKs
+  - [SDKs for Windows & Linux](https://docs.nmi.com/docs/device-sdks-windowslinux-1.md): Seamless payments for self-service experiences
+  - [Customer Present Cloud API](https://docs.nmi.com/docs/device-api-cloud.md): Cloud-first control for card-present commerce
+- [Direct Connect ](https://docs.nmi.com/docs/direct-connect.md): Build and deploy payment-ready devices with direct EMV processing on our platform.
+  - [Direct Connect API & SDKs](https://docs.nmi.com/docs/about-direct-connect.md)
+  - [Terminal Management](https://docs.nmi.com/docs/terminal-management.md)
+  - [EMV Sandbox](https://docs.nmi.com/docs/emv-sandbox.md): Reduce certification risk with fast, self-service EMV testing.
+
+## Guides: Reporting
+- [Deposit Summary Component](https://docs.nmi.com/docs/deposit-summary-component.md): Detailed deposit information including transaction breakdown and transactions
+  - [Deposit History Component](https://docs.nmi.com/docs/deposit-reporting-component.md): Displays a report of deposit information with filtering capabilities
+- [Transaction History Component](https://docs.nmi.com/docs/transaction-reporting-component.md): Filterable transaction table to view, manage, and export transaction data
+
+## Guides: Extensions
+- [Gateway Components (Gateway.js)](https://docs.nmi.com/docs/gatewayjs.md): Add Gateway services to your integration.
+  - [Payer Authentication (3DS)](https://docs.nmi.com/docs/payer-authentication-3ds.md): 3-D Secure reduces your e-commerce payment fraud risk and increases customer confidence.
+    - [Testing](https://docs.nmi.com/docs/testing.md): Testing Values for Payer Authentication
+    - [Testing - Sandbox](https://docs.nmi.com/docs/testing-sandbox.md): Testing Values for Payer Authentication
+  - [Kount Fraud Management](https://docs.nmi.com/docs/kount.md): Leading AI-Driven Fraud Prevention for eCommerce and mCommerce
+  - [CardEase 3DS Server Integration](https://docs.nmi.com/docs/cardease-3ds-server-integration.md): 3DS Server for CardEase partners
+
+## Guides: Embedded Components
+- [The Appearance API](https://docs.nmi.com/docs/the-appearance-api.md): A theming standard for styling any component in our component library
+
+## API Reference: Overview
+- [Getting Started with Our APIs](https://docs.nmi.com/reference/getting-started.md)
+- [MCP Server](https://docs.nmi.com/reference/mcp.md)
+- [Authentication](https://docs.nmi.com/reference/authentication.md): API authentication using security keys, with best practices for merchants and partners.
+- Embedded Component Authentication
+  - [Create a Session](https://docs.nmi.com/reference/create-embedded-component-session.md): This endpoint creates a short-lived session token that your embedded components can use to authenticate and fetch data. You must call this endpoint from your backend server to avoid exposing your API…
+- [Testing Methods](https://docs.nmi.com/reference/testing-methods.md)
+- [Rate Limiting](https://docs.nmi.com/reference/rate-limiting.md)
+- [Pagination](https://docs.nmi.com/reference/pagination.md)
+- [Response Codes](https://docs.nmi.com/reference/response-codes.md)
+
+## API Reference: Merchant Sign-Up
+- [Overview](https://docs.nmi.com/reference/sign-up-api.md)
+- [Authentication](https://docs.nmi.com/reference/authentication-1.md): The Authorization endpoint allows clients to securely authenticate and obtain an access token for making requests to the API.
+  - [Request an Access Token](https://docs.nmi.com/reference/getaccesstoken.md): This endpoint issues an OAuth access token via an HTTP POST request. The token remains valid for 60 minutes.  After expiration, you must request a new token.  ### Available Scopes and their access |…
+- Packages
+  - [List all Packages](https://docs.nmi.com/reference/getpackages.md): This operation returns a list of available application packages.  **Required scope:** `packages:read`
+  - [Get Package](https://docs.nmi.com/reference/getpackagebyid.md): The **Packages** endpoint provides package rules, a structured set of field details necessary for creating an  application. It defines the required and optional fields, their formats, and any…
+- Applications
+  - [List all Applications](https://docs.nmi.com/reference/getapplications.md): This operation returns a list of applications. You can filter applications by:  - `status`: Filter by application status (e.g. "draft", "submitted", "approved", etc.) - `updated_from`: Filter…
+  - [Create a new application](https://docs.nmi.com/reference/createapplication.md): In the Sandbox environment, the application's status is determined by the **Monthly Volume Field** (`fld_monthly_volume`).  Based on this value, the system will send one of the following webhook…
+  - [Get Application Information](https://docs.nmi.com/reference/getapplication.md): Returns information about a given application  **Required scope:** `applications:read`
+  - [Update an Application](https://docs.nmi.com/reference/updateapplication.md): Partially update an application. An application can be updated only when it is in `draft` status.  **Required scope:** `applications:write`
+  - [Get Legal Consent](https://docs.nmi.com/reference/getapplicationlegalconsent.md): Get the legal consent URL for the application. Legal consent is required prior to application submission.  Once you have the legal consent URL use Embed Helper to embed the widget into your form.…
+  - [Download Signed Agreement](https://docs.nmi.com/reference/getapplicationdownloadagreement.md): This endpoint downloads the signed agreement for the application.  The agreement can only be downloaded after the application is submitted.  **Required scope:** `applications:read`
+  - [Upload Document](https://docs.nmi.com/reference/uploaddocument.md): Provide supporting documents for the application. Documents can only be uploaded while the application is the `draft` or `underwriter_requested_information` status.  **Required scope:**…
+  - [Submit Application](https://docs.nmi.com/reference/submitapplication.md): Submit the application for review  To expedite the merchant application underwriting process it is recommended to include the __Bank or Processing Statement (3 Months of Statements)__ if the merchant…
+  - [Update Application Information](https://docs.nmi.com/reference/updateapplicationinfo.md): Add more information to an application that is in the `underwriter_requested_information` status.
+- [Webhook Subscriptions](https://docs.nmi.com/reference/msu-webhook-subscriptions.md)
+  - [List all Subscriptions](https://docs.nmi.com/reference/getsubscriptions.md): This operation returns a list of subscriptions.  **Required scope:** `subscriptions:read`
+  - [Create a Subscription](https://docs.nmi.com/reference/createsubscription.md): Creates a new subscription based on the provided data. #### How signing requests work When setting up, it's common to generate, store, and share a secret between your app and the app that wants to…
+  - [Get Subscription Information](https://docs.nmi.com/reference/getsubscription.md): Returns information about a given subscription  **Required scope:** `subscriptions:read`
+  - [Update a Subscription](https://docs.nmi.com/reference/updatesubscription.md): Updates an subscription  **Required scope:** `subscriptions:write`
+  - [Delete a Subscription](https://docs.nmi.com/reference/deletesubscription.md): Deletes a subscription  **Required scope:** `subscriptions:write`
+- [Webhook Events](https://docs.nmi.com/reference/webhook-events-2.md)
+  - [Underwriter Requested Information](https://docs.nmi.com/reference/sendapplicationupdateddatarequestedevent.md): This event is triggered when additional information is requested during underwriting process.
+  - [Application is approved](https://docs.nmi.com/reference/sendapplicationapprovedevent.md): Sent when the merchant application is approved.
+  - [Application is declined](https://docs.nmi.com/reference/sendapplicationdeclinedevent.md): This event is triggered when the merchant application is declined.
+  - [Application is cancelled](https://docs.nmi.com/reference/sendapplicationcancelledevent.md): This event is triggered when the merchant application is cancelled.
+  - [Merchant is ready to process](https://docs.nmi.com/reference/sendapplicationmerchantboardedevent.md): This event is triggered when the merchant is boarded and ready to process.
+  - [Merchant account is closed](https://docs.nmi.com/reference/sendapplicationmerchantclosedevent.md): This event is triggered when the merchant account is closed.
+  - [Merchant: New Chargeback](https://docs.nmi.com/reference/sendmerchantchargebackaddedevent.md): This event is triggered when a chargeback is added for a merchant.
+  - [Merchant: New Deposit](https://docs.nmi.com/reference/sendmerchantdepositnewevent.md): This event is triggered when a new deposit is made for a merchant.
+  - [Merchant: First Batch](https://docs.nmi.com/reference/sendmerchantfirstbatchevent.md): This event is triggered when a merchant processes their first batch of transactions.
+  - [Merchant: Started Processing](https://docs.nmi.com/reference/sendmerchantprocessingstartevent.md): This event is triggered when a merchant starts processing transactions.
+  - [Merchant: Stopped Processing](https://docs.nmi.com/reference/sendmerchantprocessingstopevent.md): This event is triggered when a merchant stops processing transactions.
+  - [Merchant: Residual Report Published](https://docs.nmi.com/reference/sendmerchantresidualspublishedevent.md): This event is triggered when merchant residuals reports are published.
+  - [Merchant: New Retrieval](https://docs.nmi.com/reference/sendmerchantretrievaladdedevent.md): This event is triggered when a retrieval is added for a merchant.
+  - [Merchant: New Statement](https://docs.nmi.com/reference/sendmerchantstatementnewevent.md): This event is triggered when a new statement is available for a merchant.
+- [Legal Consent Helper](https://docs.nmi.com/reference/legal-consent-helper.md)
+
+## API Reference: Online Payments
+- Payments
+  - [Sale](https://docs.nmi.com/reference/create-sale-v5.md): Process a sale. This request authorizes and captures the payment in a single step.
+  - [Authorization](https://docs.nmi.com/reference/create-auth-v5.md): Process an authorization for a payment. Use in conjunction with the capture endpoint to prepare the payment for settlement.
+  - [Credit](https://docs.nmi.com/reference/create-credit-v5.md): Process a credit without a prior payment. This endpoint credits funds to the customer's payment method.
+  - [Validate](https://docs.nmi.com/reference/validate-payment-v5.md): Validate a payment method without processing a payment.
+  - [Capture](https://docs.nmi.com/reference/capture-payment-v5.md): Capture a previously authorized payment.
+  - [Void](https://docs.nmi.com/reference/void-payment-v5.md): Void a payment. Only payments that have not yet been settled can be voided.
+  - [Refund](https://docs.nmi.com/reference/refund-payment-v5.md): Refund a payment. Only a previously settled transaction can be refunded back to the customer's payment method.
+  - [Get](https://docs.nmi.com/reference/get-payment-v5.md): Retrieve details for a specific payment by payment ID.
+- Invoicing
+  - [Create Invoice](https://docs.nmi.com/reference/create-invoice-v5.md): Create a new invoice and email it to the customer.
+  - [List Invoices](https://docs.nmi.com/reference/list-invoices-v5.md): Retrieve a list of all invoices for the merchant with optional filtering and pagination.
+  - [Get Invoice](https://docs.nmi.com/reference/get-invoice-v5.md): Retrieve a specific invoice by its ID.
+  - [Update Invoice](https://docs.nmi.com/reference/update-invoice-v5.md): Update an existing invoice. All variables (besides currency) on an invoice may be updated. Updating an invoice will not result in a new invoice being sent to the customer.
+  - [Close Invoice](https://docs.nmi.com/reference/close-invoice-v5.md): Close an existing invoice. Once closed, the invoice cannot be modified or paid.
+  - [Send Invoice](https://docs.nmi.com/reference/send-invoice-v5.md): Send an existing invoice to a customer via email.
+- Subscriptions
+  - [Create Subscription](https://docs.nmi.com/reference/create-subscription-v5.md): Create a new subscription. A subscription can be associated with an existing plan or created as a custom subscription.
+  - [List Subscriptions](https://docs.nmi.com/reference/list-subscriptions-v5.md): Retrieve a list of all subscriptions.
+  - [Get Subscription](https://docs.nmi.com/reference/get-subscription-v5.md): Retrieve details for a specific subscription.
+  - [Update Subscription](https://docs.nmi.com/reference/update-subscription-v5.md): Update an existing subscription's billing information.
+  - [Delete Subscription](https://docs.nmi.com/reference/delete-subscription-v5.md): Delete a subscription. Customer will no longer be charged.
+- Plans
+  - [Create Plan](https://docs.nmi.com/reference/create-plan-v5.md): Create a new recurring payment plan. Plans can be used to define recurring billing schedules that subscriptions can be associated with.
+  - [List Plans](https://docs.nmi.com/reference/list-plans-v5.md): Retrieve a list of all recurring payment plans.
+  - [Get Plan](https://docs.nmi.com/reference/get-plan-v5.md): Retrieve details for a specific recurring payment plan.
+  - [Update Plan](https://docs.nmi.com/reference/update-plan-v5.md): Update an existing recurring payment plan. Be careful when updating an existing plan, as all customers signed up for this plan will have their billing changed based on your edits.
+  - [Delete Plan](https://docs.nmi.com/reference/delete-plan-v5.md): Delete a recurring payment plan.
+- Customers
+  - [Create Customer](https://docs.nmi.com/reference/create-customer-v5.md): Create a new customer in the customer vault with billing and optional shipping information. The billing field can be either a single object or an array of objects to create multiple billing addresses…
+  - [List Customers](https://docs.nmi.com/reference/list-customers-v5.md): Retrieve a list of customers for the merchant with optional filtering and cursor-based pagination.  To look up a single customer by its vault ID, use **Get Customer**; to look up a specific billing…
+  - [Get Customer](https://docs.nmi.com/reference/get-customer-v5.md): Retrieve a specific customer by its ID.
+  - [Update Customer](https://docs.nmi.com/reference/update-customer-v5.md): Update an existing customer. Supports bulk updates of billing and shipping addresses. All provided billing and shipping addresses will be updated.
+  - [Delete Customer](https://docs.nmi.com/reference/delete-customer-v5.md): Delete a customer from the customer vault. This will remove the customer and all associated billing and shipping addresses.
+  - [Add Billing Address](https://docs.nmi.com/reference/add-billing-address-v5.md): Add a billing address and payment method to an existing customer.
+  - [Get Billing Address](https://docs.nmi.com/reference/get-billing-address-v5.md): Retrieve a specific billing address for a customer.
+  - [Update Billing Address](https://docs.nmi.com/reference/update-billing-address-v5.md): Update a customer billing address.
+  - [Delete Billing Address](https://docs.nmi.com/reference/delete-billing-address-v5.md): Delete a billing address from a customer. The customer must have at least one billing address remaining.
+  - [Add Shipping Address](https://docs.nmi.com/reference/add-shipping-address-v5.md): Add a new shipping address to an existing customer.
+  - [Get Shipping Address](https://docs.nmi.com/reference/get-shipping-address-v5.md): Retrieve a specific shipping address for a customer.
+  - [Update Shipping Address](https://docs.nmi.com/reference/update-shipping-address-v5.md): Update an existing shipping address for a customer.
+  - [Delete Shipping Address](https://docs.nmi.com/reference/delete-shipping-address-v5.md): Delete a shipping address from a customer.
+- Products
+  - [Create Product](https://docs.nmi.com/reference/create-product-v5.md): Create a new product in the Product Manager. Products can be used in invoices and other payment flows.
+  - [List Products](https://docs.nmi.com/reference/list-products-v5.md): Retrieve a list of all products in the Product Manager.
+  - [Get Product](https://docs.nmi.com/reference/get-product-v5.md): Retrieve details for a specific product by SKU.
+  - [Update Product](https://docs.nmi.com/reference/update-product-v5.md): Update an existing product in the Product Manager.
+  - [Delete Product](https://docs.nmi.com/reference/delete-product-v5.md): Delete a product from the Product Manager.
+- [TXT2PAY (Powered by Authvia)](https://docs.nmi.com/reference/extensions-txt2pay.md): Accept payments by text
+  - [Create a new conversation](https://docs.nmi.com/reference/post_v4-authvia-conversations.md)
+  - [List and filter conversations](https://docs.nmi.com/reference/get_v4-authvia-conversations.md)
+  - [Get a conversation](https://docs.nmi.com/reference/get-v4-authvia-conversations-conversation-id.md)
+  - [Close a conversation](https://docs.nmi.com/reference/delete-v4-authvia-conversations-conversation-id.md)
+
+## API Reference: IN-PERSON PAYMENTS
+- Devices
+  - [List Cloud Devices](https://docs.nmi.com/reference/list-devices-v5.md): Retrieve a list of all cloud devices registered to the merchant with optional pagination and status information.
+  - [Register Cloud Device](https://docs.nmi.com/reference/register-device-v5.md): Register a new cloud device with the merchant using a registration code.
+  - [Get Cloud Device](https://docs.nmi.com/reference/get-device-v5.md): Retrieve a specific cloud device by its ID.
+  - [Update Cloud Device](https://docs.nmi.com/reference/update-device-v5.md): Update a cloud device's nickname or default status.
+  - [Deregister Cloud Device](https://docs.nmi.com/reference/deregister-device-v5.md): Deregister a cloud device from the merchant. Once deregistered, the device cannot be used for transactions.
+  - [Prompt Device for Signature](https://docs.nmi.com/reference/prompt-device-sign-v5.md): Prompt a cloud device to request a signature from the user.
+  - [Get Signature Prompt Status](https://docs.nmi.com/reference/get-device-prompt-sign-status-v5.md): Retrieve the status of a signature prompt request initiated on a cloud device. The reference is obtained from the initial prompt request response (e.g., from POST…
+  - [Prompt Device for Yes/No Response](https://docs.nmi.com/reference/prompt-device-yes-no-v5.md): Prompt a cloud device to request a yes/no response from the user.
+  - [Get Yes/No Prompt Status](https://docs.nmi.com/reference/get-device-prompt-yes-no-status-v5.md): Retrieve the status of a yes/no prompt request initiated on a cloud device. The reference is obtained from the initial prompt request response (e.g., from POST…
+  - [Prompt Device for Menu Selection](https://docs.nmi.com/reference/prompt-device-menu-v5.md): Prompt a cloud device to request a menu selection from the user.
+  - [Get Menu Prompt Status](https://docs.nmi.com/reference/get-device-prompt-menu-status-v5.md): Retrieve the status of a menu selection prompt request initiated on a cloud device. The reference is obtained from the initial prompt request response (e.g., from POST…
+  - [Display QR Code on Device](https://docs.nmi.com/reference/display-device-qr-code-v5.md): Display a QR code on a cloud device screen.
+  - [Cancel Display on Device](https://docs.nmi.com/reference/cancel-device-display-v5.md): Cancel any active display (e.g., QR code) on a cloud device.
+  - [Create Sale Payment Request on Device](https://docs.nmi.com/reference/create-device-payment-request-sale-v5.md): Initiate an asynchronous sale payment request on a specific cloud device. The device_id is specified in the URL path. Payment details (card number, expiration, CVV) are collected by the device…
+  - [Create Authorization Payment Request on Device](https://docs.nmi.com/reference/create-device-payment-request-auth-v5.md): Initiate an asynchronous authorization payment request on a specific cloud device. The device_id is specified in the URL path. Payment details (card number, expiration, CVV) are collected by the…
+  - [Create Credit Payment Request on Device](https://docs.nmi.com/reference/create-device-payment-request-credit-v5.md): Initiate an asynchronous credit (refund) payment request on a specific cloud device. The device_id is specified in the URL path. Payment details (card number, expiration, CVV) are collected by the…
+  - [Create Validation Payment Request on Device](https://docs.nmi.com/reference/create-device-payment-request-validate-v5.md): Initiate an asynchronous validation payment request on a specific cloud device. The device_id is specified in the URL path. Payment details (card number, expiration, CVV) are collected by the device…
+  - [Get Payment Request Status](https://docs.nmi.com/reference/get-device-payment-request-status-v5.md): Retrieve the status of an asynchronous payment request initiated on a cloud device. The request_id is obtained from the initial payment request response (e.g., from POST…
+  - [Cancel Payment Request on Device](https://docs.nmi.com/reference/cancel-device-payment-request-v5.md): Cancel an in-flight asynchronous payment request on a cloud device before authorization completes. If the transaction cannot be cancelled (for example, it has already completed), process a void once…
+
+## API Reference: ACCOUNT MANAGEMENT
+- [Overview](https://docs.nmi.com/reference/nmi-gateway-features.md)
+- Affiliates
+  - [Get Sub-Affiliate List](https://docs.nmi.com/reference/get-sub-affiliate-list.md): <details> <summary>Usage</summary> This is a query to get all sub-affiliate accounts under your partner account. </details>
+- Merchants
+  - [Create Merchant](https://docs.nmi.com/reference/create-merchant.md): <details> <summary>Usage</summary> This step simply creates the merchant account, getting their basic information into the gateway. After this step, you can add processors and value-added services…
+  - [Assign Fee Schedule to Merchant / Complete and Send Welcome Email / Agree to TOS and Fees for a Merchant](https://docs.nmi.com/reference/patch_v4-merchants-gateway-id-1.md): <details> <summary>Assign a Fee Schedule to the Merchant</summary>  This can be done when creating the merchant in the first place <a href="createmerchant">(1. Create a Merchant)</a> but you can also…
+  - [Get a Specific Merchant's Information](https://docs.nmi.com/reference/get-specific-merchant-information.md): <details> <summary>Usage</summary> <p>This request will return all the details of a specific merchant account. If you need to get multiple merchants' info at once, use the <a…
+  - [Get Merchant List](https://docs.nmi.com/reference/get-merchant-list.md): <details> <summary>Usage</summary> This is a query to get all merchant accounts under your partner account. </details>
+- Settlement Time
+  - [Get Settlement Time](https://docs.nmi.com/reference/get-settlement-time.md): <details> <summary>Usage</summary> Use this request to get the settlementTime that is currently set on an existing account. You will see the result at the bottom of the response, in Universal Time…
+  - [Updating Settlement Time](https://docs.nmi.com/reference/updating-settlement-time.md): <details> <summary>Usage</summary> This can be done when creating the merchant’s processor in the first place (<a href="../reference/addprocessorservice" title="Add Processors">Add Processors</a>)…
+- Fee Schedule
+  - [Pull All Fee Schedules](https://docs.nmi.com/reference/pull-all-fee-schedules.md): <details> <summary>Usage</summary> This request will pull all fee schedules available on your account.  </details>
+  - [Get Fees Inside a Fee Schedule](https://docs.nmi.com/reference/get-fees-in-schedule.md): <details> <summary>Usage</summary> Use this request to get a full list of all fees currently set on an existing fee schedule.  </details>
+- Processors and Services
+  - [Add Processor / Value-Added Service](https://docs.nmi.com/reference/add-processor-service.md): <details> <summary>Adding the Processor</summary> This request submits the processor details for a specific merchant. </details> <details> <summary>Add Value-Added Services</summary> Value-added…
+  - [Get Merchant Processors and Value Added Services Details](https://docs.nmi.com/reference/get-merchant-processors-value-added-services.md): <details> <summary>Usage</summary> This request will return all services that are active, offered, or in a free trial state for a merchant, or a list of merchants. This will return every detail you…
+  - [Card Type Lookup](https://docs.nmi.com/reference/card-type.md): <summary>Usage</summary> This endpoint will return whether the card is a `debit`, `credit`, or `charge` card. A card may return `unknown` if we can't recognize the card type provided. Or it may…
+  - [Get Processor Config](https://docs.nmi.com/reference/get-processor-config.md): <details> <summary>Usage</summary> This request gets the config details for the processor you want to board. This is required if you do not know what fields to pass into the Add Processor request.…
+  - Apple Pay
+    - [Adding Apple Pay to a Merchant](https://docs.nmi.com/reference/adding-apple-pay.md): This API allows partners to opt their merchants into Apple Pay and allow Collect.js to generate Apple Pay buttons on specific domains for these merchants.  <details> <summary>Usage</summary>…
+    - [Querying A Merchant's Apple Pay Status](https://docs.nmi.com/reference/querying-merchants-apple-pay-status.md): You may also want to check on the status of Apple Pay for a specific merchant without updating their settings. This is done by making a simple GET request to the same endpoint.  > If the merchant has…
+  - [Get Available Services](https://docs.nmi.com/reference/check-services.md): <details> <summary>Usage</summary> This request will pull down a list of all services that you can offer to merchants. You don’t need to run this every time you board a merchant, but it is useful to…
+- [Customer Token Vault](https://docs.nmi.com/reference/customer-token-vault.md): Onboard a merchant to Customer Token Vault
+  - [Add Token Vault to a Gateway Account](https://docs.nmi.com/reference/add-token-vault.md): Add (or upgrade) Customer Token Vault to a gateway account.
+
+## API Reference: REPORTING
+- General
+  - [Query API (Classic)](https://docs.nmi.com/reference/query.md): <details> <summary>Methodology</summary>  **Overview**  While our online reporting interface allows merchants to quickly and easily retrieve detailed information about past transactions, a need for…
+- Transactions
+  - [Get Transaction Data](https://docs.nmi.com/reference/get-transaction-data.md): <details> <summary>Usage</summary> This is a query to find live transactions by merchants under your partner account. The query will respond in Universal Time Coordinated (UTC).  If you provide a…
+- Billing & Commission
+  - [See Merchants' Billing](https://docs.nmi.com/reference/see-merchant-billing.md): <details> <summary>Usage</summary> This will let you see what billing has occurred on merchants under your partner account. Billing reports are for Bill to Affiliate partners only. For Bill to…
+  - [See Your Commission](https://docs.nmi.com/reference/see-your-commission.md): <details> <summary>Usage</summary> This will let you see what billing has occurred on merchants under your partner account  </details>
+
+## API Reference: ADMINISTRATION
+- Users
+  - [Get Merchant or Partner User Info](https://docs.nmi.com/reference/get-merchant-partner-user-info.md): <details> <summary>Usage</summary> This will return information on all users associated with a specific merchant or sub-affiliate account. </details>
+  - [Username Availability](https://docs.nmi.com/reference/check-username-availability.md): <details> <summary>Usage</summary> This is optional, but you can check to make sure a username is available before submitting your merchant creation request.<br><br> This can be useful if you want to…
+- API Keys
+  - [Create Merchant API Keys](https://docs.nmi.com/reference/create-merchant-key.md): <details> <summary>Usage</summary> This request will create a new API key for a user on a merchant account. The request includes all key types, including those for the Payment API, Query API,…
+- Webhooks
+  - [Overview](https://docs.nmi.com/reference/overview.md): This page describes the webhook feature and how to set it up.
+  - [Retry Logic](https://docs.nmi.com/reference/retry-logic.md): This page describes the retry logic used by the gateway when delivering webhook notifications.
+  - [Transaction Events](https://docs.nmi.com/reference/transaction-events.md): Here you can find all the events that are related to transactions.
+  - [Check Status](https://docs.nmi.com/reference/check-status.md): Here you can find all the events that are related to ACH activity
+  - [Recurring Events](https://docs.nmi.com/reference/recurring-events.md): Here you can find all the events that are related to recurring activity.
+  - [Settlement Events](https://docs.nmi.com/reference/settlement-events.md): Here you can find all the events that are related to settlement activity.
+  - [Chargeback Events](https://docs.nmi.com/reference/chargeback-events.md): Here you can find all the events that are related to chargeback activity.
+  - [Automatic Card Updater Events](https://docs.nmi.com/reference/acu-events.md): Here you can find all the events that are related to automatic card updater (ACU) activity.
+
+## API Reference: Other Resources
+- [Postman Collection](https://docs.nmi.com/reference/postman-collection.md)
+- [Gateway Emulator](https://docs.nmi.com/reference/gateway-emulator.md)
+
+## API Reference: Classic APIs
+- Transactions
+  - [Transaction Processing](https://docs.nmi.com/reference/transactions-processing.md): > This documentation is intended for existing Classic API integrations. For new integrations, use the [Payment Component](../docs/payment-component) with the [REST API](../reference/create-sale-v5).…
+- Invoices
+  - [Invoice Management](https://docs.nmi.com/reference/invoices-management.md): > This documentation is intended for existing Classic API integrations. For new integrations, use the [Payment Component](../docs/payment-component) with the [REST API](../reference/create-sale-v5).…
+- Subscriptions
+  - [Subscription Management](https://docs.nmi.com/reference/subscriptions-management.md): > This documentation is intended for existing Classic API integrations. For new integrations, use the [Payment Component](../docs/payment-component) with the [REST API](../reference/create-sale-v5).…
+- Plans
+  - [Plan Management](https://docs.nmi.com/reference/plans-management.md): > This documentation is intended for existing Classic API integrations. For new integrations, use the [Payment Component](../docs/payment-component) with the [REST API](../reference/create-sale-v5).…
+- Customers
+  - [Customer Management](https://docs.nmi.com/reference/customers-management.md): > This documentation is intended for existing Classic API integrations. For new integrations, use the [Payment Component](../docs/payment-component) with the [REST API](../reference/create-sale-v5).…
+  - [Billing Information Management](https://docs.nmi.com/reference/billing-management.md): > This documentation is intended for existing Classic API integrations. For new integrations, use the [Payment Component](../docs/payment-component) with the [REST API](../reference/create-sale-v5).…
+- Products
+  - [Product Management](https://docs.nmi.com/reference/products-management.md): > This documentation is intended for existing Classic API integrations. For new integrations, use the [Payment Component](../docs/payment-component) with the [REST API](../reference/create-sale-v5).…
+
+## Recipes
+- [Activate Merchant & Send Welcome Email](https://docs.nmi.com/recipes/activate-merchant-send-welcome-email.md)
+- [Authorize and Add to Customer Vault](https://docs.nmi.com/recipes/authorize-and-add-to-customer-vault.md)
+- [Create Merchant API Keys](https://docs.nmi.com/recipes/create-merchant-api-keys.md)
+- [Payment Component Frontend](https://docs.nmi.com/recipes/payment-component-frontend.md)
+- [Recurring Payment](https://docs.nmi.com/recipes/recurring-payment.md)
+- [Refund Credit Card Transaction](https://docs.nmi.com/recipes/refund-credit-card-transaction.md)
+- [Sale and Add to Customer Vault](https://docs.nmi.com/recipes/sale-and-add-to-customer-vault.md)
+- [Sale](https://docs.nmi.com/recipes/sale.md)
+- [Validate and Add to Customer Vault](https://docs.nmi.com/recipes/validate-and-add-to-customer-vault.md)

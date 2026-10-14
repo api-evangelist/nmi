@@ -1,0 +1,423 @@
+generated: '2026-10-14'
+method: derived
+generator: derive-vocabulary.py
+source:
+- openapi/nmi-authvia-openapi.yml
+- openapi/nmi-ctv-onboarding-openapi.yml
+- openapi/nmi-embedded-components-api-openapi.yml
+- openapi/nmi-payments-api-openapi.yml
+- openapi/nmi-payments-openapi.yml
+vocabulary:
+  name: NMI Domain Vocabulary
+  description: 'Terms declared by NMI''s own API contract: its resource groups, objects and enumerations, with the contract''s definitions. Derived,
+    not authored.'
+  version: '2026-10-14'
+  terms:
+  - term: Authvia TXT2PAY
+    definition: Authvia TXT2PAY® allows your merchants to request payments by text, with no download required. With NMI’s seamless Authvia integration,
+      you can enable your merchants to create new text conversations, list and filter conversations, retrieve details for a specific conversation,
+      and close conversations that are no longer needed.
+    tags:
+    - Resource Group
+    source: openapi/nmi-authvia-openapi.yml
+  - term: Webhook Events
+    definition: Here you can find information about webhook events
+    tags:
+    - Resource Group
+    source: openapi/nmi-payments-api-openapi.yml
+  - term: Payments
+    definition: RESTful payment processing endpoints using JSON format
+    tags:
+    - Resource Group
+    source: openapi/nmi-payments-api-openapi.yml
+  - term: Invoicing
+    definition: Invoice management endpoints
+    tags:
+    - Resource Group
+    source: openapi/nmi-payments-api-openapi.yml
+  - term: Subscriptions
+    definition: Subscription management endpoints
+    tags:
+    - Resource Group
+    source: openapi/nmi-payments-api-openapi.yml
+  - term: Plans
+    definition: Recurring payment plan management endpoints
+    tags:
+    - Resource Group
+    source: openapi/nmi-payments-api-openapi.yml
+  - term: Customers
+    definition: Customer vault management endpoints
+    tags:
+    - Resource Group
+    source: openapi/nmi-payments-api-openapi.yml
+  - term: Products
+    definition: Product management endpoints for the Product Manager
+    tags:
+    - Resource Group
+    source: openapi/nmi-payments-api-openapi.yml
+  - term: Devices
+    definition: Cloud device management and payment request endpoints
+    tags:
+    - Resource Group
+    source: openapi/nmi-payments-api-openapi.yml
+  - term: Gateway Features
+    definition: Gateway Features
+    tags:
+    - Resource Group
+    source: openapi/nmi-payments-api-openapi.yml
+  - term: Processors and Services
+    definition: Here you can find information about endpoints that provide general services that are useful across a variety workflows.
+    tags:
+    - Resource Group
+    source: openapi/nmi-payments-api-openapi.yml
+  - term: Apple Pay
+    definition: Here you can find information about endpoints that are related to Apple Pay.
+    tags:
+    - Resource Group
+    source: openapi/nmi-payments-api-openapi.yml
+  - term: Data and Transaction Reporting
+    definition: Query API (query.php) for retrieving transaction, subscription, and invoice data. Intended for existing Classic integrations.
+    tags:
+    - Resource Group
+    source: openapi/nmi-payments-api-openapi.yml
+  - term: Transactions
+    definition: Core payment processing operations including credit card, ACH, and cash transactions
+    tags:
+    - Resource Group
+    source: openapi/nmi-payments-openapi.yml
+  - term: Invoices
+    definition: Invoice lifecycle management including creation, updates, delivery, and closure
+    tags:
+    - Resource Group
+    source: openapi/nmi-payments-openapi.yml
+  - term: Billing
+    definition: Billing information management for customer billing details and preferences
+    tags:
+    - Resource Group
+    source: openapi/nmi-payments-openapi.yml
+  - term: Authentication
+    definition: The Authorization endpoint allows clients to securely authenticate and obtain an access token for making requests to the API.
+    tags:
+    - Resource Group
+    source: openapi/nmi-payments-sign-up-api-openapi.yml
+  - term: Packages
+    definition: Get all the information required for application submissions
+    tags:
+    - Resource Group
+    source: openapi/nmi-payments-sign-up-api-openapi.yml
+  - term: Applications
+    definition: Manage merchant applications
+    tags:
+    - Resource Group
+    source: openapi/nmi-payments-sign-up-api-openapi.yml
+  - term: Webhook Subscriptions
+    definition: Manage Webhook Subscriptions
+    tags:
+    - Resource Group
+    source: openapi/nmi-payments-sign-up-api-openapi.yml
+  - term: ConversationId
+    definition: The Authvia v4 UUID for the conversation.
+    tags:
+    - Object
+    source: openapi/nmi-authvia-openapi.yml#/components/schemas/ConversationId
+  - term: ConversationTopic
+    definition: The resolution this conversation is trying to reach.
+    tags:
+    - Object
+    source: openapi/nmi-authvia-openapi.yml#/components/schemas/ConversationTopic
+  - term: ConversationInstructions
+    definition: A short intro or message to send along with the payment request to help provide more context.
+    tags:
+    - Object
+    source: openapi/nmi-authvia-openapi.yml#/components/schemas/ConversationInstructions
+  - term: ConversationCreationDate
+    definition: The creation date for the conversation.
+    tags:
+    - Object
+    source: openapi/nmi-authvia-openapi.yml#/components/schemas/ConversationCreationDate
+  - term: ConversationExpirationDate
+    definition: The expiration date for the conversation.
+    tags:
+    - Object
+    source: openapi/nmi-authvia-openapi.yml#/components/schemas/ConversationExpirationDate
+  - term: ConversationExpirationDateInput
+    definition: The time to wait for the payment to be completed before it is marked failed. A short time duration value is acceptable such as
+      30m, 1d, or 7d. If no unit is provided, seconds are used.
+    tags:
+    - Object
+    source: openapi/nmi-authvia-openapi.yml#/components/schemas/ConversationExpirationDateInput
+  - term: ConversationStatus
+    definition: The conversation status.
+    tags:
+    - Enumeration
+    source: openapi/nmi-authvia-openapi.yml#/components/schemas/ConversationStatus
+  - term: ConversationAmount
+    definition: The conversation amount in USD.
+    tags:
+    - Object
+    source: openapi/nmi-authvia-openapi.yml#/components/schemas/ConversationAmount
+  - term: ConversationCustomerPhone
+    definition: The conversation customer's ten-digit phone number. US and CA numbers only.
+    tags:
+    - Object
+    source: openapi/nmi-authvia-openapi.yml#/components/schemas/ConversationCustomerPhone
+  - term: ConversationCustomerPhoneWithDashes
+    definition: The conversation customer's phone number separated with dashes.
+    tags:
+    - Object
+    source: openapi/nmi-authvia-openapi.yml#/components/schemas/ConversationCustomerPhoneWithDashes
+  - term: ConversationCustomerFirstName
+    definition: The conversation customer's first name.
+    tags:
+    - Object
+    source: openapi/nmi-authvia-openapi.yml#/components/schemas/ConversationCustomerFirstName
+  - term: ConversationCustomerLastName
+    definition: The conversation customer's last name.
+    tags:
+    - Object
+    source: openapi/nmi-authvia-openapi.yml#/components/schemas/ConversationCustomerLastName
+  - term: NmiMerchantId
+    definition: The merchant ID from NMI. This is only required for partners; for merchants it is ignored.
+    tags:
+    - Object
+    source: openapi/nmi-authvia-openapi.yml#/components/schemas/NmiMerchantId
+  - term: NmiRecordId
+    definition: The NMI marketplace v4 UUID for the conversation.
+    tags:
+    - Object
+    source: openapi/nmi-authvia-openapi.yml#/components/schemas/NmiRecordId
+  - term: FilterStartDate
+    definition: The start date to filter.
+    tags:
+    - Object
+    source: openapi/nmi-authvia-openapi.yml#/components/schemas/FilterStartDate
+  - term: FilterEndDate
+    definition: The end date to filter.
+    tags:
+    - Object
+    source: openapi/nmi-authvia-openapi.yml#/components/schemas/FilterEndDate
+  - term: FilterStatusArray
+    definition: The list of conversation statuses to filter.
+    tags:
+    - Object
+    source: openapi/nmi-authvia-openapi.yml#/components/schemas/FilterStatusArray
+  - term: Success
+    definition: Indicates the success of the request.
+    tags:
+    - Object
+    source: openapi/nmi-authvia-openapi.yml#/components/schemas/Success
+  - term: Merchant Defined Fields
+    definition: Custom fields configured in the merchant control panel under Settings → Merchant Defined Fields (`field_1` through `field_20`).
+    tags:
+    - Object
+    source: openapi/nmi-payments-api-openapi.yml#/components/schemas/MerchantDefinedFields
+  - term: Payment Response
+    definition: Generic payment response
+    tags:
+    - Object
+    source: openapi/nmi-payments-api-openapi.yml#/components/schemas/TransactionResponse
+  - term: Retail unencrypted magnetic stripe
+    definition: Card-present payment using raw magnetic stripe data from a card reader. Set `industry` to `retail` on the payment request.
+    tags:
+    - Object
+    source: openapi/nmi-payments-api-openapi.yml#/components/schemas/RetailUnencryptedMagneticStripe
+  - term: Retail MagTek Magensa encrypted swipe
+    definition: Card-present payment using encrypted magnetic stripe data from a MagTek Magensa reader. Set `industry` to `retail` on the payment
+      request.
+    tags:
+    - Object
+    source: openapi/nmi-payments-api-openapi.yml#/components/schemas/RetailMagTekMagensaEncryptedSwipe
+  - term: Retail ID Tech M130 encrypted swipe
+    definition: Card-present encrypted swipe data from an ID Tech M130 reader. Set `industry` to `retail` on the payment request.
+    tags:
+    - Object
+    source: openapi/nmi-payments-api-openapi.yml#/components/schemas/RetailIdTechEncryptedSwipe
+  - term: Retail ID Tech M130 encrypted keyed
+    definition: Card-present encrypted keyed entry data from an ID Tech M130 reader. Set `industry` to `retail` on the payment request.
+    tags:
+    - Object
+    source: openapi/nmi-payments-api-openapi.yml#/components/schemas/RetailIdTechEncryptedKeyed
+  - term: Retail Ingenico Telium 2 chip (EMV)
+    definition: Card-present EMV chip payment from an Ingenico Telium 2 reader. Set `industry` to `retail` on the payment request.
+    tags:
+    - Object
+    source: openapi/nmi-payments-api-openapi.yml#/components/schemas/RetailIngenicoChip
+  - term: Retail Ingenico Telium 2 swipe
+    definition: Card-present encrypted swipe from an Ingenico Telium 2 reader. Set `industry` to `retail` on the payment request.
+    tags:
+    - Object
+    source: openapi/nmi-payments-api-openapi.yml#/components/schemas/RetailIngenicoSwipe
+  - term: Retail Ingenico Telium 2 NFC
+    definition: Card-present NFC payment from an Ingenico Telium 2 reader. Set `industry` to `retail` on the payment request.
+    tags:
+    - Object
+    source: openapi/nmi-payments-api-openapi.yml#/components/schemas/RetailIngenicoNfc
+  - term: Retail Ingenico Telium 2 keyed
+    definition: Card-present encrypted keyed entry from an Ingenico Telium 2 reader. Set `industry` to `retail` on the payment request.
+    tags:
+    - Object
+    source: openapi/nmi-payments-api-openapi.yml#/components/schemas/RetailIngenicoKeyed
+  - term: Mobile SDK encrypted payment
+    definition: RSA-encrypted card data from the NMI Mobile SDK (iOS/Android). Use in place of raw card number, expiration, and CVV. Set `industry`
+      to `retail` on the payment request when processing as a card-present transaction.
+    tags:
+    - Object
+    source: openapi/nmi-payments-api-openapi.yml#/components/schemas/RetailMobileSdkEncryptedPayment
+  - term: Payment Details
+    definition: 'Payment method details. Exactly one variant: raw card data, ACH (check) data, **payment_token**, wallet payloads, or **retail
+      card-present** data from a card reader. Do not combine fields from different variants.'
+    tags:
+    - Object
+    source: openapi/nmi-payments-api-openapi.yml#/components/schemas/PaymentDetails
+  - term: Cardholder Authentication
+    definition: Cardholder authentication data. Use the 3-D Secure variant for EMV authentication results. Use the Decrypted wallet variant for
+      merchant-decrypted Apple Pay or Google Pay, which relays the cryptogram and ECI to the 3-D Secure fields.
+    tags:
+    - Object
+    source: openapi/nmi-payments-api-openapi.yml#/components/schemas/CardholderAuth
+  - term: Billing Address & Information
+    definition: Billing address for a payment transaction request.
+    tags:
+    - Object
+    source: openapi/nmi-payments-api-openapi.yml#/components/schemas/BillingAddressRest
+  - term: Shipping Address & Information
+    definition: Shipping address and information
+    tags:
+    - Object
+    source: openapi/nmi-payments-api-openapi.yml#/components/schemas/ShippingAddressRest
+  - term: Line Item
+    definition: Line item details for order details
+    tags:
+    - Object
+    source: openapi/nmi-payments-api-openapi.yml#/components/schemas/LineItem
+  - term: Order Details
+    definition: Order details and line items
+    tags:
+    - Object
+    source: openapi/nmi-payments-api-openapi.yml#/components/schemas/OrderDetailsRest
+  - term: Payment Facilitator
+    definition: Payment facilitator information for submerchant transactions
+    tags:
+    - Object
+    source: openapi/nmi-payments-api-openapi.yml#/components/schemas/PaymentFacilitator
+  - term: Payment Descriptor
+    definition: Payment descriptor information for transaction statements
+    tags:
+    - Object
+    source: openapi/nmi-payments-api-openapi.yml#/components/schemas/PaymentDescriptor
+  - term: Credential on File
+    definition: Credential on File information
+    tags:
+    - Object
+    source: openapi/nmi-payments-api-openapi.yml#/components/schemas/CitMit
+  - term: Payment Sale Base Fields
+    definition: 'Object declared by the contract with fields: amount, surcharge, convenience_fee, misc_fee, misc_fee_name, tip, currency, processor_id,
+      dup_seconds, transaction_session_id, customer_receipt, pinless_debit_override. (13 more)'
+    tags:
+    - Object
+    source: openapi/nmi-payments-api-openapi.yml#/components/schemas/PaymentSaleBase
+  - term: Add payment method to customer vault
+    definition: Store the inline `payment_details` from this request in the customer vault.
+    tags:
+    - Object
+    source: openapi/nmi-payments-api-openapi.yml#/components/schemas/CustomerVaultAdd
+  - term: Use existing customer vault
+    definition: Charge or validate an existing customer vault record. Do not send `payment_details`.
+    tags:
+    - Object
+    source: openapi/nmi-payments-api-openapi.yml#/components/schemas/CustomerVaultCharge
+  - term: Payment Sale Request
+    definition: Sale request. Provide exactly one payment source variant.
+    tags:
+    - Object
+    source: openapi/nmi-payments-api-openapi.yml#/components/schemas/PaymentSaleRequest
+  - term: Validation Error Detail
+    definition: Validation error detail
+    tags:
+    - Object
+    source: openapi/nmi-payments-api-openapi.yml#/components/schemas/ValidationErrorDetail
+  - term: Error Response
+    definition: Error response structure matching SecureApiErrorResponseFactory
+    tags:
+    - Object
+    source: openapi/nmi-payments-api-openapi.yml#/components/schemas/ErrorResponse
+  - term: Merchant
+    definition: Merchant Details
+    tags:
+    - Object
+    source: openapi/nmi-payments-api-openapi.yml#/components/schemas/Merchant
+  - term: Features
+    definition: Features associated with the transaction
+    tags:
+    - Object
+    source: openapi/nmi-payments-api-openapi.yml#/components/schemas/Features
+  - term: Billing Address
+    definition: Billing Address details
+    tags:
+    - Object
+    source: openapi/nmi-payments-api-openapi.yml#/components/schemas/BillingAddress
+  - term: Shipping Address
+    definition: Shipping Address details.
+    tags:
+    - Object
+    source: openapi/nmi-payments-api-openapi.yml#/components/schemas/ShippingAddress
+  - term: Card Details
+    definition: Details related to the credit card used in the transaction. Available for credit card transactions only.
+    tags:
+    - Object
+    source: openapi/nmi-payments-api-openapi.yml#/components/schemas/CardDetails
+  - term: ACHAccountHolderType
+    definition: The customer's ACH account entity.
+    tags:
+    - Enumeration
+    source: openapi/nmi-payments-api-openapi.yml#/components/schemas/ACHAccountHolderType
+  - term: ACHAccountType
+    definition: The customer's ACH account type.
+    tags:
+    - Enumeration
+    source: openapi/nmi-payments-api-openapi.yml#/components/schemas/ACHAccountType
+  - term: ACHSecCode
+    definition: ACH standard entry class codes.
+    tags:
+    - Enumeration
+    source: openapi/nmi-payments-api-openapi.yml#/components/schemas/ACHSecCode
+  - term: Check Details
+    definition: Details about a check payment. Available for ACH transactions only.
+    tags:
+    - Object
+    source: openapi/nmi-payments-api-openapi.yml#/components/schemas/CheckDetails
+  - term: EMV Meta Data
+    definition: Details about the EMV transaction
+    tags:
+    - Object
+    source: openapi/nmi-payments-api-openapi.yml#/components/schemas/EmvMetaData
+  - term: Transaction Action
+    definition: Transaction Action details
+    tags:
+    - Object
+    source: openapi/nmi-payments-api-openapi.yml#/components/schemas/TransactionAction
+  - term: Card Details
+    definition: Details related to the credit card used in the transaction. Available for credit card transactions only.
+    tags:
+    - Object
+    source: openapi/nmi-payments-api-openapi.yml#/components/schemas/RecurringCardDetails
+  - term: Subscription Event Body
+    definition: Details about Subscription.
+    tags:
+    - Object
+    source: openapi/nmi-payments-api-openapi.yml#/components/schemas/RecurringEventBody
+  - term: Transactions summary
+    definition: Summary (number of transactions and total amount)
+    tags:
+    - Object
+    source: openapi/nmi-payments-api-openapi.yml#/components/schemas/TransactionSummary
+  - term: Settlement Event Body
+    definition: Details about Settlement.
+    tags:
+    - Object
+    source: openapi/nmi-payments-api-openapi.yml#/components/schemas/SettlementEventBody
+  - term: AcuCustomerVaultDetails
+    definition: Details about a customer vault card with updated expiration date.
+    tags:
+    - Object
+    source: openapi/nmi-payments-api-openapi.yml#/components/schemas/AcuCustomerVaultDetails
