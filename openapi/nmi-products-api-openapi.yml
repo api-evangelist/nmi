@@ -1,0 +1,511 @@
+openapi: 3.2.0
+info:
+  version: 1.0.0
+  title: Payments Products API
+  description: Our payments platform exposes two generations of API.
+  x-logo:
+    url: https://www.nmi.com/app/themes/nmi/images/NMI_Logo_Primary.webp
+servers:
+- url: https://sandbox.nmi.com/api
+security: []
+tags:
+- name: Products
+  description: Product management endpoints for the Product Manager
+paths:
+  /v5/products:
+    post:
+      tags:
+      - Products
+      operationId: create-product-v5
+      summary: Create Product
+      description: Create a new product in the Product Manager. Products can be used in invoices and other payment flows.
+      security:
+      - merchantApiKey: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProductCreateRequest'
+      responses:
+        '200':
+          description: Product created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductResponseV5'
+        '400':
+          description: Bad Request - Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Unauthorized
+    get:
+      tags:
+      - Products
+      operationId: list-products-v5
+      summary: List Products
+      description: Retrieve a list of all products in the Product Manager.
+      security:
+      - merchantApiKey: []
+      parameters:
+      - name: cursor
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 1
+        description: Cursor for pagination (product ID to start after). Omit for first page.
+      - name: per_page
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 100
+          default: 20
+        description: 'Number of products to return per page (default: 20, max: 100)'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  products:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/ProductResponseV5'
+                  next_cursor:
+                    type: integer
+                    nullable: true
+                    description: Cursor for the next page. Use this value in the cursor parameter for the next request. Null if there are no more results.
+                  per_page:
+                    type: integer
+                    description: Number of products per page
+        '401':
+          description: Unauthorized
+  /v5/products/{sku}:
+    get:
+      tags:
+      - Products
+      operationId: get-product-v5
+      summary: Get Product
+      description: Retrieve details for a specific product by SKU.
+      security:
+      - merchantApiKey: []
+      parameters:
+      - name: sku
+        in: path
+        required: true
+        schema:
+          type: string
+        description: The product SKU to retrieve
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductResponseV5'
+        '401':
+          description: Unauthorized
+        '404':
+          description: Product not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    put:
+      tags:
+      - Products
+      operationId: update-product-v5
+      summary: Update Product
+      description: Update an existing product in the Product Manager.
+      security:
+      - merchantApiKey: []
+      parameters:
+      - name: sku
+        in: path
+        required: true
+        schema:
+          type: string
+        description: The product SKU to update
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProductUpdateRequest'
+      responses:
+        '200':
+          description: Product updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductResponseV5'
+        '400':
+          description: Bad Request - Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Unauthorized
+        '404':
+          description: Product not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    delete:
+      tags:
+      - Products
+      operationId: delete-product-v5
+      summary: Delete Product
+      description: Delete a product from the Product Manager.
+      security:
+      - merchantApiKey: []
+      parameters:
+      - name: sku
+        in: path
+        required: true
+        schema:
+          type: string
+        description: The product SKU to delete
+      responses:
+        '200':
+          description: Product deleted successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+        '401':
+          description: Unauthorized
+        '404':
+          description: Product not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+components:
+  schemas:
+    ProductResponseV5:
+      type: object
+      title: Product Response V5
+      description: Product response matching ProductRestSerializer structure
+      properties:
+        object:
+          type: string
+          enum:
+          - product
+          description: Resource type identifier
+        id:
+          type: string
+          description: Product ID (transaction_id)
+        product_sku:
+          type: string
+          description: Product SKU
+        product_description:
+          type: string
+          description: Product description
+        product_category:
+          type: string
+          description: Product category
+        product_commodity_code:
+          type: string
+          description: Product commodity code
+        product_unit_of_measure:
+          type: string
+          description: Product unit of measure
+        product_cost:
+          type: string
+          description: Product cost
+        product_currency:
+          type: string
+          description: Product currency (ISO 4217)
+        product_tax_amount:
+          type: string
+          description: Product tax amount
+        product_discount_amount:
+          type: string
+          description: Product discount amount
+        product_image_name:
+          type: string
+          description: Product image name
+        product_image_url:
+          type: string
+          description: Product image URL
+      required:
+      - object
+      - id
+    ProductUpdateRequest:
+      title: Product Update Request
+      type: object
+      properties:
+        product_description:
+          type: string
+          maxLength: 255
+          description: The user-facing name of the product.
+        product_cost:
+          type: number
+          minimum: 0
+          description: 'The cost of the product before any tax or discounts. Format: `x.xx`'
+        product_currency:
+          type: string
+          minLength: 3
+          maxLength: 3
+          description: The currency for the product's price (e.g., USD, EUR).
+        product_commodity_code:
+          type: string
+          maxLength: 50
+          description: Product commodity code.
+        product_unit_of_measure:
+          type: string
+          maxLength: 3
+          description: The unit of measure for the product. Default - `NAR`
+        product_tax_amount:
+          type: number
+          minimum: 0
+          description: The tax that should be added to the product cost. This is a fixed amount, not a percentage.
+        product_discount_amount:
+          type: number
+          minimum: 0
+          description: The discount that will be subtracted from the cost of the product.
+        product_image_name:
+          type: string
+          maxLength: 255
+          description: The file name of the image being added with product_image_data. Required for image upload.
+        product_image_data:
+          type: string
+          description: 'Image for the product, size must be 2MB or smaller. Format: base64 encoded JPG, PNG, or GIF. Required for image upload.'
+        product_category:
+          type: string
+          maxLength: 50
+          description: Product category.
+    ValidationErrorDetail:
+      type: object
+      title: Validation Error Detail
+      description: Validation error detail
+      required:
+      - fieldName
+      - message
+      properties:
+        fieldName:
+          type: string
+          description: Request field path.
+        message:
+          type: string
+          description: Human-readable validation message for the field.
+      additionalProperties: false
+    ErrorResponse:
+      type: object
+      title: Error Response
+      description: Error response structure matching SecureApiErrorResponseFactory
+      properties:
+        type:
+          type: string
+          description: Error type (e.g., 'validationError', 'internalError', 'authenticationError')
+        error_code:
+          type: string
+          description: Error code (e.g., 'E_INTERNAL', 'E_VALIDATION')
+        message:
+          type: string
+          description: Human-readable error message
+        ref_id:
+          type: string
+          nullable: true
+          description: Reference ID for the error (transaction ID, etc.)
+        details:
+          type: array
+          nullable: true
+          description: Validation error details
+          items:
+            $ref: '#/components/schemas/ValidationErrorDetail'
+      required:
+      - type
+      - error_code
+      - message
+    ProductCreateRequest:
+      title: Product Create Request
+      type: object
+      required:
+      - product_sku
+      - product_description
+      - product_cost
+      - product_currency
+      properties:
+        product_sku:
+          type: string
+          maxLength: 256
+          description: The unique alpha-numeric SKU for this product. An error will be returned if the SKU is already in use by another product.
+        product_description:
+          type: string
+          maxLength: 255
+          description: The user-facing name of the product.
+        product_cost:
+          type: number
+          minimum: 0
+          description: 'The cost of the product before any tax or discounts. Format: `x.xx`'
+        product_currency:
+          type: string
+          minLength: 3
+          maxLength: 3
+          description: The currency for the product's price (e.g., USD, EUR).
+        product_commodity_code:
+          type: string
+          maxLength: 50
+          description: Product commodity code.
+        product_unit_of_measure:
+          type: string
+          maxLength: 3
+          description: The unit of measure for the product. Default - `NAR`
+        product_tax_amount:
+          type: number
+          minimum: 0
+          description: The tax that should be added to the product cost. This is a fixed amount, not a percentage.
+        product_discount_amount:
+          type: number
+          minimum: 0
+          description: The discount that will be subtracted from the cost of the product.
+        product_image_name:
+          type: string
+          maxLength: 255
+          description: The file name of the image being added with product_image_data. Required for image upload.
+        product_image_data:
+          type: string
+          description: 'Image for the product, size must be 2MB or smaller. Format: base64 encoded JPG, PNG, or GIF. Required for image upload.'
+        product_category:
+          type: string
+          maxLength: 50
+          description: Product category.
+  securitySchemes:
+    merchantApiKey:
+      type: apiKey
+      in: header
+      name: Authorization
+      description: Merchant API key for RESTful API authentication. This key is used for merchant-specific API access and can be generated from the merchant portal.
+externalDocs:
+  url: https://www.postman.com/nmi-integration-support/workspace/nmi-public-documentation/request/5480015-f4b0ec7b-bd84-4094-98c2-67c0b6508a7f
+  description: Public Documentation (Postman)
+x-tagGroups:
+- name: REST API (recommended)
+  tags:
+  - Payments
+  - Plans
+  - Subscriptions
+  - Products
+  - Invoicing
+  - Customers
+  - Devices
+- name: Classic API
+  tags:
+  - Payment Processing
+  - Data and Transaction Reporting
+  - Webhook Events
+  - Gateway Features
+  - Processors and Services
+  - Apple Pay
+x-provenance:
+  method: searched
+  source: https://docs.nmi.com/reference
+  harvested: '2026-10-14'
+  tool: harvest-readme-openapi.py
+  note: Assembled verbatim from the OpenAPI definition ReadMe embeds in each operation page of the provider's developer portal; paths and components merged by API title, nothing authored.
+  assembled_from:
+  - https://docs.nmi.com/reference/add-billing-address-v5.md
+  - https://docs.nmi.com/reference/add-processor-service.md
+  - https://docs.nmi.com/reference/add-shipping-address-v5.md
+  - https://docs.nmi.com/reference/adding-apple-pay.md
+  - https://docs.nmi.com/reference/cancel-device-display-v5.md
+  - https://docs.nmi.com/reference/cancel-device-payment-request-v5.md
+  - https://docs.nmi.com/reference/capture-payment-v5.md
+  - https://docs.nmi.com/reference/card-type.md
+  - https://docs.nmi.com/reference/check-services.md
+  - https://docs.nmi.com/reference/check-username-availability.md
+  - https://docs.nmi.com/reference/close-invoice-v5.md
+  - https://docs.nmi.com/reference/create-auth-v5.md
+  - https://docs.nmi.com/reference/create-credit-v5.md
+  - https://docs.nmi.com/reference/create-customer-v5.md
+  - https://docs.nmi.com/reference/create-device-payment-request-auth-v5.md
+  - https://docs.nmi.com/reference/create-device-payment-request-credit-v5.md
+  - https://docs.nmi.com/reference/create-device-payment-request-sale-v5.md
+  - https://docs.nmi.com/reference/create-device-payment-request-validate-v5.md
+  - https://docs.nmi.com/reference/create-invoice-v5.md
+  - https://docs.nmi.com/reference/create-merchant-key.md
+  - https://docs.nmi.com/reference/create-merchant.md
+  - https://docs.nmi.com/reference/create-plan-v5.md
+  - https://docs.nmi.com/reference/create-product-v5.md
+  - https://docs.nmi.com/reference/create-sale-v5.md
+  - https://docs.nmi.com/reference/create-subscription-v5.md
+  - https://docs.nmi.com/reference/delete-billing-address-v5.md
+  - https://docs.nmi.com/reference/delete-customer-v5.md
+  - https://docs.nmi.com/reference/delete-plan-v5.md
+  - https://docs.nmi.com/reference/delete-product-v5.md
+  - https://docs.nmi.com/reference/delete-shipping-address-v5.md
+  - https://docs.nmi.com/reference/delete-subscription-v5.md
+  - https://docs.nmi.com/reference/deregister-device-v5.md
+  - https://docs.nmi.com/reference/display-device-qr-code-v5.md
+  - https://docs.nmi.com/reference/get-billing-address-v5.md
+  - https://docs.nmi.com/reference/get-customer-v5.md
+  - https://docs.nmi.com/reference/get-device-payment-request-status-v5.md
+  - https://docs.nmi.com/reference/get-device-prompt-menu-status-v5.md
+  - https://docs.nmi.com/reference/get-device-prompt-sign-status-v5.md
+  - https://docs.nmi.com/reference/get-device-prompt-yes-no-status-v5.md
+  - https://docs.nmi.com/reference/get-device-v5.md
+  - https://docs.nmi.com/reference/get-fees-in-schedule.md
+  - https://docs.nmi.com/reference/get-invoice-v5.md
+  - https://docs.nmi.com/reference/get-merchant-list.md
+  - https://docs.nmi.com/reference/get-merchant-partner-user-info.md
+  - https://docs.nmi.com/reference/get-merchant-processors-value-added-services.md
+  - https://docs.nmi.com/reference/get-payment-v5.md
+  - https://docs.nmi.com/reference/get-plan-v5.md
+  - https://docs.nmi.com/reference/get-processor-config.md
+  - https://docs.nmi.com/reference/get-product-v5.md
+  - https://docs.nmi.com/reference/get-settlement-time.md
+  - https://docs.nmi.com/reference/get-shipping-address-v5.md
+  - https://docs.nmi.com/reference/get-specific-merchant-information.md
+  - https://docs.nmi.com/reference/get-sub-affiliate-list.md
+  - https://docs.nmi.com/reference/get-subscription-v5.md
+  - https://docs.nmi.com/reference/get-transaction-data.md
+  - https://docs.nmi.com/reference/list-customers-v5.md
+  - https://docs.nmi.com/reference/list-devices-v5.md
+  - https://docs.nmi.com/reference/list-invoices-v5.md
+  - https://docs.nmi.com/reference/list-plans-v5.md
+  - https://docs.nmi.com/reference/list-products-v5.md
+  - https://docs.nmi.com/reference/list-subscriptions-v5.md
+  - https://docs.nmi.com/reference/patch_v4-merchants-gateway-id-1.md
+  - https://docs.nmi.com/reference/prompt-device-menu-v5.md
+  - https://docs.nmi.com/reference/prompt-device-sign-v5.md
+  - https://docs.nmi.com/reference/prompt-device-yes-no-v5.md
+  - https://docs.nmi.com/reference/pull-all-fee-schedules.md
+  - https://docs.nmi.com/reference/query.md
+  - https://docs.nmi.com/reference/querying-merchants-apple-pay-status.md
+  - https://docs.nmi.com/reference/refund-payment-v5.md
+  - https://docs.nmi.com/reference/register-device-v5.md
+  - https://docs.nmi.com/reference/see-merchant-billing.md
+  - https://docs.nmi.com/reference/see-your-commission.md
+  - https://docs.nmi.com/reference/send-invoice-v5.md
+  - https://docs.nmi.com/reference/update-billing-address-v5.md
+  - https://docs.nmi.com/reference/update-customer-v5.md
+  - https://docs.nmi.com/reference/update-device-v5.md
+  - https://docs.nmi.com/reference/update-invoice-v5.md
+  - https://docs.nmi.com/reference/update-plan-v5.md
+  - https://docs.nmi.com/reference/update-product-v5.md
+  - https://docs.nmi.com/reference/update-shipping-address-v5.md
+  - https://docs.nmi.com/reference/update-subscription-v5.md
+  - https://docs.nmi.com/reference/updating-settlement-time.md
+  - https://docs.nmi.com/reference/validate-payment-v5.md
+  - https://docs.nmi.com/reference/void-payment-v5.md
+  merge:
+    pages: 84
+    deduped: 4356
+    conflicts_kept_first: 0

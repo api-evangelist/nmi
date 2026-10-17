@@ -1,0 +1,2318 @@
+openapi: 3.2.0
+info:
+  version: 1.0.0
+  title: Payments Processors and Services API
+  description: Our payments platform exposes two generations of API.
+  x-logo:
+    url: https://www.nmi.com/app/themes/nmi/images/NMI_Logo_Primary.webp
+servers:
+- url: https://sandbox.nmi.com/api
+security: []
+tags:
+- name: Processors and Services
+  description: Here you can find information about endpoints that provide general services that are useful across a variety workflows.
+paths:
+  /v4/card_type:
+    post:
+      tags:
+      - Processors and Services
+      operationId: cardType
+      security: []
+      summary: Card Type Lookup
+      description: 'Usage
+
+        This endpoint will return whether the card is a `debit`, `credit`, or `charge` card. A card may return `unknown` if we can''t recognize the card type provided. Or it may return `unavailable` if the service is offline.'
+      parameters:
+      - $ref: '#/components/parameters/ContentType'
+      - $ref: '#/components/parameters/Authorization'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CardTypeLookupRequest'
+            examples:
+              Debit Card:
+                $ref: '#/components/examples/CardTypeLookupDebit'
+              Credit Card:
+                $ref: '#/components/examples/CardTypeLookupCredit'
+              Unknown Card:
+                $ref: '#/components/examples/CardTypeLookupUnknown'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CardTypeLookupResponse'
+              examples:
+                Debit Card:
+                  $ref: '#/components/examples/CardTypeLookupDebitResult'
+                Credit Card:
+                  $ref: '#/components/examples/CardTypeLookupCreditResult'
+                Unknown Card:
+                  $ref: '#/components/examples/CardTypeLookupUnknownResult'
+                Service Unavailable:
+                  $ref: '#/components/examples/CardTypeLookupUnavailableResult'
+  /v4/processors:
+    post:
+      tags:
+      - Processors and Services
+      operationId: addProcessorService
+      security: []
+      summary: Add Processor / Value-Added Service
+      description: 'Adding the Processor
+
+        This request submits the processor details for a specific merchant.'
+      parameters:
+      - $ref: '#/components/parameters/ContentType'
+      - $ref: '#/components/parameters/Authorization'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              oneOf:
+              - $ref: '#/components/schemas/AddProcessorRequest'
+              - $ref: '#/components/schemas/MakeServiceActiveRequest'
+              - $ref: '#/components/schemas/MakeServiceOfferedRequest'
+            examples:
+              Add Standard Processor:
+                $ref: '#/components/examples/AddStandardProcessor'
+              Make Vault Service Active:
+                $ref: '#/components/examples/MakeVaultServiceActive'
+              Make Invoicing Service Offered:
+                $ref: '#/components/examples/MakeInvoiceServiceOffered'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AddProcessorServiceResponse'
+              examples:
+                Add Standard Processor:
+                  $ref: '#/components/examples/AddProcessorExampleResponse'
+                Vault Service Made Active:
+                  $ref: '#/components/examples/MakeServiceActiveExampleResponse'
+                Invoicing Service Offered:
+                  $ref: '#/components/examples/MakeServiceOfferedExampleResponse'
+  /v4/processors/reports:
+    post:
+      tags:
+      - Processors and Services
+      operationId: getMerchantProcessorsAndValueAddedServicesDetails
+      security: []
+      summary: Get Merchant Processors and Value Added Services Details
+      description: 'Usage
+
+        This request will return all services that are active, offered, or in a free trial state for a merchant, or a list of merchants. This will return every detail you can see in the partner portal, so the responses can be quite lengthy if the merchant has several processors and numerous services available to them.'
+      parameters:
+      - $ref: '#/components/parameters/ContentType'
+      - $ref: '#/components/parameters/Authorization'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GetMerchantProcessorsAndValueAddedServicesDetailsRequest'
+            examples:
+              Create Standard Merchant:
+                $ref: '#/components/examples/GetMerchantProcessorsAndValueAddedServicesDetailsExampleRequest'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetMerchantProcessorsAndValueAddedServicesDetailsResponse'
+              examples:
+                Get Processor Config:
+                  $ref: '#/components/examples/GetMerchantProcessorsAndValueAddedServicesDetailsExampleResponse'
+  /v4/services/search:
+    post:
+      tags:
+      - Processors and Services
+      operationId: checkServices
+      security: []
+      summary: Get Available Services
+      description: 'Usage
+
+        This request will pull down a list of all services that you can offer to merchants. You don’t need to run this every time you board a merchant, but it is useful to occasionally make sure a service is available before trying to add it to a merchant account.'
+      parameters:
+      - $ref: '#/components/parameters/ContentType'
+      - $ref: '#/components/parameters/Authorization'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CheckAvailableServicesRequest'
+            examples:
+              Create Standard Merchant:
+                $ref: '#/components/examples/CheckAvailableServices'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: array
+                $ref: '#/components/schemas/CheckAvailableServicesResponse'
+              examples:
+                Check Available Services:
+                  $ref: '#/components/examples/CheckAvailableServicesExampleResponse'
+  /v4/services/{id}/config:
+    get:
+      tags:
+      - Processors and Services
+      operationId: getProcessorConfig
+      security: []
+      summary: Get Processor Config
+      description: 'Usage
+
+        This request gets the config details for the processor you want to board. This is required if you do not know what fields to pass into the Add Processor request.
+
+
+        You want to include the `id` value from the "Check What Services Are Available" search.'
+      parameters:
+      - $ref: '#/components/parameters/GetProcessorConfigRequest'
+      - $ref: '#/components/parameters/ContentType'
+      - $ref: '#/components/parameters/Authorization'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetProcessorConfigResponse'
+              examples:
+                Get Processor Config:
+                  $ref: '#/components/examples/GetProcessorConfigExampleResponse'
+components:
+  examples:
+    CheckAvailableServicesExampleResponse:
+      summary: Check Available Services
+      description: This request will pull down a list of all services that you can offer to merchants.
+      value:
+      - objectType: service
+        id: acu
+        name: Automatic Card Updater
+        type: feature
+        source: internal
+        canMerchantSignup: true
+        canBeDeleted: false
+        supportsSplitFunding: false
+        blockers: []
+      - objectType: service
+        id: amexdemv
+        name: American Express Direct UK/EU - EMV
+        type: card
+        source: external
+        canMerchantSignup: false
+        canBeDeleted: true
+        supportsSplitFunding: false
+        blockers: []
+      - objectType: service
+        id: cash
+        name: Cash
+        type: cash
+        source: internal
+        canMerchantSignup: true
+        canBeDeleted: true
+        supportsSplitFunding: false
+        blockers: []
+      - objectType: service
+        id: fdmstemv
+        name: First Data Rapid Connect Nashville North - EMV
+        type: card
+        source: external
+        canMerchantSignup: false
+        canBeDeleted: true
+        supportsSplitFunding: false
+        blockers: []
+      - objectType: service
+        id: geti
+        name: Paya (formerly GETI)
+        type: check
+        source: external
+        canMerchantSignup: false
+        canBeDeleted: true
+        supportsSplitFunding: false
+        blockers: []
+    AddStandardProcessor:
+      summary: Add Processor
+      description: Adds a standard processor to the specific merchant.
+      value:
+        processorFields:
+          '1': '324324524'
+          '2': '3456342'
+          '3': CREDITCALLHCRC
+          '4': '10001'
+          '5': ''
+          '6': false
+        descriptor:
+          url: ''
+        currencies:
+        - USD
+        accountClassification: ecommerce
+        billingType: standard
+        paymentTypes:
+        - visa
+        - mastercard
+        - amex
+        - discover
+        - diners
+        - jcb
+        - maestro
+        maxMonthlyVolume: '0.00'
+        avsCvvPreCheck: voidOnDecline
+        skipAvsCvv: false
+        applyToAllCardType: false
+        enableDuplicateChecking: true
+        allowMerchantOverride: false
+        duplicateTime: '1200'
+        requiredFields:
+          name: true
+          company: false
+          address: false
+          city: false
+          state: false
+          zip: false
+          country: false
+          phone: false
+          email: false
+          driversLicense: false
+          driversLicenseState: false
+          driversLicenseDob: false
+          ssn: false
+          cvv: notRequired
+          fax: false
+          url: false
+          orderId: false
+          orderDescription: false
+          poNumber: false
+          shipping: false
+          tax: false
+          shippingName: false
+          shippingAddress: false
+          shippingCity: false
+          shippingState: false
+          shippingZip: false
+          shippingCountry: false
+          mdf1: false
+          mdf2: false
+          mdf3: false
+          mdf4: false
+          mdf5: false
+          mdf6: false
+          mdf7: false
+          mdf8: false
+          mdf9: false
+          mdf10: false
+          mdf11: false
+          mdf12: false
+          mdf13: false
+          mdf14: false
+          mdf15: false
+          mdf16: false
+          mdf17: false
+          mdf18: false
+          mdf19: false
+          mdf20: false
+        processorName: Retail
+        mcc: '5999'
+        serviceId: fdmshemv
+        merchantId: '1588'
+    CardTypeLookupUnknown:
+      summary: Card Type Lookup - Unknown
+      description: Card Type Lookup - Will return `unknown`
+      value:
+        ccnumber: '341382'
+    MakeInvoiceServiceOffered:
+      summary: Make Invoicing Service Offered
+      description: Offers the Invoicing value-added service to the specific merchant.
+      value:
+        merchantId: '1587'
+        serviceId: invoice
+        condition: offered
+    CardTypeLookupDebitResult:
+      summary: Card Type Lookup - Debit
+      description: Card Type Lookup response for a `debit` card
+      value:
+        result: debit
+    GetMerchantProcessorsAndValueAddedServicesDetailsExampleResponse:
+      summary: Get Merchant Processors and Value Added Services Details
+      description: Get Merchant Processors and Value Added Services Details
+      value:
+      - objectType: report
+        reportId: 155
+        offset: 0
+        maxResults: 1000
+        totalResults: 17
+        hasMore: false
+        links:
+          first: https://sandbox.nmi.com/api/v4/processors/reports/155?maxResults=1000
+          last: https://sandbox.nmi.com/api/v4/processors/reports/155?offset=0&maxResults=1000
+          next: https://sandbox.nmi.com/api/v4/processors/reports/155?offset=1000&maxResults=1000
+          previous: https://sandbox.nmi.com/api/v4/processors/reports/155?offset=0&maxResults=1000
+        results:
+        - objectType: processor
+          id: '12'
+          processorType: feature
+          processorId: ''
+          processorName: ''
+          serviceId: acu
+          merchantId: '33'
+          mcc: '0000'
+          accountClassification: ecommerce
+          maxTicketAmount: ''
+          maxMonthlyVolume: '0.00'
+          applyToAllCardType: false
+          enableDuplicateChecking: true
+          allowMerchantOverride: false
+          duplicateTime: '1200'
+          status: active
+          condition: mandatory
+          extraDetails:
+            nextAcuRunDate: '2023-04-10'
+            previousAcuRunDate: '2023-04-04'
+            previousAcuRunStatus: null
+          freeTrialEndDate: null
+          freeTrialDaysLeft: ''
+          hasBeenActive: true
+          created: '2018-03-09T16:03:48+00:00'
+          updated: '2023-03-24T18:39:07+00:00'
+          supportsReroutedRefunds: false
+          shouldDisableFields: false
+          disabled: null
+          refundProcessor: null
+          billingType: standard
+          avsCvvPreCheck: null
+          skipAvsCvv: false
+          processorFields: {}
+          paymentTypes: []
+          descriptor:
+            descriptor: null
+            phone: null
+            city: null
+            state: null
+            url: null
+          currencies:
+          - ''
+          requiredFields:
+            name: false
+            company: false
+            address: false
+            city: false
+            state: false
+            zip: false
+            country: false
+            phone: false
+            email: false
+            driversLicense: false
+            driversLicenseState: false
+            driversLicenseDob: false
+            ssn: false
+          faceConfiguration: null
+          disabledFields: {}
+        - objectType: processor
+          id: '440'
+          processorType: card
+          processorId: tsys
+          processorName: tsys
+          serviceId: tsys
+          merchantId: '33453'
+          mcc: '5999'
+          accountClassification: ecommerce
+          maxTicketAmount: ''
+          maxMonthlyVolume: '100000.00'
+          applyToAllCardType: false
+          enableDuplicateChecking: false
+          allowMerchantOverride: false
+          duplicateTime: '0'
+          status: active
+          condition: mandatory
+          extraDetails: {}
+          freeTrialEndDate: null
+          freeTrialDaysLeft: ''
+          hasBeenActive: true
+          created: '2018-03-09T21:55:42+00:00'
+          updated: '2023-03-24T18:39:34+00:00'
+          supportsReroutedRefunds: true
+          shouldDisableFields: true
+          disabled: null
+          refundProcessor: null
+          billingType: standard
+          avsCvvPreCheck: voidOnDecline
+          skipAvsCvv: false
+          processorFields:
+            '1': 88******2454
+            '2': '999995'
+            '3': '5999'
+            '4': '1515'
+            '5': '5999'
+            '6': '00001'
+            '7': 7*****24
+            '8': '000000'
+            '9': '111111'
+            '10': ''
+            '11': ''
+            '12': ''
+            '13': ''
+            '14': FR****1234
+            '16': ''
+            '17': ''
+            '18': false
+            '19': false
+            '22': ''
+            '23': ''
+            '24': ''
+            '25': ''
+            '26': ''
+            '27': ''
+            '28': ''
+            '29': ''
+            '30': ''
+            '31': ''
+            '32': false
+          paymentTypes:
+          - visa
+          - mastercard
+          - amex
+          - discover
+          - diners
+          - jcb
+          descriptor:
+            descriptor: ''
+            phone: ''
+            city: null
+            state: null
+            url: null
+          currencies:
+          - USD
+          requiredFields:
+            name: false
+            company: false
+            address: false
+            city: false
+            state: false
+            zip: false
+            country: false
+            phone: false
+            email: false
+            driversLicense: false
+            driversLicenseState: false
+            driversLicenseDob: false
+            ssn: false
+            cvv: notRequired
+            fax: false
+            url: false
+            orderId: false
+            orderDescription: false
+            poNumber: false
+            shipping: false
+            tax: false
+            shippingName: false
+            shippingAddress: false
+            shippingCity: false
+            shippingState: false
+            shippingZip: false
+            shippingCountry: false
+            shipFromZipCode: false
+            summaryCommodityCode: false
+            dutyAmount: false
+            discountAmount: false
+            nationalTaxAmount: false
+            alternateTaxAmount: false
+            alternateTaxId: false
+            vatTaxAmount: false
+            vatTaxRate: false
+            vatInvoiceReferenceNumber: false
+            customerVatRegistration: false
+            merchantVatRegistration: false
+            orderDate: false
+            mdf1: false
+            mdf2: false
+            mdf3: false
+            mdf4: false
+            mdf5: false
+            mdf6: false
+            mdf7: false
+            mdf8: false
+            mdf9: false
+            mdf10: false
+            mdf11: false
+            mdf12: false
+            mdf13: false
+            mdf14: false
+            mdf15: false
+            mdf16: false
+            mdf17: false
+            mdf18: false
+            mdf19: false
+            mdf20: false
+          faceConfiguration: null
+          disabledFields:
+            processorFields:
+              '1': true
+              '2': true
+              '3': true
+              '4': true
+    MakeServiceOfferedExampleResponse:
+      summary: Invoicing Service Offered
+      description: This request returns the details of the value-added service now offered.
+      value:
+        objectType: processor
+        id: 535
+        processorType: feature
+        processorId: null
+        processorName: null
+        serviceId: invoice
+        merchantId: '1587'
+        mcc: '0000'
+        accountClassification: null
+        maxTicketAmount: ''
+        maxMonthlyVolume: null
+        applyToAllCardType: false
+        enableDuplicateChecking: false
+        allowMerchantOverride: false
+        duplicateTime: null
+        status: inactive
+        condition: offered
+        extraDetails: {}
+        created: '2022-09-26T15:47:48+00:00'
+        updated: '2022-09-26T15:47:48+00:00'
+        supportsReroutedRefunds: false
+        shouldDisableFields: false
+        disabled: null
+        refundProcessor: null
+        billingType: standard
+        avsCvvPreCheck: null
+        skipAvsCvv: false
+        processorFields: {}
+        paymentTypes: []
+        descriptor:
+          descriptor: null
+          phone: null
+          city: null
+          state: null
+          url: null
+        currencies:
+        - ''
+        requiredFields:
+          name: false
+          company: false
+          address: false
+          city: false
+          state: false
+          zip: false
+          country: false
+          phone: false
+          email: false
+          driversLicense: false
+          driversLicenseState: false
+          driversLicenseDob: false
+          ssn: false
+        faceConfiguration: null
+        disabledFields: {}
+    CardTypeLookupUnknownResult:
+      summary: Card Type Lookup - Unknown
+      description: Card Type Lookup response for an `unknown` card
+      value:
+        result: unknown
+    CardTypeLookupCreditResult:
+      summary: Card Type Lookup - Credit
+      description: Card Type Lookup response for a `credit` card
+      value:
+        result: credit
+    GetMerchantProcessorsAndValueAddedServicesDetailsExampleRequest:
+      summary: Get Merchant Processors and Value Added Services Details
+      description: Get list of merchant processors and value added services details
+      value:
+        offset: '0'
+        maxResults: '1000'
+        merchantIds:
+        - '33'
+        - '33453'
+    MakeServiceActiveExampleResponse:
+      summary: Vault Service Made Active
+      description: This request returns the details of the value-added service now made active.
+      value:
+        objectType: processor
+        id: 536
+        processorType: unknown
+        processorId: null
+        processorName: null
+        serviceId: vault
+        merchantId: '1587'
+        mcc: '0000'
+        accountClassification: null
+        maxTicketAmount: ''
+        maxMonthlyVolume: null
+        applyToAllCardType: false
+        enableDuplicateChecking: false
+        allowMerchantOverride: false
+        duplicateTime: null
+        status: pending
+        condition: offered
+        extraDetails: {}
+        created: '2022-09-26T15:47:48+00:00'
+        updated: '2022-09-26T15:47:48+00:00'
+        supportsReroutedRefunds: false
+        shouldDisableFields: false
+        disabled: null
+        refundProcessor: null
+        billingType: standard
+        avsCvvPreCheck: null
+        skipAvsCvv: false
+        processorFields: {}
+        paymentTypes: []
+        descriptor:
+          descriptor: null
+          phone: null
+          city: null
+          state: null
+          url: null
+        currencies:
+        - ''
+        requiredFields:
+          name: false
+          company: false
+          address: false
+          city: false
+          state: false
+          zip: false
+          country: false
+          phone: false
+          email: false
+          driversLicense: false
+          driversLicenseState: false
+          driversLicenseDob: false
+          ssn: false
+        faceConfiguration: null
+        disabledFields: {}
+    CardTypeLookupUnavailableResult:
+      summary: Card Type Lookup - Unavailable
+      description: Card Type Lookup response when the service is offline
+      value:
+        result: unavailable
+    CardTypeLookupCredit:
+      summary: Card Type Lookup - Credit
+      description: Card Type Lookup - Will return `credit`
+      value:
+        ccnumber: '543267'
+    GetProcessorConfigExampleResponse:
+      summary: Get Processor Config
+      description: This request returns everything you need to know about what data to submit in the actual boarding request.
+      value:
+        objectType: serviceConfig
+        processorFields:
+        - id: '1'
+          name: Rapid Connect Merchant Number
+          optional: false
+          validationRegex: /^.{0,256}$/
+          helpText: ''
+          type: text
+          disabled: false
+          readonly: false
+          highlight: false
+          defaultValue: ''
+          selectOptions: null
+        - id: '2'
+          name: Rapid Connect Terminal ID
+          optional: false
+          validationRegex: /^[0-9A-Za-z]{3,18}$/
+          helpText: ''
+          type: text
+          disabled: false
+          readonly: false
+          highlight: false
+          defaultValue: ''
+          selectOptions: null
+        - id: '5'
+          name: Amex Charge Description
+          optional: true
+          validationRegex: /^[0-9a-zA-Z_]{1,23}$/
+          helpText: 'Note:  Only applicable to eCommerce American Express transactions.'
+          type: text
+          disabled: false
+          readonly: false
+          highlight: false
+          defaultValue: ''
+          selectOptions: null
+        - id: '6'
+          name: Payer Authentication / 3DS Capable
+          optional: true
+          validationRegex: /^[0-9a-zA-Z_]{1,23}$/
+          helpText: Ignored and assumed to be checked when a 3DS service is boarded.
+          type: checkbox
+          disabled: false
+          readonly: false
+          highlight: false
+          defaultValue: false
+          selectOptions: null
+        - id: '3'
+          name: POS Solution Name
+          optional: true
+          validationRegex: /^.{0,256}$/
+          helpText: ''
+          type: text
+          disabled: false
+          readonly: false
+          highlight: false
+          defaultValue: CREDITCALLHCRC
+          selectOptions: null
+        - id: '4'
+          name: Group ID
+          optional: true
+          validationRegex: /^[0-9]{5}$/
+          helpText: ''
+          type: text
+          disabled: false
+          readonly: false
+          highlight: false
+          defaultValue: '10001'
+          selectOptions: null
+        paymentTypes:
+        - visa
+        - mastercard
+        - amex
+        - discover
+        - diners
+        - jcb
+        - maestro
+        descriptor:
+          descriptor:
+            isAllowed: false
+            maxLength: 25
+            validationRegex: /^[a-zA-Z0-9\.\-'_*+,&$()]{1}[a-zA-Z0-9\.\- '_*+,&$()]*$/
+            helpText: 'Allowed characters: A-Z, 0-9, and certain special characters.'
+          phone:
+            isAllowed: false
+            maxLength: 0
+            validationRegex: null
+            helpText: null
+          city:
+            isAllowed: false
+            maxLength: 0
+            validationRegex: null
+            helpText: null
+          state:
+            isAllowed: false
+            maxLength: 0
+            validationRegex: null
+            helpText: null
+          url:
+            isAllowed: true
+            maxLength: 50
+            validationRegex: /(?:[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\.)+[a-z0-9][a-z0-9-]{0,61}[a-z0-9]/
+            helpText: Please enter a valid url. ex. www.example.com
+        allowedCurrencies:
+        - USD
+        allowedClassifications:
+        - ecommerce
+        - retail
+        - moto
+        - restaurant
+        defaultCurrency: USD
+        singleCurrencyMode: false
+        shouldShowMccField: true
+        level3Support: false
+        checkVerification: false
+        avsCvvPreCheckSupport: true
+        skipAvsCvvSupport: false
+        canBeOffered: false
+        faceConfiguration: null
+    CheckAvailableServices:
+      summary: Check Available Services
+      description: Gets a list of all services that you can offer to merchants.
+      value:
+        maxResults: '1000'
+    CardTypeLookupDebit:
+      summary: Card Type Lookup - Debit
+      description: Card Type Lookup - Will return `debit`
+      value:
+        ccnumber: '453978'
+    MakeVaultServiceActive:
+      summary: Make Vault Service Active
+      description: Makes the Customer Vault value-added service active for the specific merchant.
+      value:
+        merchantId: '1587'
+        serviceId: vault
+        condition: offered
+        status: active
+    AddProcessorExampleResponse:
+      summary: Add Processor
+      description: This request returns the details of the processor added.
+      value:
+        objectType: processor
+        id: 518
+        processorType: card
+        processorId: retail
+        processorName: Retail
+        serviceId: fdmshemv
+        merchantId: '1588'
+        mcc: '5999'
+        accountClassification: ecommerce
+        maxTicketAmount: ''
+        maxMonthlyVolume: '0.00'
+        applyToAllCardType: false
+        enableDuplicateChecking: true
+        allowMerchantOverride: false
+        duplicateTime: '1200'
+        status: pending
+        condition: mandatory
+        extraDetails: {}
+        created: '2022-09-26T13:58:56+00:00'
+        updated: '2022-09-26T13:58:56+00:00'
+        supportsReroutedRefunds: true
+        shouldDisableFields: true
+        disabled: null
+        refundProcessor: null
+        billingType: standard
+        avsCvvPreCheck: voidOnDecline
+        skipAvsCvv: false
+        processorFields:
+          '1': 32***4524
+          '2': '3456342'
+          '3': CREDITCALLHCRC
+          '4': '10001'
+          '5': ''
+          '6': false
+        paymentTypes:
+        - visa
+        - mastercard
+        - amex
+        - discover
+        - diners
+        - jcb
+        - maestro
+        descriptor:
+          descriptor: null
+          phone: null
+          city: null
+          state: null
+          url: ''
+        currencies:
+        - USD
+        requiredFields:
+          name: true
+          company: false
+          address: false
+          city: false
+          state: false
+          zip: false
+          country: false
+          phone: false
+          email: false
+          driversLicense: false
+          driversLicenseState: false
+          driversLicenseDob: false
+          ssn: false
+          cvv: notRequired
+          fax: false
+          url: false
+          orderId: false
+          orderDescription: false
+          poNumber: false
+          shipping: false
+          tax: false
+          shippingName: false
+          shippingAddress: false
+          shippingCity: false
+          shippingState: false
+          shippingZip: false
+          shippingCountry: false
+          mdf1: false
+          mdf2: false
+          mdf3: false
+          mdf4: false
+          mdf5: false
+          mdf6: false
+          mdf7: false
+          mdf8: false
+          mdf9: false
+          mdf10: false
+          mdf11: false
+          mdf12: false
+          mdf13: false
+          mdf14: false
+          mdf15: false
+          mdf16: false
+          mdf17: false
+          mdf18: false
+          mdf19: false
+          mdf20: false
+        faceConfiguration: null
+        disabledFields:
+          processorFields:
+            '3': true
+            '4': true
+  parameters:
+    Authorization:
+      name: Authorization
+      in: header
+      required: true
+      schema:
+        type: string
+      description: Your v4 API key that was generated in the Partner portal.
+    ContentType:
+      name: Content-Type
+      in: header
+      required: true
+      schema:
+        type: string
+      description: The Content-Type representation header is used to indicate the original media type of the resource (prior to any content encoding applied for sending).
+      example: application/json
+    GetProcessorConfigRequest:
+      name: id
+      in: path
+      required: true
+      schema:
+        type: string
+      description: The id of the processor you want to board.
+      example: fdmshemv
+  schemas:
+    AddProcessorServiceResponse:
+      type: object
+      title: Response
+      properties:
+        objectType:
+          type: string
+          enum:
+          - processor
+          description: The type of object that was returned as a result of the request.
+        id:
+          type: integer
+          description: The unique identifier of the processor or service instance added.
+        processorType:
+          type: string
+          description: The type of the processor added.
+        processorId:
+          type: string
+          description: The ID of the processor added.
+        processorName:
+          type: string
+          description: The name of the processor added.
+        serviceId:
+          type: string
+          description: The code name of the processor platform or service added.
+        merchantId:
+          type: string
+          description: The merchant's Gateway ID.
+        mcc:
+          type: string
+          description: The Merchant Category Code.
+        accountClassification:
+          type: string
+          description: The account classification of the processor added.
+        maxTicketAmount:
+          type: string
+          description: The maximum amount for a single transaction run through the added processor.
+        maxMonthlyVolume:
+          type: string
+          description: The maximum total amount that can be run through the processor in a single month.
+        applyToAllCardType:
+          type: boolean
+          description: Whether the maxMonthlyVolume and maxTicketAmount apply to all payment methods through the added processor or not.
+        enableDuplicateChecking:
+          type: boolean
+          description: Whether duplicate checking is enabled or not.
+        allowMerchantOverride:
+          type: boolean
+          description: Whether the merchant is allowed to ignore the duplicate check on a per-transaction basis or not.
+        duplicateTime:
+          type: string
+          description: The amount of time in seconds to look back to check if a transaction is a duplicate.
+        status:
+          type: string
+          description: The status of the added processor or service, depending on the processor/billing authorization status.
+          enum:
+          - active
+          - pending
+        condition:
+          type: string
+          description: The condition of the added processor or service.
+          enum:
+          - offered
+          - notOffered
+          - mandatory
+        extraDetails:
+          type: object
+          description: Any extra details about the added processor.
+        created:
+          type: string
+          description: The date and time of when the processor or service was added.
+        updated:
+          type: string
+          description: The date and time of when the processor or service was last updated.
+        supportsReroutedRefunds:
+          type: boolean
+          description: Whether the added processor supports rerouted refunds or not.
+        shouldDisableFields:
+          type: boolean
+          description: Whether the added processor should disable fields or not.
+        disabled:
+          type: boolean
+          description: Whether the processor is disabled or not.
+        refundProcessor:
+          type: string
+          description: The specified processor to reroute future refunds to, if this processor is disabled.
+        billingType:
+          type: string
+          description: The billing type of the added processor or service.
+        avsCvvPreCheck:
+          type: string
+          description: The AVS/CVV precheck method for the added processor.
+        skipAvsCvv:
+          type: boolean
+          description: Whether skipping AVS/CVV is enabled for the added processor or not.
+        processorFields:
+          type: object
+          description: The processor-dependent fields for the added processor.
+        paymentTypes:
+          type: array
+          description: The allowed payment types for the added processor.
+          items:
+            type: string
+            enum:
+            - visa
+            - mastercard
+            - amex
+            - discover
+            - diners
+            - jcb
+            - maestro
+        descriptor:
+          type: object
+          description: The descriptor fields for the added processor.
+          properties:
+            descriptor:
+              type: string
+              description: The descriptor for the added processor.
+            phone:
+              type: string
+              description: The descriptor phone number for the added processor.
+            city:
+              type: string
+              description: The descriptor city for the added processor.
+            state:
+              type: string
+              description: The descriptor state for the added processor.
+            url:
+              type: string
+              description: The descriptor URL for the added processor.
+        currencies:
+          type: array
+          description: The allowed currencies for the added processor.
+          items:
+            type: string
+        requiredFields:
+          type: object
+          description: The fields that are required to be populated for each transaction.
+          properties:
+            name:
+              type: boolean
+              description: Whether the name is a required field or not.
+            company:
+              type: boolean
+              description: Whether the company is a required field or not.
+            address:
+              type: boolean
+              description: Whether the address is a required field or not.
+            city:
+              type: boolean
+              description: Whether the city is required field or not.
+            state:
+              type: boolean
+              description: Whether the state is a required field or not.
+            zip:
+              type: boolean
+              description: Whether the ZIP code is a required field or not.
+            country:
+              type: boolean
+              description: Whether the country is a required field or not.
+            phone:
+              type: boolean
+              description: Whether the phone is a required field or not.
+            email:
+              type: boolean
+              description: Whether the email is a required field or not.
+            driversLicense:
+              type: boolean
+              description: Whether the driver's license is a required field or not.
+            driversLicenseState:
+              type: boolean
+              description: Whether the driver's license state is a required field or not.
+            driversLicenseDob:
+              type: boolean
+              description: Whether the driver's license date of birth is a required field or not.
+            ssn:
+              type: boolean
+              description: Whether the SSN is a required field or not.
+            cvv:
+              type: string
+              description: The CVV requirement setting.
+            fax:
+              type: boolean
+              description: Whether the fax is a required field or not.
+            url:
+              type: boolean
+              description: Whether the URL is a required field or not.
+            orderId:
+              type: boolean
+              description: Whether the order ID is a required field or not.
+            orderDescription:
+              type: boolean
+              description: Whether the order description is a required field or not.
+            poNumber:
+              type: boolean
+              description: Whether the PO number is a required field or not.
+            shipping:
+              type: boolean
+              description: Whether shipping is a required field or not.
+            tax:
+              type: boolean
+              description: Whether tax is a required field or not.
+            shippingName:
+              type: boolean
+              description: Whether the shipping name is a required field or not.
+            shippingAddress:
+              type: boolean
+              description: Whether the shipping address is a required field or not.
+            shippingCity:
+              type: boolean
+              description: Whether the shipping city is a required field or not.
+            shippingState:
+              type: boolean
+              description: Whether the shipping state is a required field or not.
+            shippingZip:
+              type: boolean
+              description: Whether the shipping ZIP code is a required field or not.
+            shippingCountry:
+              type: boolean
+              description: Whether the shipping country is a required field or not.
+            mdf1:
+              type: boolean
+              description: Whether Merchant Defined Field 1 is a required field or not.
+            mdf2:
+              type: boolean
+              description: Whether Merchant Defined Field 2 is a required field or not.
+            mdf3:
+              type: boolean
+              description: Whether Merchant Defined Field 3 is a required field or not.
+            mdf4:
+              type: boolean
+              description: Whether Merchant Defined Field 4 is a required field or not.
+            mdf5:
+              type: boolean
+              description: Whether Merchant Defined Field 5 is a required field or not.
+            mdf6:
+              type: boolean
+              description: Whether Merchant Defined Field 6 is a required field or not.
+            mdf7:
+              type: boolean
+              description: Whether Merchant Defined Field 7 is a required field or not.
+            mdf8:
+              type: boolean
+              description: Whether Merchant Defined Field 8 is a required field or not.
+            mdf9:
+              type: boolean
+              description: Whether Merchant Defined Field 9 is a required field or not.
+            mdf10:
+              type: boolean
+              description: Whether Merchant Defined Field 10 is a required field or not.
+            mdf11:
+              type: boolean
+              description: Whether Merchant Defined Field 11 is a required field or not.
+            mdf12:
+              type: boolean
+              description: Whether Merchant Defined Field 12 is a required field or not.
+            mdf13:
+              type: boolean
+              description: Whether Merchant Defined Field 13 is a required field or not.
+            mdf14:
+              type: boolean
+              description: Whether Merchant Defined Field 14 is a required field or not.
+            mdf15:
+              type: boolean
+              description: Whether Merchant Defined Field 15 is a required field or not.
+            mdf16:
+              type: boolean
+              description: Whether Merchant Defined Field 16 is a required field or not.
+            mdf17:
+              type: boolean
+              description: Whether Merchant Defined Field 17 is a required field or not.
+            mdf18:
+              type: boolean
+              description: Whether Merchant Defined Field 18 is a required field or not.
+            mdf19:
+              type: boolean
+              description: Whether Merchant Defined Field 19 is a required field or not.
+            mdf20:
+              type: boolean
+              description: Whether Merchant Defined Field 20 is a required field or not.
+        faceConfiguration:
+          type: object
+          description: The FACe configuration for the added processor.
+        disabledFields:
+          type: object
+          description: The disabled fields for the added processor.
+          properties:
+            processorFields:
+              type: object
+              description: The processor-dependent fields and whether they are disabled or not.
+    GetMerchantProcessorsAndValueAddedServicesDetailsResponse:
+      type: object
+      title: Report Response
+      properties:
+        objectType:
+          type: string
+          enum:
+          - report
+          description: The type of object that was returned as a result of the request.
+        reportId:
+          type: integer
+          description: The report's ID.
+        offset:
+          type: integer
+          description: The offset for paginated results.
+        maxResults:
+          type: integer
+          description: The maximum number of results.
+        totalResults:
+          type: integer
+          description: The total number of results.
+        hasMore:
+          type: boolean
+          description: Indicates if there are more results to be fetched.
+        links:
+          type: object
+          description: Links for navigating the paginated results.
+          properties:
+            first:
+              type: string
+              description: Link to the first page of results.
+            last:
+              type: string
+              description: Link to the last page of results.
+            next:
+              type: string
+              description: Link to the next page of results.
+            previous:
+              type: string
+              description: Link to the previous page of results.
+        results:
+          type: array
+          description: Array of processor objects.
+          items:
+            type: object
+            properties:
+              objectType:
+                type: string
+                description: The type of object that was returned as a result of the request.
+              id:
+                type: integer
+                description: The unique identifier of the processor or service instance added.
+              processorType:
+                type: string
+                description: The type of the processor added.
+              processorId:
+                type: string
+                description: The ID of the processor added.
+              processorName:
+                type: string
+                description: The name of the processor added.
+              serviceId:
+                type: string
+                description: The code name of the processor platform or service added.
+              merchantId:
+                type: string
+                description: The merchant's Gateway ID.
+              mcc:
+                type: string
+                description: The Merchant Category Code.
+              accountClassification:
+                type: string
+                description: The account classification of the processor added.
+              maxTicketAmount:
+                type: string
+                description: The maximum amount for a single transaction run through the added processor.
+              maxMonthlyVolume:
+                type: string
+                description: The maximum total amount that can be run through the processor in a single month.
+              applyToAllCardType:
+                type: boolean
+                description: Whether the maxMonthlyVolume and maxTicketAmount apply to all payment methods through the added processor or not.
+              enableDuplicateChecking:
+                type: boolean
+                description: Whether duplicate checking is enabled or not.
+              allowMerchantOverride:
+                type: boolean
+                description: Whether the merchant is allowed to ignore the duplicate check on a per-transaction basis or not.
+              freeTrialEndDate:
+                type: string
+                description: End date of free trial.
+              freeTrialDaysLeft:
+                type: string
+                description: Days left of free trial.
+              duplicateTime:
+                type: string
+                description: The amount of time in seconds to look back to check if a transaction is a duplicate.
+              status:
+                type: string
+                description: The status of the added processor or service, depending on the processor/billing authorization status.
+                enum:
+                - active
+                - pending
+              condition:
+                type: string
+                description: The condition of the added processor or service.
+                enum:
+                - offered
+                - notOffered
+                - mandatory
+              extraDetails:
+                type: object
+                description: Any extra details about the added processor.
+              created:
+                type: string
+                description: The date and time of when the processor or service was added.
+              updated:
+                type: string
+                description: The date and time of when the processor or service was last updated.
+              supportsReroutedRefunds:
+                type: boolean
+                description: Whether the added processor supports rerouted refunds or not.
+              shouldDisableFields:
+                type: boolean
+                description: Whether the added processor should disable fields or not.
+              disabled:
+                type: boolean
+                description: Whether the processor is disabled or not.
+              refundProcessor:
+                type: string
+                description: The specified processor to reroute future refunds to, if this processor is disabled.
+              billingType:
+                type: string
+                description: The billing type of the added processor or service.
+              avsCvvPreCheck:
+                type: string
+                description: The AVS/CVV precheck method for the added processor.
+              skipAvsCvv:
+                type: boolean
+                description: Whether skipping AVS/CVV is enabled for the added processor or not.
+              processorFields:
+                type: object
+                description: The processor-dependent fields for the added processor.
+              paymentTypes:
+                type: array
+                description: The allowed payment types for the added processor.
+                items:
+                  type: string
+                  enum:
+                  - visa
+                  - mastercard
+                  - amex
+                  - discover
+                  - diners
+                  - jcb
+                  - maestro
+              descriptor:
+                type: object
+                description: The descriptor fields for the added processor.
+                properties:
+                  descriptor:
+                    type: string
+                    description: The descriptor for the added processor.
+                  phone:
+                    type: string
+                    description: The descriptor phone number for the added processor.
+                  city:
+                    type: string
+                    description: The descriptor city for the added processor.
+                  state:
+                    type: string
+                    description: The descriptor state for the added processor.
+                  url:
+                    type: string
+                    description: The descriptor URL for the added processor.
+              currencies:
+                type: array
+                description: The allowed currencies for the added processor.
+                items:
+                  type: string
+              requiredFields:
+                type: object
+                description: The fields that are required to be populated for each transaction.
+                properties:
+                  name:
+                    type: boolean
+                    description: Whether the name is a required field or not.
+                  company:
+                    type: boolean
+                    description: Whether the company is a required field or not.
+                  address:
+                    type: boolean
+                    description: Whether the address is a required field or not.
+                  city:
+                    type: boolean
+                    description: Whether the city is required field or not.
+                  state:
+                    type: boolean
+                    description: Whether the state is a required field or not.
+                  zip:
+                    type: boolean
+                    description: Whether the ZIP code is a required field or not.
+                  country:
+                    type: boolean
+                    description: Whether the country is a required field or not.
+                  phone:
+                    type: boolean
+                    description: Whether the phone is a required field or not.
+                  email:
+                    type: boolean
+                    description: Whether the email is a required field or not.
+                  driversLicense:
+                    type: boolean
+                    description: Whether the driver's license is a required field or not.
+                  driversLicenseState:
+                    type: boolean
+                    description: Whether the driver's license state is a required field or not.
+                  driversLicenseDob:
+                    type: boolean
+                    description: Whether the driver's license date of birth is a required field or not.
+                  ssn:
+                    type: boolean
+                    description: Whether the SSN is a required field or not.
+                  cvv:
+                    type: string
+                    description: The CVV requirement setting.
+                  fax:
+                    type: boolean
+                    description: Whether the fax is a required field or not.
+                  url:
+                    type: boolean
+                    description: Whether the URL is a required field or not.
+                  orderId:
+                    type: boolean
+                    description: Whether the order ID is a required field or not.
+                  orderDescription:
+                    type: boolean
+                    description: Whether the order description is a required field or not.
+                  poNumber:
+                    type: boolean
+                    description: Whether the PO number is a required field or not.
+                  shipping:
+                    type: boolean
+                    description: Whether shipping is a required field or not.
+                  tax:
+                    type: boolean
+                    description: Whether tax is a required field or not.
+                  shippingName:
+                    type: boolean
+                    description: Whether the shipping name is a required field or not.
+                  shippingAddress:
+                    type: boolean
+                    description: Whether the shipping address is a required field or not.
+                  shippingCity:
+                    type: boolean
+                    description: Whether the shipping city is a required field or not.
+                  shippingState:
+                    type: boolean
+                    description: Whether the shipping state is a required field or not.
+                  shippingZip:
+                    type: boolean
+                    description: Whether the shipping ZIP code is a required field or not.
+                  shippingCountry:
+                    type: boolean
+                    description: Whether the shipping country is a required field or not.
+                  mdf1:
+                    type: boolean
+                    description: Whether Merchant Defined Field 1 is a required field or not.
+                  mdf2:
+                    type: boolean
+                    description: Whether Merchant Defined Field 2 is a required field or not.
+                  mdf3:
+                    type: boolean
+                    description: Whether Merchant Defined Field 3 is a required field or not.
+                  mdf4:
+                    type: boolean
+                    description: Whether Merchant Defined Field 4 is a required field or not.
+                  mdf5:
+                    type: boolean
+                    description: Whether Merchant Defined Field 5 is a required field or not.
+                  mdf6:
+                    type: boolean
+                    description: Whether Merchant Defined Field 6 is a required field or not.
+                  mdf7:
+                    type: boolean
+                    description: Whether Merchant Defined Field 7 is a required field or not.
+                  mdf8:
+                    type: boolean
+                    description: Whether Merchant Defined Field 8 is a required field or not.
+                  mdf9:
+                    type: boolean
+                    description: Whether Merchant Defined Field 9 is a required field or not.
+                  mdf10:
+                    type: boolean
+                    description: Whether Merchant Defined Field 10 is a required field or not.
+                  mdf11:
+                    type: boolean
+                    description: Whether Merchant Defined Field 11 is a required field or not.
+                  mdf12:
+                    type: boolean
+                    description: Whether Merchant Defined Field 12 is a required field or not.
+                  mdf13:
+                    type: boolean
+                    description: Whether Merchant Defined Field 13 is a required field or not.
+                  mdf14:
+                    type: boolean
+                    description: Whether Merchant Defined Field 14 is a required field or not.
+                  mdf15:
+                    type: boolean
+                    description: Whether Merchant Defined Field 15 is a required field or not.
+                  mdf16:
+                    type: boolean
+                    description: Whether Merchant Defined Field 16 is a required field or not.
+                  mdf17:
+                    type: boolean
+                    description: Whether Merchant Defined Field 17 is a required field or not.
+                  mdf18:
+                    type: boolean
+                    description: Whether Merchant Defined Field 18 is a required field or not.
+                  mdf19:
+                    type: boolean
+                    description: Whether Merchant Defined Field 19 is a required field or not.
+                  mdf20:
+                    type: boolean
+                    description: Whether Merchant Defined Field 20 is a required field or not.
+              faceConfiguration:
+                type: object
+                description: The FACe configuration for the added processor.
+              disabledFields:
+                type: object
+                description: The disabled fields for the added processor.
+                properties:
+                  processorFields:
+                    type: object
+                    description: The processor-dependent fields and whether they are disabled or not.
+              settlementTime:
+                type: string
+                description: The time settlement occurs.
+              settlementTimezone:
+                type: string
+                description: The timezone of the configured settlement time.
+    CheckAvailableServicesResponse:
+      type: array
+      title: Response
+      items:
+        type: object
+        properties:
+          objectType:
+            type: string
+            enum:
+            - service
+            description: The type of object that was returned as a result of the request.
+          id:
+            type: string
+            description: The service ID.
+          name:
+            type: string
+            description: The name of the service.
+          type:
+            type: string
+            description: The type of service.
+          source:
+            type: string
+            enum:
+            - internal
+            - external
+            description: The source of the service.
+          canMerchantSignUp:
+            type: boolean
+            description: Whether your merchants can sign up to this service or not.
+          canBeDeleted:
+            type: boolean
+            description: Whether the service can be deleted or not.
+          supportsSplitFunding:
+            type: boolean
+            description: Whether the service supports split funding or not.
+          blockers:
+            type: array
+            items:
+              type: string
+              description: blocker for the service
+    GetMerchantProcessorsAndValueAddedServicesDetailsRequest:
+      title: Get Merchant Processors and Value Added Services Details.
+      allOf:
+      - type: object
+        required:
+        - maxResults
+        properties:
+          maxResults:
+            type: string
+            description: Number of max results in response. Must be in range from 1 to 1000.
+          merchantIds:
+            type: array
+            items:
+              type: string
+            description: Array of merchant IDs.
+          offset:
+            type: string
+            description: Start point for the responses
+    GetProcessorConfigResponse:
+      type: object
+      title: Response
+      properties:
+        objectType:
+          type: string
+          enum:
+          - serviceConfig
+          description: The type of object that was returned as a result of the request.
+        processorFields:
+          type: array
+          description: The processor-specific fields along with validation rules.
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+                description: The ID of the processor field.
+              name:
+                type: string
+                description: The name of the processor field.
+              optional:
+                type: boolean
+                description: Whether the processor field is required or not.
+              validationRegex:
+                type: string
+                description: The validation regex for the processor field.
+              helpText:
+                type: string
+                description: The help text for this field.
+              type:
+                type: string
+                description: The type of the processor field.
+              disabled:
+                type: boolean
+                description: Whether the processor field is disabled or not.
+              readonly:
+                type: boolean
+                description: Whether the processor field is read-only or not.
+              highlight:
+                type: boolean
+                description: Whether the processor field is highlighted or not.
+              defaultValue:
+                type: string
+                description: The default value for the processor field.
+              selectOptions:
+                type: string
+                description: The select options for this processor field.
+        paymentTypes:
+          type: array
+          description: The allowed payment types for the processor.
+          items:
+            type: string
+            enum:
+            - visa
+            - mastercard
+            - amex
+            - discover
+            - diners
+            - jcb
+            - maestro
+        descriptor:
+          type: object
+          description: Descriptor information for the processor.
+          properties:
+            descriptor:
+              type: object
+              description: The descriptor properties.
+              properties:
+                isAllowed:
+                  type: boolean
+                  description: Whether a descriptor is allowed or not.
+                maxLength:
+                  type: integer
+                  description: The maximum length of the descriptor.
+                validationRegex:
+                  type: string
+                  description: The validation regex for the descriptor.
+                helpText:
+                  type: string
+                  description: The help text for the descriptor.
+            phone:
+              type: object
+              description: The descriptor phone number properties.
+              properties:
+                isAllowed:
+                  type: boolean
+                  description: Whether a descriptor phone number is allowed or not.
+                maxLength:
+                  type: integer
+                  description: The maximum length of the descriptor phone number.
+                validationRegex:
+                  type: string
+                  description: The validation regex for the descriptor phone number.
+                helpText:
+                  type: string
+                  description: The help text for the descriptor phone number.
+            city:
+              type: object
+              description: The descriptor city properties.
+              properties:
+                isAllowed:
+                  type: boolean
+                  description: Whether a descriptor city is allowed or not.
+                maxLength:
+                  type: integer
+                  description: The maximum length of the descriptor city.
+                validationRegex:
+                  type: string
+                  description: The validation regex for the descriptor city.
+                helpText:
+                  type: string
+                  description: The help text for the descriptor city.
+            state:
+              type: object
+              description: The descriptor state properties.
+              properties:
+                isAllowed:
+                  type: boolean
+                  description: Whether a descriptor state is allowed or not.
+                maxLength:
+                  type: integer
+                  description: The maximum length of the descriptor state.
+                validationRegex:
+                  type: string
+                  description: The validation regex for the descriptor state.
+                helpText:
+                  type: string
+                  description: The help text for the descriptor state.
+            url:
+              type: object
+              description: The descriptor URL properties.
+              properties:
+                isAllowed:
+                  type: boolean
+                  description: Whether a descriptor URL is allowed or not.
+                maxLength:
+                  type: integer
+                  description: The maximum length of the descriptor URL.
+                validationRegex:
+                  type: string
+                  description: The validation regex for the descriptor URL.
+                helpText:
+                  type: string
+                  description: The help text for the descriptor URL.
+        allowedCurrencies:
+          type: array
+          description: The allowed currencies for the processor.
+          items:
+            type: string
+        allowedClassifications:
+          type: array
+          description: The allowed classifications for the processor.
+          items:
+            type: string
+        defaultCurrency:
+          type: string
+          description: The default currency for the processor.
+        singleCurrencyMode:
+          type: boolean
+          description: Whether this processor supports single currency mode or not.
+        shouldShowMccField:
+          type: boolean
+          description: Whether this processor should show the MCC field or not.
+        level3Support:
+          type: boolean
+          description: Whether this processor supports Level III processing or not.
+        checkVerification:
+          type: boolean
+          description: Whether this processor supports check verification or not.
+        avsCvvPreCheckSupport:
+          type: boolean
+          description: Whether this processor supports AVS/CVV precheck or not.
+        skipAvsCvvSupport:
+          type: boolean
+          description: Whether this processor supports skipping AVS/CVV or not.
+        canBeOffered:
+          type: boolean
+          description: Whether this processor can be offered or not.
+        faceConfiguration:
+          type: object
+          description: The FACe configuration for this processor.
+    CheckAvailableServicesRequest:
+      title: Check available services
+      allOf:
+      - type: object
+        required:
+        - maxResults
+        properties:
+          maxResults:
+            type: string
+            description: Number of max results, any integer number from 1 to 1000
+    CardTypeLookupRequest:
+      title: Lookup Card Type
+      allOf:
+      - type: object
+        required:
+        - ccnumber
+        properties:
+          ccnumber:
+            type: string
+            enum:
+            - '510840'
+            - '543267'
+            - '453978'
+            - '454634'
+            - '341382'
+            description: 'Credit card Issuer Identification Number (IIN).
+
+
+              <details>
+
+              <summary>Allowed Card Numbers:</summary>
+
+
+              | Card Type                | Test Card IIN |
+
+              |:-------------------------|:--------------|
+
+              | Mastercard Debit         | 510840        |
+
+              | Mastercard Credit        | 543267        |
+
+              | Visa Debit               | 453978        |
+
+              | Visa Credit              | 454634        |
+
+              | American Express Unknown | 341382        |
+
+              </details>'
+    CardTypeLookupResponse:
+      title: Lookup Card Type
+      allOf:
+      - type: object
+        properties:
+          result:
+            type: string
+            enum:
+            - debit
+            - credit
+            - prepaid
+            - charge
+            - deferred_debit
+            description: The card type associated with the credit card IIN sent in the request. Will return `unknown` if type can't be determined or `unavailable` if the service is offline.
+    MakeServiceActiveRequest:
+      title: Make service active
+      allOf:
+      - type: object
+        required:
+        - merchantId
+        - serviceId
+        - condition
+        - status
+        properties:
+          merchantId:
+            type: string
+            description: The merchant's Gateway ID.
+          serviceId:
+            type: string
+            description: The ID of the service you are trying to make active.
+          condition:
+            type: string
+            description: The condition of the service.
+            enum:
+            - offered
+          status:
+            type: string
+            description: The status of the service.
+            enum:
+            - active
+    AddProcessorRequest:
+      title: Add processor
+      allOf:
+      - type: object
+        required:
+        - processorFields
+        - currencies
+        - paymentTypes
+        - serviceId
+        - accountClassification
+        - maxMonthlyVolume
+        - duplicateTime
+        - processorName
+        - mcc
+        - merchantId
+        properties:
+          processorFields:
+            type: object
+            description: The processor-specific fields.
+          descriptor:
+            type: object
+            description: The descriptor fields.
+            properties:
+              descriptor:
+                type: string
+                description: The descriptor.
+              phone:
+                type: string
+                description: The descriptor phone number.
+              city:
+                type: string
+                description: The descriptor city.
+              state:
+                type: string
+                description: The descriptor state.
+              url:
+                type: string
+                description: The descriptor URL.
+          currencies:
+            type: array
+            description: The allowed currencies for the processor.
+            items:
+              type: string
+          accountClassification:
+            type: string
+            description: The processor account classification.
+          billingType:
+            type: string
+            description: The processor billing type.
+          paymentTypes:
+            type: array
+            description: The allowed payment types for the processor.
+            items:
+              type: string
+              enum:
+              - visa
+              - mastercard
+              - amex
+              - discover
+              - diners
+              - jcb
+              - maestro
+          maxTicketAmount:
+            type: string
+            description: The maximum amount for a single transaction run through this processor.
+          maxMonthlyVolume:
+            type: string
+            description: The maximum total amount that can be run through this processor in a single month.
+          applyToAllCardType:
+            type: boolean
+            description: Whether the maxMonthlyVolume and maxTicketAmount should apply to all payment methods through this processor or not.
+          avsCvvPreCheck:
+            type: string
+            description: The AVS/CVV precheck method for the processor.
+          skipAvsCvv:
+            type: boolean
+            description: Whether to enable skipping AVS/CVV or not.
+          enableDuplicateChecking:
+            type: boolean
+            description: Whether to enable duplicate checking or not.
+          allowMerchantOverride:
+            type: boolean
+            description: Whether to allow the merchant to ignore the duplicate check on a per-transaction basis or not.
+          duplicateTime:
+            type: string
+            description: The amount of time in seconds to look back to check if a transaction is a duplicate.
+          requiredFields:
+            type: object
+            description: The fields that are required to be populated for each transaction.
+            properties:
+              name:
+                type: boolean
+                description: Whether the name should be a required field or not.
+              company:
+                type: boolean
+                description: Whether the company should be a required field or not.
+              address:
+                type: boolean
+                description: Whether the address should be a required field or not.
+              city:
+                type: boolean
+                description: Whether the city should be a required field or not.
+              state:
+                type: boolean
+                description: Whether the state should be a required field or not.
+              zip:
+                type: boolean
+                description: Whether the ZIP code should be a required field or not.
+              country:
+                type: boolean
+                description: Whether the country should be a required field or not.
+              phone:
+                type: boolean
+                description: Whether the phone should be a required field or not.
+              email:
+                type: boolean
+                description: Whether the email should be a required field or not.
+              driversLicense:
+                type: boolean
+                description: Whether the driver's license should be a required field or not.
+              driversLicenseState:
+                type: boolean
+                description: Whether the driver's license state should be a required field or not.
+              driversLicenseDob:
+                type: boolean
+                description: Whether the driver's license date of birth should be a required field or not.
+              ssn:
+                type: boolean
+                description: Whether the SSN should be a required field or not.
+              cvv:
+                type: string
+                description: The CVV requirement setting.
+              fax:
+                type: boolean
+                description: Whether the fax should be a required field or not.
+              url:
+                type: boolean
+                description: Whether the URL should be a required field or not.
+              orderId:
+                type: boolean
+                description: Whether the order ID should be a required field or not.
+              orderDescription:
+                type: boolean
+                description: Whether the order description should be a required field or not.
+              poNumber:
+                type: boolean
+                description: Whether the PO number should be a required field or not.
+              shipping:
+                type: boolean
+                description: Whether shipping should be a required field or not.
+              tax:
+                type: boolean
+                description: Whether tax should be a required field or not.
+              shippingName:
+                type: boolean
+                description: Whether the shipping name should be a required field or not.
+              shippingAddress:
+                type: boolean
+                description: Whether the shipping address should be a required field or not.
+              shippingCity:
+                type: boolean
+                description: Whether the shipping city should be a required field or not.
+              shippingState:
+                type: boolean
+                description: Whether the shipping state should be a required field or not.
+              shippingZip:
+                type: boolean
+                description: Whether the shipping ZIP code should be a required field or not.
+              shippingCountry:
+                type: boolean
+                description: Whether the shipping country should be a required field or not.
+              mdf1:
+                type: boolean
+                description: Whether Merchant Defined Field 1 should be a required field or not.
+              mdf2:
+                type: boolean
+                description: Whether Merchant Defined Field 2 should be a required field or not.
+              mdf3:
+                type: boolean
+                description: Whether Merchant Defined Field 3 should be a required field or not.
+              mdf4:
+                type: boolean
+                description: Whether Merchant Defined Field 4 should be a required field or not.
+              mdf5:
+                type: boolean
+                description: Whether Merchant Defined Field 5 should be a required field or not.
+              mdf6:
+                type: boolean
+                description: Whether Merchant Defined Field 6 should be a required field or not.
+              mdf7:
+                type: boolean
+                description: Whether Merchant Defined Field 7 should be a required field or not.
+              mdf8:
+                type: boolean
+                description: Whether Merchant Defined Field 8 should be a required field or not.
+              mdf9:
+                type: boolean
+                description: Whether Merchant Defined Field 9 should be a required field or not.
+              mdf10:
+                type: boolean
+                description: Whether Merchant Defined Field 10 should be a required field or not.
+              mdf11:
+                type: boolean
+                description: Whether Merchant Defined Field 11 should be a required field or not.
+              mdf12:
+                type: boolean
+                description: Whether Merchant Defined Field 12 should be a required field or not.
+              mdf13:
+                type: boolean
+                description: Whether Merchant Defined Field 13 should be a required field or not.
+              mdf14:
+                type: boolean
+                description: Whether Merchant Defined Field 14 should be a required field or not.
+              mdf15:
+                type: boolean
+                description: Whether Merchant Defined Field 15 should be a required field or not.
+              mdf16:
+                type: boolean
+                description: Whether Merchant Defined Field 16 should be a required field or not.
+              mdf17:
+                type: boolean
+                description: Whether Merchant Defined Field 17 should be a required field or not.
+              mdf18:
+                type: boolean
+                description: Whether Merchant Defined Field 18 should be a required field or not.
+              mdf19:
+                type: boolean
+                description: Whether Merchant Defined Field 19 should be a required field or not.
+              mdf20:
+                type: boolean
+                description: Whether Merchant Defined Field 20 should be a required field or not.
+          processorName:
+            type: string
+            description: The name for the processor.
+          mcc:
+            type: string
+            description: The Merchant Category Code.
+          serviceId:
+            type: string
+            description: The ID of the processor platform you want to board.
+          merchantId:
+            type: string
+            description: The merchant's Gateway ID.
+          faceConfiguration:
+            type: object
+            description: The FACe configuration for the processor.
+    MakeServiceOfferedRequest:
+      title: Make service offered
+      allOf:
+      - type: object
+        required:
+        - merchantId
+        - serviceId
+        - condition
+        properties:
+          merchantId:
+            type: string
+            description: The merchant's Gateway ID.
+          serviceId:
+            type: string
+            description: The ID of the service you are trying to make offered.
+          condition:
+            type: string
+            description: The condition of the service.
+            enum:
+            - offered
+  securitySchemes:
+    merchantApiKey:
+      type: apiKey
+      in: header
+      name: Authorization
+      description: Merchant API key for RESTful API authentication. This key is used for merchant-specific API access and can be generated from the merchant portal.
+externalDocs:
+  url: https://www.postman.com/nmi-integration-support/workspace/nmi-public-documentation/request/5480015-f4b0ec7b-bd84-4094-98c2-67c0b6508a7f
+  description: Public Documentation (Postman)
+x-tagGroups:
+- name: REST API (recommended)
+  tags:
+  - Payments
+  - Plans
+  - Subscriptions
+  - Products
+  - Invoicing
+  - Customers
+  - Devices
+- name: Classic API
+  tags:
+  - Payment Processing
+  - Data and Transaction Reporting
+  - Webhook Events
+  - Gateway Features
+  - Processors and Services
+  - Apple Pay
+x-provenance:
+  method: searched
+  source: https://docs.nmi.com/reference
+  harvested: '2026-10-14'
+  tool: harvest-readme-openapi.py
+  note: Assembled verbatim from the OpenAPI definition ReadMe embeds in each operation page of the provider's developer portal; paths and components merged by API title, nothing authored.
+  assembled_from:
+  - https://docs.nmi.com/reference/add-billing-address-v5.md
+  - https://docs.nmi.com/reference/add-processor-service.md
+  - https://docs.nmi.com/reference/add-shipping-address-v5.md
+  - https://docs.nmi.com/reference/adding-apple-pay.md
+  - https://docs.nmi.com/reference/cancel-device-display-v5.md
+  - https://docs.nmi.com/reference/cancel-device-payment-request-v5.md
+  - https://docs.nmi.com/reference/capture-payment-v5.md
+  - https://docs.nmi.com/reference/card-type.md
+  - https://docs.nmi.com/reference/check-services.md
+  - https://docs.nmi.com/reference/check-username-availability.md
+  - https://docs.nmi.com/reference/close-invoice-v5.md
+  - https://docs.nmi.com/reference/create-auth-v5.md
+  - https://docs.nmi.com/reference/create-credit-v5.md
+  - https://docs.nmi.com/reference/create-customer-v5.md
+  - https://docs.nmi.com/reference/create-device-payment-request-auth-v5.md
+  - https://docs.nmi.com/reference/create-device-payment-request-credit-v5.md
+  - https://docs.nmi.com/reference/create-device-payment-request-sale-v5.md
+  - https://docs.nmi.com/reference/create-device-payment-request-validate-v5.md
+  - https://docs.nmi.com/reference/create-invoice-v5.md
+  - https://docs.nmi.com/reference/create-merchant-key.md
+  - https://docs.nmi.com/reference/create-merchant.md
+  - https://docs.nmi.com/reference/create-plan-v5.md
+  - https://docs.nmi.com/reference/create-product-v5.md
+  - https://docs.nmi.com/reference/create-sale-v5.md
+  - https://docs.nmi.com/reference/create-subscription-v5.md
+  - https://docs.nmi.com/reference/delete-billing-address-v5.md
+  - https://docs.nmi.com/reference/delete-customer-v5.md
+  - https://docs.nmi.com/reference/delete-plan-v5.md
+  - https://docs.nmi.com/reference/delete-product-v5.md
+  - https://docs.nmi.com/reference/delete-shipping-address-v5.md
+  - https://docs.nmi.com/reference/delete-subscription-v5.md
+  - https://docs.nmi.com/reference/deregister-device-v5.md
+  - https://docs.nmi.com/reference/display-device-qr-code-v5.md
+  - https://docs.nmi.com/reference/get-billing-address-v5.md
+  - https://docs.nmi.com/reference/get-customer-v5.md
+  - https://docs.nmi.com/reference/get-device-payment-request-status-v5.md
+  - https://docs.nmi.com/reference/get-device-prompt-menu-status-v5.md
+  - https://docs.nmi.com/reference/get-device-prompt-sign-status-v5.md
+  - https://docs.nmi.com/reference/get-device-prompt-yes-no-status-v5.md
+  - https://docs.nmi.com/reference/get-device-v5.md
+  - https://docs.nmi.com/reference/get-fees-in-schedule.md
+  - https://docs.nmi.com/reference/get-invoice-v5.md
+  - https://docs.nmi.com/reference/get-merchant-list.md
+  - https://docs.nmi.com/reference/get-merchant-partner-user-info.md
+  - https://docs.nmi.com/reference/get-merchant-processors-value-added-services.md
+  - https://docs.nmi.com/reference/get-payment-v5.md
+  - https://docs.nmi.com/reference/get-plan-v5.md
+  - https://docs.nmi.com/reference/get-processor-config.md
+  - https://docs.nmi.com/reference/get-product-v5.md
+  - https://docs.nmi.com/reference/get-settlement-time.md
+  - https://docs.nmi.com/reference/get-shipping-address-v5.md
+  - https://docs.nmi.com/reference/get-specific-merchant-information.md
+  - https://docs.nmi.com/reference/get-sub-affiliate-list.md
+  - https://docs.nmi.com/reference/get-subscription-v5.md
+  - https://docs.nmi.com/reference/get-transaction-data.md
+  - https://docs.nmi.com/reference/list-customers-v5.md
+  - https://docs.nmi.com/reference/list-devices-v5.md
+  - https://docs.nmi.com/reference/list-invoices-v5.md
+  - https://docs.nmi.com/reference/list-plans-v5.md
+  - https://docs.nmi.com/reference/list-products-v5.md
+  - https://docs.nmi.com/reference/list-subscriptions-v5.md
+  - https://docs.nmi.com/reference/patch_v4-merchants-gateway-id-1.md
+  - https://docs.nmi.com/reference/prompt-device-menu-v5.md
+  - https://docs.nmi.com/reference/prompt-device-sign-v5.md
+  - https://docs.nmi.com/reference/prompt-device-yes-no-v5.md
+  - https://docs.nmi.com/reference/pull-all-fee-schedules.md
+  - https://docs.nmi.com/reference/query.md
+  - https://docs.nmi.com/reference/querying-merchants-apple-pay-status.md
+  - https://docs.nmi.com/reference/refund-payment-v5.md
+  - https://docs.nmi.com/reference/register-device-v5.md
+  - https://docs.nmi.com/reference/see-merchant-billing.md
+  - https://docs.nmi.com/reference/see-your-commission.md
+  - https://docs.nmi.com/reference/send-invoice-v5.md
+  - https://docs.nmi.com/reference/update-billing-address-v5.md
+  - https://docs.nmi.com/reference/update-customer-v5.md
+  - https://docs.nmi.com/reference/update-device-v5.md
+  - https://docs.nmi.com/reference/update-invoice-v5.md
+  - https://docs.nmi.com/reference/update-plan-v5.md
+  - https://docs.nmi.com/reference/update-product-v5.md
+  - https://docs.nmi.com/reference/update-shipping-address-v5.md
+  - https://docs.nmi.com/reference/update-subscription-v5.md
+  - https://docs.nmi.com/reference/updating-settlement-time.md
+  - https://docs.nmi.com/reference/validate-payment-v5.md
+  - https://docs.nmi.com/reference/void-payment-v5.md
+  merge:
+    pages: 84
+    deduped: 4356
+    conflicts_kept_first: 0

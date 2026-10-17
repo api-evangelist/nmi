@@ -1,0 +1,1545 @@
+openapi: 3.2.0
+info:
+  version: 1.0.0
+  title: Payments Invoicing API
+  description: Our payments platform exposes two generations of API.
+  x-logo:
+    url: https://www.nmi.com/app/themes/nmi/images/NMI_Logo_Primary.webp
+servers:
+- url: https://sandbox.nmi.com/api
+security: []
+tags:
+- name: Invoicing
+  description: Invoice management endpoints
+paths:
+  /v5/invoices:
+    post:
+      tags:
+      - Invoicing
+      operationId: create-invoice-v5
+      summary: Create Invoice
+      description: Create a new invoice and email it to the customer.
+      security:
+      - merchantApiKey: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateInvoiceRequest'
+      responses:
+        '200':
+          description: Invoice created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InvoiceResponse'
+        '400':
+          description: Bad Request - Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Unauthorized
+    get:
+      tags:
+      - Invoicing
+      operationId: list-invoices-v5
+      summary: List Invoices
+      description: Retrieve a list of all invoices for the merchant with optional filtering and pagination.
+      security:
+      - merchantApiKey: []
+      parameters:
+      - name: status
+        in: query
+        required: false
+        description: Filter invoices by status (open, closed, paid, etc.)
+        schema:
+          type: string
+          enum:
+          - open
+          - closed
+          - paid
+          - overdue
+          - draft
+      - name: customer_id
+        in: query
+        required: false
+        description: Filter invoices by customer ID
+        schema:
+          type: string
+      - name: date_from
+        in: query
+        required: false
+        description: Filter invoices created from this date (YYYY-MM-DD)
+        schema:
+          type: string
+          format: date
+      - name: date_to
+        in: query
+        required: false
+        description: Filter invoices created until this date (YYYY-MM-DD)
+        schema:
+          type: string
+          format: date
+      - name: cursor
+        in: query
+        required: false
+        description: Cursor for pagination (invoice ID to start after). Omit for first page.
+        schema:
+          type: integer
+      - name: per_page
+        in: query
+        required: false
+        description: 'Number of invoices to return per page (default: 10, max: 100)'
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 100
+          default: 10
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  invoices:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/InvoiceResponse'
+                  next_cursor:
+                    type: integer
+                    nullable: true
+                    description: Cursor for the next page. Use this value in the cursor parameter for the next request. Null if there are no more results.
+                  per_page:
+                    type: integer
+                    description: Number of invoices per page
+        '401':
+          description: Unauthorized
+  /v5/invoices/{invoice_id}:
+    get:
+      tags:
+      - Invoicing
+      operationId: get-invoice-v5
+      summary: Get Invoice
+      description: Retrieve a specific invoice by its ID.
+      security:
+      - merchantApiKey: []
+      parameters:
+      - name: invoice_id
+        in: path
+        required: true
+        description: The invoice ID to retrieve.
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InvoiceResponse'
+        '401':
+          description: Unauthorized
+        '404':
+          description: Invoice not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    put:
+      tags:
+      - Invoicing
+      operationId: update-invoice-v5
+      summary: Update Invoice
+      description: Update an existing invoice. All variables (besides currency) on an invoice may be updated. Updating an invoice will not result in a new invoice being sent to the customer.
+      security:
+      - merchantApiKey: []
+      parameters:
+      - name: invoice_id
+        in: path
+        required: true
+        description: The invoice ID to be updated.
+        schema:
+          type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateInvoiceRequest'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InvoiceResponse'
+        '400':
+          description: Bad Request - Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Unauthorized
+        '404':
+          description: Invoice not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    delete:
+      tags:
+      - Invoicing
+      operationId: close-invoice-v5
+      summary: Close Invoice
+      description: Close an existing invoice. Once closed, the invoice cannot be modified or paid.
+      security:
+      - merchantApiKey: []
+      parameters:
+      - name: invoice_id
+        in: path
+        required: true
+        description: The invoice ID to be closed.
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InvoiceResponse'
+        '400':
+          description: Bad Request - Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Unauthorized
+        '404':
+          description: Invoice not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /v5/invoices/{invoice_id}/send:
+    post:
+      tags:
+      - Invoicing
+      operationId: send-invoice-v5
+      summary: Send Invoice
+      description: Send an existing invoice to a customer via email.
+      security:
+      - merchantApiKey: []
+      parameters:
+      - name: invoice_id
+        in: path
+        required: true
+        description: The invoice ID to be emailed.
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InvoiceResponse'
+        '400':
+          description: Bad Request - Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Unauthorized
+        '404':
+          description: Invoice not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+components:
+  schemas:
+    RetailMagTekMagensaEncryptedSwipe:
+      type: object
+      title: Retail MagTek Magensa encrypted swipe
+      description: Card-present payment using encrypted magnetic stripe data from a MagTek Magensa reader. Set `industry` to `retail` on the payment request.
+      additionalProperties: false
+      required:
+      - magnesafe_track_1
+      - magnesafe_track_2
+      properties:
+        magnesafe_track_1:
+          type: string
+          description: Raw MagTek Magensa data.
+        magnesafe_track_2:
+          type: string
+          description: Raw MagTek Magensa data.
+        magnesafe_magneprint:
+          type: string
+          description: Raw MagTek Magensa data.
+        magnesafe_ksn:
+          type: string
+          description: Raw MagTek Magensa data.
+        magnesafe_magneprint_status:
+          type: string
+          description: Raw MagTek Magensa data.
+    RetailIngenicoNfc:
+      type: object
+      title: Retail Ingenico Telium 2 NFC
+      description: Card-present NFC payment from an Ingenico Telium 2 reader. Set `industry` to `retail` on the payment request.
+      additionalProperties: false
+      required:
+      - entry_mode
+      - emv_device
+      - encrypted_ksn
+      - encrypted_track_2
+      properties:
+        entry_mode:
+          type: string
+          enum:
+          - nfc_msd
+          description: The type of transaction data to be processed.
+        emv_device:
+          type: string
+          enum:
+          - ingenico_rba
+          description: The EMV-capable card reader.
+        encrypted_ksn:
+          type: string
+          description: Raw encrypted data.
+        encrypted_track_2:
+          type: string
+          description: Raw encrypted data.
+    ShippingAddressRest:
+      type: object
+      title: Shipping Address & Information
+      description: Shipping address and information
+      properties:
+        id:
+          type: string
+          maxLength: 32
+          description: Shipping address ID (max 32 characters). Generated if omitted on create.
+        first_name:
+          type: string
+          maxLength: 50
+          description: Shipping first name
+        last_name:
+          type: string
+          maxLength: 50
+          description: Shipping last name
+        company:
+          type: string
+          maxLength: 100
+          description: Shipping company
+        address1:
+          type: string
+          maxLength: 100
+          description: Shipping address
+        address2:
+          type: string
+          maxLength: 100
+          description: Shipping address, line 2
+        city:
+          type: string
+          maxLength: 50
+          description: Shipping city
+        state:
+          type: string
+          maxLength: 50
+          description: Shipping state.
+        zip:
+          type: string
+          maxLength: 20
+          description: Shipping zip code
+        country:
+          type: string
+          maxLength: 2
+          description: 'ISO 3166-1 alpha-2 country code. Example: `US`'
+        email:
+          type: string
+          format: email
+          description: Shipping email address
+        carrier:
+          type: string
+          enum:
+          - ups
+          - fedex
+          - dhl
+          - usps
+          description: Shipping carrier
+    LineItem:
+      type: object
+      title: Line Item
+      description: Line item details for order details
+      properties:
+        product_code:
+          type: string
+          maxLength: 50
+          description: Product code
+        description:
+          type: string
+          maxLength: 255
+          description: Line item description
+        commodity_code:
+          type: string
+          maxLength: 50
+          description: Commodity code
+        unit_of_measure:
+          type: string
+          maxLength: 50
+          description: Unit of measure
+        unit_cost:
+          type: number
+          minimum: 0
+          description: Unit cost
+        quantity:
+          type: integer
+          minimum: 0
+          maximum: 999999
+          description: Quantity
+        total_amount:
+          type: number
+          minimum: 0
+          description: Total amount
+        tax_amount:
+          type: number
+          minimum: 0
+          description: Tax amount
+        tax_rate:
+          type: number
+          minimum: 0
+          description: Tax rate
+        discount_amount:
+          type: number
+          minimum: 0
+          description: Discount amount
+        discount_rate:
+          type: number
+          minimum: 0
+          description: Discount rate
+        tax_type:
+          type: string
+          maxLength: 50
+          description: Tax type
+        alternate_tax_id:
+          type: string
+          maxLength: 50
+          description: Alternate tax ID
+    RetailIdTechEncryptedKeyed:
+      type: object
+      title: Retail ID Tech M130 encrypted keyed
+      description: Card-present encrypted keyed entry data from an ID Tech M130 reader. Set `industry` to `retail` on the payment request.
+      additionalProperties: false
+      required:
+      - encrypted_data
+      properties:
+        encrypted_data:
+          type: string
+          description: Raw encrypted data.
+    InvoiceResponse:
+      type: object
+      title: Invoice Response
+      description: Invoice response matching InvoiceRestSerializer structure
+      properties:
+        object:
+          type: string
+          enum:
+          - invoice
+          description: Resource type identifier
+        id:
+          type: integer
+          description: Invoice ID
+        status:
+          type: string
+          enum:
+          - open
+          - partially_paid
+          - paid
+          - closed
+          - overdue
+          description: Current status of the invoice
+        amount:
+          type: string
+          description: 'Total amount of the invoice. Format: `x.xx`'
+        subtotal:
+          type: number
+          nullable: true
+          description: Subtotal amount before tax and shipping
+        payment_terms:
+          type: string
+          description: Payment terms for the invoice (e.g., 'Due Upon Receipt', '30 days')
+        payment_methods_allowed:
+          type: array
+          items:
+            type: string
+            enum:
+            - cc
+            - ck
+            - cs
+          description: 'Allowed payment methods: ''cc'' = Credit Card, ''ck'' = Check, ''cs'' = Cash'
+        processor_id:
+          type: string
+          nullable: true
+          description: Processor ID for payment processing
+        currency:
+          type: string
+          description: Currency code (ISO 4217, e.g., USD, EUR)
+        created_date:
+          type: string
+          format: date-time
+          nullable: true
+          description: Date and time when the invoice was created in UTC ISO 8601 format
+        updated_date:
+          type: string
+          format: date-time
+          nullable: true
+          description: Date and time when the invoice was last updated in UTC ISO 8601 format
+        billing_address:
+          type: object
+          description: Billing address information
+          properties:
+            first_name:
+              type: string
+              description: First name
+            last_name:
+              type: string
+              description: Last name
+            company:
+              type: string
+              description: Company name
+            email:
+              type: string
+              format: email
+              description: Email address
+            phone:
+              type: string
+              description: Phone number
+            fax:
+              type: string
+              description: Fax number
+            website:
+              type: string
+              maxLength: 255
+              description: Website
+            address1:
+              type: string
+              description: Address line 1
+            address2:
+              type: string
+              description: Address line 2
+            city:
+              type: string
+              description: City
+            state:
+              type: string
+              description: State or province
+            zip:
+              type: string
+              description: ZIP or postal code
+            country:
+              type: string
+              description: Country code (ISO 3166-1 alpha-2)
+        shipping_address:
+          type: object
+          description: Shipping address information
+          properties:
+            first_name:
+              type: string
+              description: First name
+            last_name:
+              type: string
+              description: Last name
+            company:
+              type: string
+              description: Company name
+            email:
+              type: string
+              format: email
+              description: Email address
+            address1:
+              type: string
+              description: Address line 1
+            address2:
+              type: string
+              description: Address line 2
+            city:
+              type: string
+              description: City
+            state:
+              type: string
+              description: State or province
+            zip:
+              type: string
+              description: ZIP or postal code
+            country:
+              type: string
+              description: Country code (ISO 3166-1 alpha-2)
+        order_details:
+          type: object
+          description: Order details
+          properties:
+            order_id:
+              type: string
+              description: Order ID
+            ip_address:
+              type: string
+              description: IP address
+            order_description:
+              type: string
+              description: Order description
+            po_number:
+              type: string
+              description: Purchase order number
+            customer_id:
+              type: string
+              description: Customer ID
+            customer_tax_id:
+              type: string
+              description: Customer tax ID
+            tax:
+              type: string
+              description: 'Tax amount. Format: `x.xx`'
+            shipping:
+              type: string
+              description: 'Shipping amount. Format: `x.xx`'
+            discount_amount:
+              type: string
+              description: 'Discount amount. Format: `x.xx`'
+            surcharge:
+              type: string
+              description: 'Surcharge amount. Format: `x.xx`'
+            tip:
+              type: string
+              description: 'Tip amount. Format: `x.xx`'
+            shipping_carrier:
+              type: string
+              description: Shipping carrier
+            tracking_number:
+              type: string
+              description: Tracking number
+            shipping_date:
+              type: string
+              format: date-time
+              nullable: true
+              description: Shipping date in UTC ISO 8601 format
+        merchant_defined_fields:
+          $ref: '#/components/schemas/MerchantDefinedFields'
+          description: Merchant defined fields (`field_1` through `field_20`). Only non-empty values are included; returns an empty object when none are set.
+      required:
+      - object
+      - id
+    ErrorResponse:
+      type: object
+      title: Error Response
+      description: Error response structure matching SecureApiErrorResponseFactory
+      properties:
+        type:
+          type: string
+          description: Error type (e.g., 'validationError', 'internalError', 'authenticationError')
+        error_code:
+          type: string
+          description: Error code (e.g., 'E_INTERNAL', 'E_VALIDATION')
+        message:
+          type: string
+          description: Human-readable error message
+        ref_id:
+          type: string
+          nullable: true
+          description: Reference ID for the error (transaction ID, etc.)
+        details:
+          type: array
+          nullable: true
+          description: Validation error details
+          items:
+            $ref: '#/components/schemas/ValidationErrorDetail'
+      required:
+      - type
+      - error_code
+      - message
+    RetailIngenicoKeyed:
+      type: object
+      title: Retail Ingenico Telium 2 keyed
+      description: Card-present encrypted keyed entry from an Ingenico Telium 2 reader. Set `industry` to `retail` on the payment request.
+      additionalProperties: false
+      required:
+      - entry_mode
+      - emv_device
+      - encrypted_ksn
+      - encrypted_track_2
+      properties:
+        entry_mode:
+          type: string
+          enum:
+          - keyed
+          description: The type of transaction data to be processed.
+        emv_device:
+          type: string
+          enum:
+          - ingenico_rba
+          description: The EMV-capable card reader.
+        encrypted_ksn:
+          type: string
+          description: Raw encrypted data.
+        encrypted_track_2:
+          type: string
+          description: Raw encrypted data.
+    RetailIdTechEncryptedSwipe:
+      type: object
+      title: Retail ID Tech M130 encrypted swipe
+      description: Card-present encrypted swipe data from an ID Tech M130 reader. Set `industry` to `retail` on the payment request.
+      additionalProperties: false
+      required:
+      - encrypted_track_1
+      - encrypted_track_2
+      properties:
+        encrypted_track_1:
+          type: string
+          description: Raw encrypted data.
+        encrypted_track_2:
+          type: string
+          description: Raw encrypted data.
+        encrypted_track_3:
+          type: string
+          description: Raw encrypted data.
+        encrypted_ksn:
+          type: string
+          description: Raw encrypted data.
+    RetailIngenicoChip:
+      type: object
+      title: Retail Ingenico Telium 2 chip (EMV)
+      description: Card-present EMV chip payment from an Ingenico Telium 2 reader. Set `industry` to `retail` on the payment request.
+      additionalProperties: false
+      required:
+      - entry_mode
+      - emv_auth_request_data
+      - emv_device
+      - verification_method
+      - encrypted_ksn
+      - encrypted_track_2
+      properties:
+        entry_mode:
+          type: string
+          enum:
+          - emv_icc
+          description: The type of transaction data to be processed.
+        emv_auth_request_data:
+          type: string
+          description: EMV data for the transaction as received from the EMV chip card SDK.
+        emv_device:
+          type: string
+          enum:
+          - ingenico_rba
+          description: The EMV-capable card reader.
+        verification_method:
+          type: string
+          enum:
+          - signature
+          - offline_pin
+          - offline_pin_signature
+          - none
+          description: Method used to verify the EMV transaction.
+        encrypted_ksn:
+          type: string
+          description: Raw encrypted data.
+        encrypted_track_2:
+          type: string
+          description: Raw encrypted data.
+    CreateInvoiceRequest:
+      type: object
+      title: Create Invoice Request
+      description: Request to create a new invoice
+      required:
+      - amount
+      properties:
+        amount:
+          type: number
+          description: 'Total amount to be invoiced. Must be greater than 0.00. Format: `x.xx`'
+        subtotal:
+          type: number
+          format: float
+          minimum: 0
+          description: Subtotal amount before tax and shipping
+        payment_terms:
+          type: string
+          description: 'When the invoice should be paid. Values: ''upon_receipt'', or integers from 0-999. Default - `upon_receipt`.'
+          default: upon_receipt
+        payment_methods_allowed:
+          type: array
+          items:
+            type: string
+            enum:
+            - cc
+            - ck
+            - cs
+          description: Payment methods allowed for this invoice. 'cc' = Credit Card, 'ck' = Check, 'cs' = Cash
+        processor_id:
+          type: string
+          description: 'If using Multiple MIDs, route to this processor (processor_id is obtained under Settings → Transaction Routing in the Control Panel).
+
+
+            If allowing multiple payment types, one processor_id can be selected per payment type by submitting comma-separated values.'
+        currency:
+          type: string
+          minLength: 3
+          maxLength: 3
+          pattern: ^[A-Z]{3}$
+          description: 'The transaction currency. Format: ISO 4217 (must be uppercase 3-letter code)'
+        billing_address:
+          $ref: '#/components/schemas/BillingAddressRest'
+        shipping_address:
+          $ref: '#/components/schemas/ShippingAddressRest'
+        order_details:
+          $ref: '#/components/schemas/OrderDetailsRest'
+        merchant_defined_fields:
+          $ref: '#/components/schemas/MerchantDefinedFields'
+      additionalProperties:
+        type: string
+        description: Up to 99 sets of item_* fields are allowed for product line items.
+    RetailMobileSdkEncryptedPayment:
+      type: object
+      title: Mobile SDK encrypted payment
+      description: RSA-encrypted card data from the NMI Mobile SDK (iOS/Android). Use in place of raw card number, expiration, and CVV. Set `industry` to `retail` on the payment request when processing as a card-present transaction.
+      additionalProperties: false
+      required:
+      - encrypted_payment
+      properties:
+        encrypted_payment:
+          type: string
+          description: Encrypted payment blob returned by the Mobile SDK.
+    MerchantDefinedFields:
+      type: object
+      title: Merchant Defined Fields
+      description: Custom fields configured in the merchant control panel under Settings → Merchant Defined Fields (`field_1` through `field_20`).
+      properties:
+        field_1:
+          type: string
+          maxLength: 255
+          description: Merchant defined field 1
+        field_2:
+          type: string
+          maxLength: 255
+          description: Merchant defined field 2
+        field_3:
+          type: string
+          maxLength: 255
+          description: Merchant defined field 3
+        field_4:
+          type: string
+          maxLength: 255
+          description: Merchant defined field 4
+        field_5:
+          type: string
+          maxLength: 255
+          description: Merchant defined field 5
+        field_6:
+          type: string
+          maxLength: 255
+          description: Merchant defined field 6
+        field_7:
+          type: string
+          maxLength: 255
+          description: Merchant defined field 7
+        field_8:
+          type: string
+          maxLength: 255
+          description: Merchant defined field 8
+        field_9:
+          type: string
+          maxLength: 255
+          description: Merchant defined field 9
+        field_10:
+          type: string
+          maxLength: 255
+          description: Merchant defined field 10
+        field_11:
+          type: string
+          maxLength: 255
+          description: Merchant defined field 11
+        field_12:
+          type: string
+          maxLength: 255
+          description: Merchant defined field 12
+        field_13:
+          type: string
+          maxLength: 255
+          description: Merchant defined field 13
+        field_14:
+          type: string
+          maxLength: 255
+          description: Merchant defined field 14
+        field_15:
+          type: string
+          maxLength: 255
+          description: Merchant defined field 15
+        field_16:
+          type: string
+          maxLength: 255
+          description: Merchant defined field 16
+        field_17:
+          type: string
+          maxLength: 255
+          description: Merchant defined field 17
+        field_18:
+          type: string
+          maxLength: 255
+          description: Merchant defined field 18
+        field_19:
+          type: string
+          maxLength: 255
+          description: Merchant defined field 19
+        field_20:
+          type: string
+          maxLength: 255
+          description: Merchant defined field 20
+    BillingAddressRest:
+      type: object
+      title: Billing Address & Information
+      description: Billing address for a payment transaction request.
+      properties:
+        method:
+          type: string
+          enum:
+          - initial_recurring
+          - recurring
+          - installment
+          description: 'Recurring or installment classification for the processor.
+
+
+            - `initial_recurring`: First transaction in a recurring sequence only.
+
+            - `recurring`: Later charges in that sequence.
+
+            - `installment`: Installment transactions; use `number` and `total` on supported processors.
+
+
+            Which values apply depends on the processor.'
+        number:
+          type: integer
+          minimum: 0
+          maximum: 99
+          description: Specify installment billing number, on supported processors. For use when `billing.method` is set to "installment"
+        total:
+          type: number
+          minimum: 0
+          description: Specify installment billing total on supported processors. For use when `billing.method` is set to "installment"
+        first_name:
+          type: string
+          maxLength: 50
+          description: Cardholder's first name
+        last_name:
+          type: string
+          maxLength: 50
+          description: Cardholder's last name
+        company:
+          type: string
+          maxLength: 100
+          description: Cardholder's company
+        address1:
+          type: string
+          maxLength: 100
+          description: Card billing address
+        address2:
+          type: string
+          maxLength: 100
+          description: Card billing address, line 2
+        city:
+          type: string
+          maxLength: 50
+          description: Card billing city
+        state:
+          type: string
+          maxLength: 50
+          description: 'Card billing state. Format: `CC`'
+        zip:
+          type: string
+          maxLength: 20
+          description: Card billing zip code
+        country:
+          type: string
+          maxLength: 2
+          description: 'Card billing country. Country codes are as shown in ISO 3166-1 alpha-2. Format: `CC`'
+        phone:
+          type: string
+          description: Billing phone number
+        email:
+          type: string
+          format: email
+          description: Billing email address
+        fax:
+          type: string
+          maxLength: 50
+          description: Billing fax number
+        cell_phone:
+          type: string
+          description: Billing cell phone number
+        website:
+          type: string
+          maxLength: 255
+          description: Website (invoice-specific field)
+        drivers_license_number:
+          type: string
+          maxLength: 20
+          description: Driver's license number
+        drivers_license_dob:
+          type: string
+          pattern: ^\d{4}-\d{2}-\d{2}$
+          description: 'Driver''s license date of birth. Format: `YYYY-MM-DD`'
+        drivers_license_state:
+          type: string
+          maxLength: 2
+          description: 'Driver''s license state. Format: `CC`'
+        payment_details:
+          $ref: '#/components/schemas/PaymentDetails'
+        cardholder_auth:
+          $ref: '#/components/schemas/CardholderAuth'
+    PaymentDetails:
+      title: Payment Details
+      description: 'Payment method details. Exactly one variant: raw card data, ACH (check) data, **payment_token**, wallet payloads, or **retail card-present** data from a card reader. Do not combine fields from different variants.'
+      oneOf:
+      - type: object
+        title: Credit card
+        description: Non-tokenized credit card data.
+        additionalProperties: false
+        required:
+        - card_number
+        - card_exp
+        properties:
+          card_number:
+            type: string
+            description: Credit card number
+          card_exp:
+            type: string
+            description: 'Credit card expiration date. Format: `MMYY`'
+          card_cvv:
+            type: string
+            maxLength: 4
+            description: The card security code.
+      - $ref: '#/components/schemas/RetailUnencryptedMagneticStripe'
+      - $ref: '#/components/schemas/RetailMagTekMagensaEncryptedSwipe'
+      - $ref: '#/components/schemas/RetailIdTechEncryptedSwipe'
+      - $ref: '#/components/schemas/RetailIdTechEncryptedKeyed'
+      - $ref: '#/components/schemas/RetailIngenicoChip'
+      - $ref: '#/components/schemas/RetailIngenicoSwipe'
+      - $ref: '#/components/schemas/RetailIngenicoNfc'
+      - $ref: '#/components/schemas/RetailIngenicoKeyed'
+      - $ref: '#/components/schemas/RetailMobileSdkEncryptedPayment'
+      - type: object
+        title: ACH / check
+        description: Bank account (ACH) details for this transaction.
+        additionalProperties: false
+        required:
+        - check_name
+        - check_aba
+        - check_account
+        - account_type
+        - account_holder_type
+        - sec_code
+        properties:
+          check_name:
+            type: string
+            maxLength: 50
+            description: The name on the customer's ACH account
+          check_aba:
+            type: number
+            description: The customer's bank routing number
+          check_account:
+            type: number
+            description: The customer's bank account number
+          account_type:
+            type: string
+            enum:
+            - checking
+            - savings
+            description: The type of ACH account the customer has
+          account_holder_type:
+            type: string
+            enum:
+            - personal
+            - business
+            description: The type of ACH account the customer has
+          sec_code:
+            type: string
+            enum:
+            - PPD
+            - WEB
+            - TEL
+            - CCD
+            - POP
+            - RCK
+            description: The Standard Entry Class code of the ACH transaction
+          check_number:
+            type: string
+            maxLength: 20
+            description: Check number
+      - type: object
+        title: Payment token
+        description: Single-use or vault token from [Payment Component](../docs/payment-component) or [Collect.js](https://secure.networkmerchants.com/merchants/resources/integration/integration_portal.php#cjs_methodology) (not Apple Pay / Google Pay).
+        additionalProperties: false
+        required:
+        - payment_token
+        properties:
+          payment_token:
+            type: string
+            description: The tokenized version of the customer's card or check information
+      - type: object
+        title: Apple Pay
+        description: Encrypted payment data from the Apple Pay SDK.
+        additionalProperties: false
+        required:
+        - applepay_payment_data
+        properties:
+          applepay_payment_data:
+            type: string
+            description: The encrypted token created when integration directly to the Apple Pay SDK
+      - type: object
+        title: Google Pay
+        description: Encrypted payment data from the Google Pay SDK.
+        additionalProperties: false
+        required:
+        - googlepay_payment_data
+        properties:
+          googlepay_payment_data:
+            type: string
+            description: The encrypted token created when integration directly to the Google Pay SDK
+      - type: object
+        title: Decrypted Apple Pay
+        description: Merchant-decrypted Apple Pay payment data.
+        additionalProperties: false
+        required:
+        - decrypted_applepay_data
+        - card_number
+        - card_exp
+        properties:
+          decrypted_applepay_data:
+            type: boolean
+            enum:
+            - true
+            description: Set to `true` when submitting merchant-decrypted Apple Pay data.
+          card_number:
+            type: string
+            description: Credit card number
+          card_exp:
+            type: string
+            description: 'Credit card expiration date. Format: `MMYY`'
+      - type: object
+        title: Decrypted Google Pay
+        description: Merchant-decrypted Google Pay payment data.
+        additionalProperties: false
+        required:
+        - decrypted_googlepay_data
+        - card_number
+        - card_exp
+        properties:
+          decrypted_googlepay_data:
+            type: boolean
+            enum:
+            - true
+            description: Set to `true` when submitting merchant-decrypted Google Pay data.
+          card_number:
+            type: string
+            description: Credit card number
+          card_exp:
+            type: string
+            description: 'Credit card expiration date. Format: `MMYY`'
+    ValidationErrorDetail:
+      type: object
+      title: Validation Error Detail
+      description: Validation error detail
+      required:
+      - fieldName
+      - message
+      properties:
+        fieldName:
+          type: string
+          description: Request field path.
+        message:
+          type: string
+          description: Human-readable validation message for the field.
+      additionalProperties: false
+    OrderDetailsRest:
+      type: object
+      title: Order Details
+      description: Order details and line items
+      properties:
+        template_id:
+          type: string
+          maxLength: 50
+          description: Order template ID
+        description:
+          type: string
+          maxLength: 100
+          description: Order description
+        id:
+          type: string
+          maxLength: 50
+          description: Order ID (for payment requests)
+        order_id:
+          type: string
+          maxLength: 255
+          description: Order ID (for invoice requests and responses)
+        customer_id:
+          type: string
+          maxLength: 255
+          description: Customer ID (invoice-specific)
+        customer_tax_id:
+          type: string
+          maxLength: 255
+          description: Customer tax ID (invoice-specific)
+        tax:
+          type: number
+          minimum: 0
+          description: Tax amount
+        shipping:
+          type: number
+          minimum: 0
+          description: Shipping amount
+        po_number:
+          type: string
+          maxLength: 255
+          description: Purchase order number (maxLength 50 for payments, 255 for invoices)
+        shipping_postal_code:
+          type: string
+          maxLength: 20
+          description: Shipping postal code
+        ship_from_postal_code:
+          type: string
+          maxLength: 20
+          description: Ship from postal code
+        summary_commodity_code:
+          type: string
+          maxLength: 50
+          description: Summary commodity code
+        duty_amount:
+          type: number
+          minimum: 0
+          description: Duty amount
+        discount_amount:
+          type: number
+          minimum: 0
+          description: Discount amount
+        national_tax_amount:
+          type: number
+          minimum: 0
+          description: National tax amount
+        alternate_tax_amount:
+          type: number
+          minimum: 0
+          description: Alternate tax amount
+        alternate_tax_id:
+          type: string
+          maxLength: 50
+          description: Alternate tax ID
+        vat_tax_amount:
+          type: number
+          minimum: 0
+          description: VAT tax amount
+        vat_tax_rate:
+          type: number
+          minimum: 0
+          description: VAT tax rate
+        vat_invoice_reference_number:
+          type: string
+          maxLength: 50
+          description: VAT invoice reference number
+        customer_vat_registration:
+          type: string
+          maxLength: 50
+          description: Customer VAT registration
+        merchant_vat_registration:
+          type: string
+          maxLength: 50
+          description: Merchant VAT registration
+        order_date:
+          type: string
+          format: date
+          description: Order date
+        order_description:
+          type: string
+          maxLength: 255
+          description: Order description (maxLength 255 for both payments and invoices)
+        ip_address:
+          type: string
+          description: IP address of cardholder (IPv4 or IPv6). Format validated as IP address
+        line_items:
+          type: array
+          items:
+            $ref: '#/components/schemas/LineItem'
+    RetailIngenicoSwipe:
+      type: object
+      title: Retail Ingenico Telium 2 swipe
+      description: Card-present encrypted swipe from an Ingenico Telium 2 reader. Set `industry` to `retail` on the payment request.
+      additionalProperties: false
+      required:
+      - entry_mode
+      - emv_device
+      - encrypted_ksn
+      - encrypted_track_1
+      - encrypted_track_2
+      properties:
+        entry_mode:
+          type: string
+          enum:
+          - swiped
+          - swiped_emv_fallback
+          description: The type of transaction data to be processed.
+        emv_device:
+          type: string
+          enum:
+          - ingenico_rba
+          description: The EMV-capable card reader.
+        encrypted_ksn:
+          type: string
+          description: Raw encrypted data.
+        encrypted_track_1:
+          type: string
+          description: Raw encrypted data.
+        encrypted_track_2:
+          type: string
+          description: Raw encrypted data.
+    CardholderAuth:
+      type: object
+      title: Cardholder Authentication
+      description: Cardholder authentication data. Use the 3-D Secure variant for EMV authentication results. Use the Decrypted wallet variant for merchant-decrypted Apple Pay or Google Pay, which relays the cryptogram and ECI to the 3-D Secure fields.
+      oneOf:
+      - type: object
+        title: 3-D Secure
+        description: EMV 3-D Secure authentication result fields.
+        additionalProperties: false
+        required:
+        - status
+        - cavv
+        properties:
+          status:
+            type: string
+            enum:
+            - verified
+            - attempted
+            description: Set 3D Secure condition. Value used to determine E-commerce indicator (ECI).
+          cavv:
+            type: string
+            maxLength: 50
+            description: 'Cardholder authentication verification value from the 3-D Secure authentication response. Format: base64 encoded.'
+          xid:
+            type: string
+            maxLength: 50
+            description: 'Cardholder authentication transaction id. Format: base64 encoded.'
+          three_ds_version:
+            type: string
+            maxLength: 10
+            description: 3DSecure version (for example `2.1.0` or `2.2.0`).
+          directory_server_id:
+            type: string
+            maxLength: 50
+            description: 'Directory Server Transaction ID from 3DSecure 2.0 authentication. Format: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx'
+      - type: object
+        title: Decrypted wallet (Apple Pay / Google Pay)
+        description: Wallet authentication for decrypted Apple Pay or Google Pay payments.
+        additionalProperties: false
+        required:
+        - cavv
+        properties:
+          cavv:
+            type: string
+            maxLength: 50
+            description: Wallet payment cryptogram (submitted in the repurposed 3-D Secure `cavv` field).
+          eci:
+            type: string
+            maxLength: 10
+            description: Electronic Commerce Indicator from the wallet payment data (submitted in the repurposed 3-D Secure `eci` field).
+    UpdateInvoiceRequest:
+      type: object
+      title: Update Invoice Request
+      description: Request to update an existing invoice. All fields are optional - only include the fields you want to update.
+      properties:
+        amount:
+          type: number
+          description: 'Total amount to be invoiced. Must be greater than 0.00. Format: `x.xx`'
+        subtotal:
+          type: number
+          format: float
+          minimum: 0
+          description: Subtotal amount before tax and shipping
+        payment_terms:
+          type: string
+          description: 'When the invoice should be paid. Values: ''upon_receipt'', or integers from 0-999. Default - `upon_receipt`.'
+          default: upon_receipt
+        payment_methods_allowed:
+          type: array
+          items:
+            type: string
+            enum:
+            - cc
+            - ck
+            - cs
+          description: Payment methods allowed for this invoice. 'cc' = Credit Card, 'ck' = Check, 'cs' = Cash
+        processor_id:
+          type: string
+          description: 'If using Multiple MIDs, route to this processor (processor_id is obtained under Settings → Transaction Routing in the Control Panel).
+
+
+            If allowing multiple payment types, one processor_id can be selected per payment type by submitting comma-separated values.'
+        currency:
+          type: string
+          minLength: 3
+          maxLength: 3
+          pattern: ^[A-Z]{3}$
+          description: 'The transaction currency. Format: ISO 4217 (must be uppercase 3-letter code)'
+        billing_address:
+          $ref: '#/components/schemas/BillingAddressRest'
+        shipping_address:
+          $ref: '#/components/schemas/ShippingAddressRest'
+        order_details:
+          $ref: '#/components/schemas/OrderDetailsRest'
+        merchant_defined_fields:
+          $ref: '#/components/schemas/MerchantDefinedFields'
+      additionalProperties:
+        type: string
+        description: Up to 99 sets of item_* fields are allowed for product line items.
+    RetailUnencryptedMagneticStripe:
+      type: object
+      title: Retail unencrypted magnetic stripe
+      description: Card-present payment using raw magnetic stripe data from a card reader. Set `industry` to `retail` on the payment request.
+      additionalProperties: false
+      required:
+      - track_1
+      - track_2
+      properties:
+        track_1:
+          type: string
+          description: Raw magnetic stripe data.
+        track_2:
+          type: string
+          description: Raw magnetic stripe data.
+        track_3:
+          type: string
+          description: Raw magnetic stripe data.
+  securitySchemes:
+    merchantApiKey:
+      type: apiKey
+      in: header
+      name: Authorization
+      description: Merchant API key for RESTful API authentication. This key is used for merchant-specific API access and can be generated from the merchant portal.
+externalDocs:
+  url: https://www.postman.com/nmi-integration-support/workspace/nmi-public-documentation/request/5480015-f4b0ec7b-bd84-4094-98c2-67c0b6508a7f
+  description: Public Documentation (Postman)
+x-tagGroups:
+- name: REST API (recommended)
+  tags:
+  - Payments
+  - Plans
+  - Subscriptions
+  - Products
+  - Invoicing
+  - Customers
+  - Devices
+- name: Classic API
+  tags:
+  - Payment Processing
+  - Data and Transaction Reporting
+  - Webhook Events
+  - Gateway Features
+  - Processors and Services
+  - Apple Pay
+x-provenance:
+  method: searched
+  source: https://docs.nmi.com/reference
+  harvested: '2026-10-14'
+  tool: harvest-readme-openapi.py
+  note: Assembled verbatim from the OpenAPI definition ReadMe embeds in each operation page of the provider's developer portal; paths and components merged by API title, nothing authored.
+  assembled_from:
+  - https://docs.nmi.com/reference/add-billing-address-v5.md
+  - https://docs.nmi.com/reference/add-processor-service.md
+  - https://docs.nmi.com/reference/add-shipping-address-v5.md
+  - https://docs.nmi.com/reference/adding-apple-pay.md
+  - https://docs.nmi.com/reference/cancel-device-display-v5.md
+  - https://docs.nmi.com/reference/cancel-device-payment-request-v5.md
+  - https://docs.nmi.com/reference/capture-payment-v5.md
+  - https://docs.nmi.com/reference/card-type.md
+  - https://docs.nmi.com/reference/check-services.md
+  - https://docs.nmi.com/reference/check-username-availability.md
+  - https://docs.nmi.com/reference/close-invoice-v5.md
+  - https://docs.nmi.com/reference/create-auth-v5.md
+  - https://docs.nmi.com/reference/create-credit-v5.md
+  - https://docs.nmi.com/reference/create-customer-v5.md
+  - https://docs.nmi.com/reference/create-device-payment-request-auth-v5.md
+  - https://docs.nmi.com/reference/create-device-payment-request-credit-v5.md
+  - https://docs.nmi.com/reference/create-device-payment-request-sale-v5.md
+  - https://docs.nmi.com/reference/create-device-payment-request-validate-v5.md
+  - https://docs.nmi.com/reference/create-invoice-v5.md
+  - https://docs.nmi.com/reference/create-merchant-key.md
+  - https://docs.nmi.com/reference/create-merchant.md
+  - https://docs.nmi.com/reference/create-plan-v5.md
+  - https://docs.nmi.com/reference/create-product-v5.md
+  - https://docs.nmi.com/reference/create-sale-v5.md
+  - https://docs.nmi.com/reference/create-subscription-v5.md
+  - https://docs.nmi.com/reference/delete-billing-address-v5.md
+  - https://docs.nmi.com/reference/delete-customer-v5.md
+  - https://docs.nmi.com/reference/delete-plan-v5.md
+  - https://docs.nmi.com/reference/delete-product-v5.md
+  - https://docs.nmi.com/reference/delete-shipping-address-v5.md
+  - https://docs.nmi.com/reference/delete-subscription-v5.md
+  - https://docs.nmi.com/reference/deregister-device-v5.md
+  - https://docs.nmi.com/reference/display-device-qr-code-v5.md
+  - https://docs.nmi.com/reference/get-billing-address-v5.md
+  - https://docs.nmi.com/reference/get-customer-v5.md
+  - https://docs.nmi.com/reference/get-device-payment-request-status-v5.md
+  - https://docs.nmi.com/reference/get-device-prompt-menu-status-v5.md
+  - https://docs.nmi.com/reference/get-device-prompt-sign-status-v5.md
+  - https://docs.nmi.com/reference/get-device-prompt-yes-no-status-v5.md
+  - https://docs.nmi.com/reference/get-device-v5.md
+  - https://docs.nmi.com/reference/get-fees-in-schedule.md
+  - https://docs.nmi.com/reference/get-invoice-v5.md
+  - https://docs.nmi.com/reference/get-merchant-list.md
+  - https://docs.nmi.com/reference/get-merchant-partner-user-info.md
+  - https://docs.nmi.com/reference/get-merchant-processors-value-added-services.md
+  - https://docs.nmi.com/reference/get-payment-v5.md
+  - https://docs.nmi.com/reference/get-plan-v5.md
+  - https://docs.nmi.com/reference/get-processor-config.md
+  - https://docs.nmi.com/reference/get-product-v5.md
+  - https://docs.nmi.com/reference/get-settlement-time.md
+  - https://docs.nmi.com/reference/get-shipping-address-v5.md
+  - https://docs.nmi.com/reference/get-specific-merchant-information.md
+  - https://docs.nmi.com/reference/get-sub-affiliate-list.md
+  - https://docs.nmi.com/reference/get-subscription-v5.md
+  - https://docs.nmi.com/reference/get-transaction-data.md
+  - https://docs.nmi.com/reference/list-customers-v5.md
+  - https://docs.nmi.com/reference/list-devices-v5.md
+  - https://docs.nmi.com/reference/list-invoices-v5.md
+  - https://docs.nmi.com/reference/list-plans-v5.md
+  - https://docs.nmi.com/reference/list-products-v5.md
+  - https://docs.nmi.com/reference/list-subscriptions-v5.md
+  - https://docs.nmi.com/reference/patch_v4-merchants-gateway-id-1.md
+  - https://docs.nmi.com/reference/prompt-device-menu-v5.md
+  - https://docs.nmi.com/reference/prompt-device-sign-v5.md
+  - https://docs.nmi.com/reference/prompt-device-yes-no-v5.md
+  - https://docs.nmi.com/reference/pull-all-fee-schedules.md
+  - https://docs.nmi.com/reference/query.md
+  - https://docs.nmi.com/reference/querying-merchants-apple-pay-status.md
+  - https://docs.nmi.com/reference/refund-payment-v5.md
+  - https://docs.nmi.com/reference/register-device-v5.md
+  - https://docs.nmi.com/reference/see-merchant-billing.md
+  - https://docs.nmi.com/reference/see-your-commission.md
+  - https://docs.nmi.com/reference/send-invoice-v5.md
+  - https://docs.nmi.com/reference/update-billing-address-v5.md
+  - https://docs.nmi.com/reference/update-customer-v5.md
+  - https://docs.nmi.com/reference/update-device-v5.md
+  - https://docs.nmi.com/reference/update-invoice-v5.md
+  - https://docs.nmi.com/reference/update-plan-v5.md
+  - https://docs.nmi.com/reference/update-product-v5.md
+  - https://docs.nmi.com/reference/update-shipping-address-v5.md
+  - https://docs.nmi.com/reference/update-subscription-v5.md
+  - https://docs.nmi.com/reference/updating-settlement-time.md
+  - https://docs.nmi.com/reference/validate-payment-v5.md
+  - https://docs.nmi.com/reference/void-payment-v5.md
+  merge:
+    pages: 84
+    deduped: 4356
+    conflicts_kept_first: 0

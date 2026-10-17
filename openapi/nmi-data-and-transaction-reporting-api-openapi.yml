@@ -1,0 +1,1577 @@
+openapi: 3.2.0
+info:
+  version: 1.0.0
+  title: Payments Data and Transaction Reporting API
+  description: Our payments platform exposes two generations of API.
+  x-logo:
+    url: https://www.nmi.com/app/themes/nmi/images/NMI_Logo_Primary.webp
+servers:
+- url: https://sandbox.nmi.com/api
+security: []
+tags:
+- name: Data and Transaction Reporting
+  description: Query API (query.php) for retrieving transaction, subscription, and invoice data. Intended for existing Classic integrations.
+paths:
+  /query.php:
+    post:
+      tags:
+      - Data and Transaction Reporting
+      summary: Query API (Classic)
+      description: 'Methodology
+
+
+        **Overview**
+
+
+        While our online reporting interface allows merchants to quickly and easily retrieve detailed information about past transactions, a need for additional flexibility may be required.'
+      operationId: query
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                security_key:
+                  required: true
+                  type: string
+                  description: API Security Key assigned to a merchant account. New keys can be generated from the merchant control panel in Settings > Security Keys
+                condition:
+                  type: string
+                  description: "A combination of values can be passed and should be separated by commas. \n\nFor example, to retrieve all transactions pending settlement or complete, the following could be used: \n\n`condition=pendingsettlement,complete`\n\n<details>\n<summary>Conditions</summary>\n\n| Condition          | Description                                                                                                                                                       |\n|:-------------------|:------------------------------------------------------------------------------------------------------------------------------------------------------------------|\n| pending            | 'Auth Only' transactions that are awaiting capture.                                                                                                               |\n| pendingsettlement  | Transaction is awaiting settlement.                                                                                                                               |\n| in_progress        | Three-Step Redirect API transaction has not yet been completed. The transaction <br>condition will change to 'abandoned' if 24 hours pass with no further action. |\n| abandoned          | Three-Step Redirect API transaction has not been completed, and has timed out.                                                                                    |\n| failed             | Transaction has failed.                                                                                                                                           |\n| canceled           | Transaction has been voided.                                                                                                                                      |\n| complete           | Transaction has settled.                                                                                                                                          |\n| unknown            | An unknown error was encountered while processing this transaction.                                                                                               |\n\n</details>"
+                  enum:
+                  - pending
+                  - pendingsettlement
+                  - in_progress
+                  - abandoned
+                  - failed
+                  - canceled
+                  - complete
+                  - unknown
+                transaction_type:
+                  type: string
+                  description: 'Retrieves only transactions with the specified transaction type.
+
+
+                    <details>
+
+                    <summary>Transaction Types</summary>
+
+
+                    | Transaction Type  | Description                 |
+
+                    |:------------------|:----------------------------|
+
+                    | cc                | A credit card transaction.  |
+
+                    | ck                | A check transaction.        |
+
+                    | cs                | A cash transaction.         |
+
+
+                    </details>'
+                  enum:
+                  - cc
+                  - ck
+                  - cs
+                action_type:
+                  type: string
+                  description: 'Retrieves only transactions with the specified action types. A combination of the values can be used and <br>should be separated by commas.
+
+
+                    For example, to retrieve all transactions with credit or refund actions, use the following:
+
+
+                    `action_type=refund,credit`
+
+
+                    <details>
+
+                    <summary>Action Types</summary>
+
+
+                    | Action Type  | Description                                                                                      |
+
+                    |:-------------|:-------------------------------------------------------------------------------------------------|
+
+                    | sale         | Sale transactions.                                                                               |
+
+                    | refund       | Refund transactions.                                                                             |
+
+                    | credit       | Credit transactions.                                                                             |
+
+                    | auth         | ''Auth Only'' transactions.                                                                        |
+
+                    | capture      | Captured transactions.                                                                           |
+
+                    | void         | Voided transactions.                                                                             |
+
+                    | return       | Electronic Check (ACH) transactions that have returned, as well as credit card <br>chargebacks.  |
+
+                    | validate     | Validated transactions.                                                                          |
+
+
+                    </details>'
+                  enum:
+                  - sale
+                  - refund
+                  - credit
+                  - auth
+                  - capture
+                  - void
+                  - return
+                  - validate
+                source:
+                  type: string
+                  description: 'Retrieves only transactions with a particular ''transaction source''. A combination of the values can be used <br>and should be separated by commas.
+
+
+                    For example, to retrieve all transactions with api or recurring actions, use the following:
+
+
+                    `source=api,recurring`
+
+
+                    <details>
+
+                    <summary>Sources</summary>
+
+
+                    | Source           | Description                                                                                       |
+
+                    |:-----------------|:--------------------------------------------------------------------------------------------------|
+
+                    | api              | API transactions.                                                                                 |
+
+                    | batch_upload     | Batch Upload transactions.                                                                        |
+
+                    | mobile           | Mobile (iProcess) transactions.                                                                   |
+
+                    | quickclick       | QuickClick transactions.                                                                          |
+
+                    | quickbooks       | QuickBooks SyncPay transactions.                                                                  |
+
+                    | recurring        | Recurring transactions when using Recurring module.                                               |
+
+                    | swipe            | Swipe transactions.                                                                               |
+
+                    | virtual_terminal | Virtual Terminal transactions.                                                                    |
+
+                    | internal         | Internal transactions. Typically indicates settlement.                                            |
+
+
+                    </details>'
+                  enum:
+                  - api
+                  - batch_upload
+                  - mobile
+                  - quickclick
+                  - quickbooks
+                  - recurring
+                  - swipe
+                  - virtual_terminal
+                  - internal
+                transaction_id:
+                  type: string
+                  description: Specify a transaction ID or a comma separated list of transaction IDs to retrieve information on.<br>Alternatively, provide a Subscription ID to retrieve processed (approved and declined) transactions <br>associated with it.
+                subscription_id:
+                  type: string
+                  description: Set a specific subscription record or comma separated list of records. Using this with a transaction search <br>will return all transactions associated with this subscription. This will return this subscription's payment/plan <br>information when used with `report_type=recurring`.
+                invoice_id:
+                  type: string
+                  description: Set a specific Invoice ID. Should only be used when `report_type=invoicing`.
+                partial_payment_id:
+                  type: string
+                  description: Retrieves only transactions with the specified partial payment ID.
+                order_id:
+                  type: string
+                  description: Retrieves only transactions with the specified Order ID.
+                first_name:
+                  type: string
+                  description: Retrieves only transactions with the specified first name.
+                last_name:
+                  type: string
+                  description: Retrieves only transactions with the specified last name.
+                address1:
+                  type: string
+                  description: Retrieves only transactions with the specified specified address.
+                city:
+                  type: string
+                  description: Retrieves only transactions with the specified city.
+                state:
+                  type: string
+                  description: "Retrieves only transactions with the specified state.\n  \nFormat: `CC`"
+                zip:
+                  type: string
+                  description: Retrieves only transactions with the specified zip/postal code.
+                phone:
+                  type: string
+                  description: Retrieves only transactions with the specified phone number.
+                fax:
+                  type: string
+                  description: Retrieves only transactions with the specified fax number.
+                order_description:
+                  type: string
+                  description: Retrieves only transactions with the specified order description.
+                drivers_license_number:
+                  type: string
+                  description: Retrieves only transactions with the specified driver's license number.
+                drivers_license_dob:
+                  type: string
+                  description: Retrieves only transactions with the specified driver's license date of birth.
+                drivers_license_state:
+                  type: string
+                  description: Retrieves only transactions with the specified driver's license state.
+                email:
+                  type: string
+                  description: Retrieves only transactions with the specified billing email address.
+                cc_number:
+                  type: string
+                  enum:
+                  - '4111111111111111'
+                  - '5431111111111111'
+                  - '6011000991300009'
+                  - '341111111111111'
+                  - '30205252489926'
+                  - '3541963594572595'
+                  - '6799990100000000019'
+                  - '1111'
+                  - 0009
+                  - '9926'
+                  - '2595'
+                  - 0019
+                  description: 'Retrieves only transactions with the specified credit card number.
+
+                    You can use either the full number or the last 4 digits of the credit card number.
+
+                    **Note:** The last four digits in the test card number for Visa, MasterCard, and American Express are identical. In order to receive type-specific transactions, use the full test card number.
+
+
+                    <details>
+
+                    <summary>Allowed Card Numbers:</summary>
+
+
+                    | Card Type                            | Test Card Number    |
+
+                    |:-------------------------------------|:--------------------|
+
+                    | Visa                                 | 4111111111111111    |
+
+                    | MasterCard                           | 5431111111111111    |
+
+                    | Discover                             | 6011000991300009    |
+
+                    | American Express                     | 341111111111111     |
+
+                    | Diner''s Club                         | 30205252489926      |
+
+                    | JCB                                  | 3541963594572595    |
+
+                    | Maestro                              | 6799990100000000019 |
+
+                    | Visa, MasterCard, & American Express | 1111                |
+
+                    | Discover                             | 0009                |
+
+                    | Diner''s Club                         | 9926                |
+
+                    | JCB                                  | 2595                |
+
+                    | Maestro                              | 0019                |
+
+
+                    </details>'
+                merchant_defined_field_1:
+                  type: string
+                  description: 'Retrieves only transactions with the specified merchant defined field value.<br>Replace the ''1'' with a field number (1-20) (Example: `merchant_defined_field_12=value`)'
+                start_date:
+                  type: string
+                  format: date-time
+                  description: 'Only transactions that have been modified on or after this date will be retrieved.<br>Note that any actions performed on a transaction will cause the modified date to be updated.<br><br>Format: `YYYYMMDDhhmmss`'
+                end_date:
+                  type: string
+                  format: date-time
+                  description: 'Only transactions that have been modified on or before this date will be retrieved.<br>Note that any actions performed on a transaction will cause the modified date to be updated.<br><br>Format: `YYYYMMDDhhmmss`'
+                report_type:
+                  type: string
+                  enum:
+                  - receipt
+                  - customer_vault
+                  - recurring
+                  - recurring_plans
+                  - invoicing
+                  - gateway_processors
+                  - account_updater
+                  - test_mode_status
+                  - profile
+                  description: 'Sets the report type.
+
+
+                    * If you would like to query the Customer Vault to view what customer information is stored in the Customer Vault, you must set the customer_vault variable.
+
+                    * If you omit the customer_vault_id, the system will return all customers that are stored in the vault.
+
+                    * If you include a customer_vault_id, it will return the customer record associated with that ID.
+
+
+                    Example: `report_type=customer_vault&customer_vault _id=123456789`
+
+
+                    <details>
+
+                    <summary>Report Types</summary>
+
+
+                    | Report Type        | Description                                                                                                                                                                            |
+
+                    |:-------------------|:---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+
+                    | receipt            | Will return an html receipt for a specified transaction id.                                                                                                                            |
+
+                    | customer_vault     | Set the Query API to return Customer Vault data.                                                                                                                                       |
+
+                    | recurring          | Set the Query API to return subscription data.                                                                                                                                         |
+
+                    | recurring_plans    | Set the Query API to return plan data.                                                                                                                                                 |
+
+                    | invoicing          | Set the Query API to return invoicing data.                                                                                                                                            |
+
+                    | gateway_processors | Will return Processor details a user has permissions for. Specify a "user" by <br>querying with that security key.                                                                     |
+
+                    | account_updater    | Will return Customer Vault data that has been updated using the <br>Account Updater service.                                                                                           |
+
+                    | test_mode_status   | Will return whether the account has test mode active or inactive.                                                                                                                      |
+
+                    | profile            | Return merchant profile (company, email, address, timezone, defined fields, <br>gateway, favicon, status). It will also return card_schemes with <br>''processor_details'' set to ''true'' |
+
+
+                    </details>'
+                mobile_device_license:
+                  type: string
+                  description: 'Retrieves only transactions processed using the specified mobile device.
+
+
+                    * The device IDs for this parameter are available in the License Manager.
+
+                    * Use ''any_mobile'' to retrieve all mobile transactions.
+
+                    * A combination of the values can be used and should be separated by commas.
+
+                    * Can not be used with ''mobile_device_nickname''.
+
+
+                    Example 1: `mobile_device_license=D91AC56A-4242-3131-2323-2AE4AA6DB6EB`
+
+                    <br>Example 2: `mobile_device_license=any_mobile`
+
+                    '
+                mobile_device_nickname:
+                  type: string
+                  description: 'Retrieves only transactions processed using mobile devices with the specified nickname.
+
+
+                    * The nicknames for this parameter are available in the License Manager.
+
+                    * Can not be used with ''mobile_device_license''.
+
+
+                    Example (URL encoded): `mobile_device_nickname=Jim''s%20iPhone`
+
+                    '
+                customer_vault_id:
+                  type: string
+                  description: Set a specific Customer Vault record. Should only be used when `report_type=customer_vault`.
+                date_search:
+                  type: string
+                  enum:
+                  - created
+                  - updated
+                  description: 'Allows Customer Vault information to be returned based on the ''created'' or ''updated'' date.
+
+
+                    * If you would like to query the Customer Vault to view when customer information was created or updated, you must set the report_type variable with the customer_vault value.
+
+                    * If you omit the report_type variable, the system will ignore the date_search variable.
+
+
+                    Example: `report_type=customer_vault&date_search=created,updated&start_date=20170101000000&end_date=20201231232359`
+
+
+                    | Value    | Description                                                             |
+
+                    |:---------|:------------------------------------------------------------------------|
+
+                    | created  | Will return Customer Vault data created during a specified date range.  |
+
+                    | updated  | Will return Customer Vault data updated during a specified date range.  |'
+                result_limit:
+                  type: integer
+                  description: Determines the maximum number of results that may return for the current query.
+                page_number:
+                  type: integer
+                  description: Determines which "page" of results are returned. For example, `result_limit=100&page_number=0` will return the first 100 results. Using `page_number=1` will return the next 100 results. Default - `0`.
+                result_order:
+                  type: string
+                  enum:
+                  - standard
+                  - reverse
+                  description: 'Determines order of in which results are returned. Default - `standard`.
+
+
+                    <details>
+
+                    <summary>Result Orders</summary>
+
+
+                    | Result Order     | Description                                 |
+
+                    |:-----------------|:--------------------------------------------|
+
+                    | standard         | Returns the results from oldest to newest.  |
+
+                    | reverse          | Returns the results from newest to oldest.  |'
+                invoice_status:
+                  type: string
+                  description: 'Specify a comma separated list of what invoice statuses will return when using an "invoicing" report type.<br><br>Example: `invoice_status=open,closed,paid`'
+                  enum:
+                  - open
+                  - paid
+                  - closed
+                  - past_due
+                processor_details:
+                  type: string
+                  description: Can be use with `"report_type"="profile"`, this will include merchant `"card_schemes"` in the response
+                additionalProperties:
+                  type: string
+                  description: Up to 20 `merchant_defined_field_#` are allowed.
+            examples:
+              CompletedCreditCardTransactions:
+                $ref: '#/components/examples/CompletedCreditCardTransactions'
+              PendingTransactions:
+                $ref: '#/components/examples/PendingTransactions'
+              CustomerVault:
+                $ref: '#/components/examples/CustomerVault'
+      responses:
+        '200':
+          description: ok
+          content:
+            application/xml:
+              schema:
+                oneOf:
+                - $ref: '#/components/schemas/QueryResponse'
+                - $ref: '#/components/schemas/QueryCustomerVaultResponse'
+                - $ref: '#/components/schemas/QueryRecurringResponse'
+                - $ref: '#/components/schemas/QueryRecurringPlanResponse'
+                - $ref: '#/components/schemas/QueryInvoicingResponse'
+                - $ref: '#/components/schemas/QueryGatewayProcessorResponse'
+                - $ref: '#/components/schemas/QueryProfileWithProcessorDetailsResponse'
+components:
+  schemas:
+    QueryProfileWithProcessorDetailsResponse:
+      type: object
+      title: Response - Profile Report Type With Processor Details
+      properties:
+        nm_response:
+          type: object
+          properties:
+            protected:
+              type: string
+              description: Indicates whether the response is protected
+            is_gateway:
+              type: string
+              description: Indicates whether the response is related to a gateway
+            merchant:
+              type: object
+              properties:
+                company:
+                  type: string
+                  description: Merchant's company name
+                email:
+                  type: string
+                  description: Merchant's email address
+                phone:
+                  type: string
+                  description: Merchant's phone number
+                url:
+                  type: string
+                  description: Merchant's website URL
+                address1:
+                  type: string
+                  description: Merchant's primary address line
+                address2:
+                  type: string
+                  description: Merchant's secondary address line
+                city:
+                  type: string
+                  description: Merchant's city
+                state:
+                  type: string
+                  description: Merchant's state
+                zip:
+                  type: string
+                  description: Merchant's ZIP code
+                country:
+                  type: string
+                  description: Merchant's country
+                timezone:
+                  type: string
+                  description: Merchant's timezone
+                card_schemes:
+                  type: string
+                  description: Supported card schemes by the merchant
+            gateway:
+              type: object
+              properties:
+                company:
+                  type: string
+                  description: Gateway's company name
+                url:
+                  type: string
+                  description: Gateway's website URL
+                email:
+                  type: string
+                  description: Gateway's email address
+                phone:
+                  type: string
+                  description: Gateway's phone number
+                primary_color:
+                  type: string
+                  description: Gateway's primary color code
+                complimentary_color_1:
+                  type: string
+                  description: Gateway's first complimentary color code
+                complimentary_color_2:
+                  type: string
+                  description: Gateway's second complimentary color code
+            merchant_defined_fields:
+              type: array
+              description: Merchant-defined fields
+              items:
+                type: object
+                properties: {}
+            processors:
+              type: object
+              properties:
+                processor:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                        description: Processor's unique identifier
+                      type:
+                        type: string
+                        description: Processor's type
+                      platform:
+                        type: string
+                        description: Processor's platform
+                      tap_to_mobile:
+                        type: object
+                        description: Details related to tap mobile functionality
+                      required_fields:
+                        type: string
+                        description: Fields required by the processor
+                      currencies:
+                        type: object
+                        description: Supported currencies by the processor
+                      merchant_category_code:
+                        type: string
+                        description: Merchant category code associated with the processor
+            merchant_favicon:
+              type: string
+              description: Merchant's favicon data
+            account_details:
+              type: object
+              properties:
+                account_status:
+                  type: string
+                  description: Status of the merchant's account
+                test_mode_enabled:
+                  type: string
+                  description: Indicates whether test mode is enabled for the merchant's account
+    QueryGatewayProcessorResponse:
+      type: object
+      title: Response - Gateway Processors Report Type
+      properties:
+        nm_response:
+          type: object
+          properties:
+            gateway_processor:
+              type: array
+              items:
+                type: object
+                properties:
+                  description:
+                    type: string
+                    description: Description of the gateway processor
+                  processor_id:
+                    type: string
+                    description: Unique identifier for the processor
+                  platform:
+                    type: string
+                    description: Platform associated with the gateway processor
+                  emv_support:
+                    type: string
+                    description: EMV support status; indicates whether the processor supports EMV transactions
+                  mcc:
+                    type: string
+                    description: Merchant category code
+    QueryResponse:
+      type: object
+      title: Response
+      properties:
+        nm_response:
+          type: object
+          properties:
+            transaction:
+              type: array
+              items:
+                type: object
+                properties:
+                  transaction_id:
+                    type: string
+                    description: Transaction id
+                  partial_payment_id:
+                    type: string
+                    description: Partial payment id
+                  partial_payment_balance:
+                    type: string
+                    description: Partial payment balance
+                  platform_id:
+                    type: string
+                    description: Platform id
+                  transaction_type:
+                    type: string
+                    description: Transaction type
+                  condition:
+                    type: string
+                    description: Condition
+                  order_id:
+                    type: string
+                    description: Order id
+                  authorization_code:
+                    type: string
+                    description: Authorization code
+                  ponumber:
+                    type: string
+                    description: PO Number
+                  order_description:
+                    type: string
+                    description: Order description
+                  first_name:
+                    type: string
+                    description: First name
+                  last_name:
+                    type: string
+                    description: Last name
+                  address_1:
+                    type: string
+                    description: Address 1
+                  address_2:
+                    type: string
+                    description: Address 2
+                  company:
+                    type: string
+                    description: Company
+                  city:
+                    type: string
+                    description: City
+                  state:
+                    type: string
+                    description: State
+                  postal_code:
+                    type: string
+                    description: Postal code
+                  country:
+                    type: string
+                    description: Country
+                  email:
+                    type: string
+                    description: Email
+                  phone:
+                    type: string
+                    description: Phone
+                  fax:
+                    type: string
+                    description: Fax
+                  cell_phone:
+                    type: string
+                    description: Cell phone
+                  customertaxid:
+                    type: string
+                    description: Customer tax id
+                  customerid:
+                    type: string
+                    description: Customer id
+                  website:
+                    type: string
+                    description: Website
+                  shipping_first_name:
+                    type: string
+                    description: Shipping first name
+                  shipping_last_name:
+                    type: string
+                    description: Shipping last name
+                  shipping_address_1:
+                    type: string
+                    description: Shipping address 1
+                  shipping_address_2:
+                    type: string
+                    description: Shipping address 2
+                  shipping_company:
+                    type: string
+                    description: Shipping company
+                  shipping_city:
+                    type: string
+                    description: Shipping city
+                  shipping_state:
+                    type: string
+                    description: Shipping state
+                  shipping_postal_code:
+                    type: string
+                    description: Shipping postal code
+                  shipping_country:
+                    type: string
+                    description: Shipping country
+                  shipping_email:
+                    type: string
+                    description: Shipping email
+                  shipping_carrier:
+                    type: string
+                    description: Shipping carrier
+                  tracking_number:
+                    type: string
+                    description: Tracking number
+                  shipping_date:
+                    type: string
+                    description: Shipping date
+                  shipping:
+                    type: string
+                    description: Shipping
+                  shipping_phone:
+                    type: string
+                    description: Shipping phone
+                  cc_number:
+                    type: string
+                    description: Credit card number
+                  cc_hash:
+                    type: string
+                    description: Credit card hash
+                  cc_exp:
+                    type: string
+                    description: Credit card expiration
+                  cavv:
+                    type: string
+                    description: Cavv
+                  cavv_result:
+                    type: string
+                    description: Cavv result
+                  xid:
+                    type: string
+                    description: Xid
+                  eci:
+                    type: string
+                    description: Eci
+                  directory_server_id:
+                    type: string
+                    description: Directory server id
+                  three_ds_version:
+                    type: string
+                    description: 3DS version
+                  avs_response:
+                    type: string
+                    description: AVS response
+                  csc_response:
+                    type: string
+                    description: CSC response
+                  cardholder_auth:
+                    type: string
+                    description: Cardholder auth
+                  cc_start_date:
+                    type: string
+                    description: Credit card start date
+                  cc_issue_number:
+                    type: string
+                    description: Credit card issue number
+                  check_account:
+                    type: string
+                    description: Check account
+                  check_hash:
+                    type: string
+                    description: Check hash
+                  check_aba:
+                    type: string
+                    description: Check ABA
+                  check_name:
+                    type: string
+                    description: Check name
+                  account_holder_type:
+                    type: string
+                    description: Account holder type
+                  account_type:
+                    type: string
+                    description: Account type
+                  sec_code:
+                    type: string
+                    description: Sec code
+                  drivers_license_number:
+                    type: string
+                    description: Drivers license number
+                  drivers_license_state:
+                    type: string
+                    description: Drivers license state
+                  drivers_license_dob:
+                    type: string
+                    description: Drivers license dob
+                  social_security_number:
+                    type: string
+                    description: Social security number
+                  processor_id:
+                    type: string
+                    description: Processor id
+                  tax:
+                    type: string
+                    description: Tax
+                  currency:
+                    type: string
+                    description: Currency
+                  surcharge:
+                    type: string
+                    description: Surcharge
+                  convenience_fee:
+                    type: string
+                    description: Convenience Fee
+                  misc_fee:
+                    type: string
+                    description: Miscelaneous Fee
+                  misc_fee_name:
+                    type: string
+                    description: Miscelaneous Fee Name
+                  cash_discount:
+                    type: string
+                    description: Cash discount
+                  tip:
+                    type: string
+                    description: Tip
+                  card_balance:
+                    type: string
+                    description: Card balance
+                  card_available_balance:
+                    type: string
+                    description: Card available balance
+                  entry_mode:
+                    type: string
+                    description: Entry mode
+                  cc_bin:
+                    type: string
+                    description: Credit card bin
+                  cc_type:
+                    type: string
+                    description: Credit card type
+                  signature_image:
+                    type: string
+                    description: Signature image
+                  product:
+                    type: object
+                    properties:
+                      sku:
+                        type: string
+                        description: SKU
+                      quantity:
+                        type: string
+                        description: Quantity
+                      description:
+                        type: string
+                        description: Description
+                      amount:
+                        type: string
+                        description: Amount
+                  duty_amount:
+                    type: string
+                    description: Duty amount
+                  discount_amount:
+                    type: string
+                    description: Discount amount
+                  national_tax_amount:
+                    type: string
+                    description: National tax amount
+                  summary_commodity_code:
+                    type: string
+                    description: Summary commodity code
+                  vat_tax_amount:
+                    type: string
+                    description: Vat tax amount
+                  vat_tax_rate:
+                    type: string
+                    description: Vat tax rate
+                  alternate_tax_amount:
+                    type: string
+                    description: Alternate tax amount
+                  action:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        amount:
+                          type: string
+                          description: Amount
+                        action_type:
+                          type: string
+                          description: Action type
+                        date:
+                          type: string
+                          description: Date
+                        success:
+                          type: string
+                          description: Success
+                        ip_address:
+                          type: string
+                          description: IP address
+                        source:
+                          type: string
+                          description: Source
+                        api_method:
+                          type: string
+                          description: API method
+                        tap_to_mobile:
+                          type: string
+                          description: Tap to mobile
+                        username:
+                          type: string
+                          description: Username
+                        response_text:
+                          type: string
+                          description: Response text
+                        batch_id:
+                          type: string
+                          description: Batch id
+                        processor_batch_id:
+                          type: string
+                          description: Processor batch id
+                        response_code:
+                          type: string
+                          description: Response code
+                        processor_response_text:
+                          type: string
+                          description: Processor response text
+                        processor_response_code:
+                          type: string
+                          description: Processor response code
+                        requested_amount:
+                          type: string
+                          description: Requested amount
+                        device_license_number:
+                          type: string
+                          description: Device license number
+                        device_nickname:
+                          type: string
+                          description: Device nickname
+    QueryCustomerVaultResponse:
+      type: object
+      title: Response - Customer Vault Report Type
+      properties:
+        nm_response:
+          type: object
+          properties:
+            customer_vault:
+              type: object
+              properties:
+                customer:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                        description: Customer ID
+                      first_name:
+                        type: string
+                        description: First name of the customer
+                      last_name:
+                        type: string
+                        description: Last name of the customer
+                      address_1:
+                        type: string
+                        description: Primary address line of the customer
+                      address_2:
+                        type: string
+                        description: Secondary address line of the customer
+                      company:
+                        type: string
+                        description: Company name associated with the customer
+                      city:
+                        type: string
+                        description: City of the customer's address
+                      state:
+                        type: string
+                        description: State of the customer's address
+                      postal_code:
+                        type: string
+                        description: Postal code of the customer's address
+                      country:
+                        type: string
+                        description: Country of the customer's address
+                      email:
+                        type: string
+                        description: Email address of the customer
+                      phone:
+                        type: string
+                        description: Phone number of the customer
+                      fax:
+                        type: string
+                        description: Fax number of the customer
+                      cell_phone:
+                        type: string
+                        description: Cell phone number of the customer
+                      customertaxid:
+                        type: string
+                        description: Customer's tax identification number
+                      website:
+                        type: string
+                        description: Website associated with the customer
+                      shipping_first_name:
+                        type: string
+                        description: First name for shipping details
+                      shipping_last_name:
+                        type: string
+                        description: Last name for shipping details
+                      shipping_address_1:
+                        type: string
+                        description: Primary shipping address line
+                      shipping_address_2:
+                        type: string
+                        description: Secondary shipping address line
+                      shipping_company:
+                        type: string
+                        description: Shipping company name
+                      shipping_city:
+                        type: string
+                        description: Shipping city
+                      shipping_state:
+                        type: string
+                        description: Shipping state
+                      shipping_postal_code:
+                        type: string
+                        description: Shipping postal code
+                      shipping_country:
+                        type: string
+                        description: Shipping country
+                      shipping_email:
+                        type: string
+                        description: Email address for shipping
+                      shipping_carrier:
+                        type: string
+                        description: Shipping carrier details
+                      tracking_number:
+                        type: string
+                        description: Shipping tracking number
+                      shipping_date:
+                        type: string
+                        description: Shipping date
+                      shipping:
+                        type: string
+                        description: Shipping cost
+                      cc_number:
+                        type: string
+                        description: Credit card number (masked)
+                      cc_hash:
+                        type: string
+                        description: Credit card hash
+                      cc_exp:
+                        type: string
+                        description: Credit card expiration date
+                      cc_start_date:
+                        type: string
+                        description: Credit card start date
+                      cc_issue_number:
+                        type: string
+                        description: Credit card issue number
+                      check_account:
+                        type: string
+                        description: Check account details
+                      check_hash:
+                        type: string
+                        description: Check hash value
+                      check_aba:
+                        type: string
+                        description: Check ABA routing number
+                      check_name:
+                        type: string
+                        description: Name on the check
+                      account_holder_type:
+                        type: string
+                        description: Account holder type
+                      account_type:
+                        type: string
+                        description: Type of bank account
+                      sec_code:
+                        type: string
+                        description: SEC code for ACH transactions
+                      processor_id:
+                        type: string
+                        description: Processor ID
+                      cc_bin:
+                        type: string
+                        description: Credit card BIN number
+                      cc_type:
+                        type: string
+                        description: Credit card type
+                      created:
+                        type: string
+                        description: Creation date
+                      updated:
+                        type: string
+                        description: Last update date
+                      account_updated:
+                        type: string
+                        description: Last account update date
+                      customer_vault_id:
+                        type: string
+                        description: Customer vault ID
+    QueryInvoicingResponse:
+      type: object
+      title: Response - Invoicing Report Type
+      properties:
+        nm_response:
+          type: object
+          properties:
+            invoice_report:
+              type: object
+              properties:
+                invoice:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      invoice_id:
+                        type: string
+                        description: Unique identifier for the invoice
+                      amount:
+                        type: string
+                        description: Total amount of the invoice
+                      status:
+                        type: string
+                        description: Status of the invoice
+                      currency:
+                        type: string
+                        description: Currency code for the invoice amount
+                      order_description:
+                        type: string
+                        description: Description of the order
+                      customer_id:
+                        type: string
+                        description: Unique identifier for the customer
+                      customer_tax_id:
+                        type: string
+                        description: Tax ID associated with the customer
+                      order_id:
+                        type: string
+                        description: Unique identifier for the order
+                      po_number:
+                        type: string
+                        description: Purchase order number
+                      tax_amount:
+                        type: string
+                        description: Total tax amount for the invoice
+                      shipping_amount:
+                        type: string
+                        description: Total shipping amount for the invoice
+                      discount_amount:
+                        type: string
+                        description: Total discount amount for the invoice
+                      created:
+                        type: string
+                        description: Creation date of the invoice
+                      terms:
+                        type: string
+                        description: Payment terms for the invoice
+                      payments_applied:
+                        type: string
+                        description: Total payments applied to the invoice
+                      billing:
+                        type: object
+                        properties:
+                          first_name:
+                            type: string
+                            description: First name for billing contact
+                          last_name:
+                            type: string
+                            description: Last name for billing contact
+                          address1:
+                            type: string
+                            description: Primary address line for billing
+                          address2:
+                            type: string
+                            description: Secondary address line for billing
+                          company:
+                            type: string
+                            description: Company name for billing
+                          city:
+                            type: string
+                            description: City for billing
+                          state:
+                            type: string
+                            description: State for billing
+                          postal:
+                            type: string
+                            description: Postal code for billing
+                          country:
+                            type: string
+                            description: Country for billing
+                          email:
+                            type: string
+                            description: Email address for billing
+                          phone:
+                            type: string
+                            description: Phone number for billing
+                          fax:
+                            type: string
+                            description: Fax number for billing
+                      shipping:
+                        type: object
+                        properties:
+                          first_name:
+                            type: string
+                            description: First name for shipping contact
+                          last_name:
+                            type: string
+                            description: Last name for shipping contact
+                          address1:
+                            type: string
+                            description: Primary address line for shipping
+                          address2:
+                            type: string
+                            description: Secondary address line for shipping
+                          company:
+                            type: string
+                            description: Company name for shipping
+                          city:
+                            type: string
+                            description: City for shipping
+                          state:
+                            type: string
+                            description: State for shipping
+                          postal:
+                            type: string
+                            description: Postal code for shipping
+                          country:
+                            type: string
+                            description: Country for shipping
+                          email:
+                            type: string
+                            description: Email address for shipping
+                          phone:
+                            type: string
+                            description: Phone number for shipping
+                          fax:
+                            type: string
+                            description: Fax number for shipping
+    QueryRecurringPlanResponse:
+      type: object
+      title: Response - Recurring Plans Report Type
+      properties:
+        nm_response:
+          type: object
+          properties:
+            plan:
+              type: array
+              items:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    description: Unique identifier for the plan
+                  plan_id:
+                    type: string
+                    description: Plan's specific ID
+                  plan_name:
+                    type: string
+                    description: Name of the recurring plan
+                  plan_amount:
+                    type: string
+                    description: Amount associated with the plan
+                  day_frequency:
+                    type: string
+                    description: Frequency of the plan in days
+                  month_frequency:
+                    type: string
+                    description: Frequency of the plan in months
+                  day_of_month:
+                    type: string
+                    description: Specific day of the month for the plan
+                  plan_payments:
+                    type: string
+                    description: Number of payments for the plan
+    QueryRecurringResponse:
+      type: object
+      title: Response - Recurring Report Type
+      properties:
+        nm_response:
+          type: object
+          properties:
+            subscription:
+              type: array
+              items:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    description: Unique identifier for the subscription
+                  subscription_id:
+                    type: string
+                    description: Subscription-specific ID
+                  plan:
+                    type: object
+                    properties:
+                      plan_id:
+                        type: string
+                        description: Plan's specific ID
+                      plan_name:
+                        type: string
+                        description: Name of the plan
+                      plan_amount:
+                        type: string
+                        description: Amount associated with the plan
+                      plan_payments:
+                        type: string
+                        description: Number of payments for the plan
+                      day_frequency:
+                        type: string
+                        description: Frequency of the plan in days
+                  next_charge_date:
+                    type: string
+                    description: Date of next charge for the subscription
+                  completed_payments:
+                    type: string
+                    description: Number of completed payments
+                  attempted_payments:
+                    type: string
+                    description: Number of attempted payments
+                  remaining_payments:
+                    type: string
+                    description: Number of remaining payments
+                  ponumber:
+                    type: string
+                    description: Purchase Order number
+                  orderid:
+                    type: string
+                    description: Order ID
+                  order_description:
+                    type: string
+                    description: Description of the order
+                  shipping:
+                    type: string
+                    description: Shipping details
+                  tax:
+                    type: string
+                    description: Tax details
+                  first_name:
+                    type: string
+                    description: First name of the customer
+                  last_name:
+                    type: string
+                    description: Last name of the customer
+                  address_1:
+                    type: string
+                    description: Address line 1
+                  address_2:
+                    type: string
+                    description: Address line 2
+                  company:
+                    type: string
+                    description: Company name
+                  city:
+                    type: string
+                    description: City
+                  state:
+                    type: string
+                    description: State or region
+                  postal_code:
+                    type: string
+                    description: Postal code
+                  country:
+                    type: string
+                    description: Country
+                  email:
+                    type: string
+                    description: Email address
+                  phone:
+                    type: string
+                    description: Phone number
+                  fax:
+                    type: string
+                    description: Fax number
+                  cell_phone:
+                    type: string
+                    description: Cell phone number
+                  customertaxid:
+                    type: string
+                    description: Customer's tax identification number
+                  website:
+                    type: string
+                    description: Website URL
+                  cc_number:
+                    type: string
+                    description: Credit card number
+                  cc_hash:
+                    type: string
+                    description: Credit card hash
+                  cc_exp:
+                    type: string
+                    description: Credit card expiration date
+                  cc_start_date:
+                    type: string
+                    description: Credit card start date
+                  cc_issue_number:
+                    type: string
+                    description: Credit card issue number
+                  cc_bin:
+                    type: string
+                    description: Credit card BIN number
+                  processor_id:
+                    type: string
+                    description: Processor ID
+  examples:
+    CustomerVault:
+      summary: Customer Vault
+      description: Retrieves customer profiles. Pass `customer_vault_id` parameter to filter by specific customer.
+      value:
+        report_type: customer_vault
+        security_key: 6457Thfj624V5r7WUwc5v6a68Zsd6YEm
+    PendingTransactions:
+      summary: Pending Transaction
+      description: Retrieves pending transactions
+      value:
+        condition: pending
+        security_key: 6457Thfj624V5r7WUwc5v6a68Zsd6YEm
+    CompletedCreditCardTransactions:
+      summary: Completed Credit Card Transaction
+      description: Retrieves completed credit card `sale` transactions
+      value:
+        condition: complete
+        transaction_type: cc
+        action_type: sale
+        security_key: 6457Thfj624V5r7WUwc5v6a68Zsd6YEm
+  securitySchemes:
+    merchantApiKey:
+      type: apiKey
+      in: header
+      name: Authorization
+      description: Merchant API key for RESTful API authentication. This key is used for merchant-specific API access and can be generated from the merchant portal.
+externalDocs:
+  url: https://www.postman.com/nmi-integration-support/workspace/nmi-public-documentation/request/5480015-f4b0ec7b-bd84-4094-98c2-67c0b6508a7f
+  description: Public Documentation (Postman)
+x-tagGroups:
+- name: REST API (recommended)
+  tags:
+  - Payments
+  - Plans
+  - Subscriptions
+  - Products
+  - Invoicing
+  - Customers
+  - Devices
+- name: Classic API
+  tags:
+  - Payment Processing
+  - Data and Transaction Reporting
+  - Webhook Events
+  - Gateway Features
+  - Processors and Services
+  - Apple Pay
+x-provenance:
+  method: searched
+  source: https://docs.nmi.com/reference
+  harvested: '2026-10-14'
+  tool: harvest-readme-openapi.py
+  note: Assembled verbatim from the OpenAPI definition ReadMe embeds in each operation page of the provider's developer portal; paths and components merged by API title, nothing authored.
+  assembled_from:
+  - https://docs.nmi.com/reference/add-billing-address-v5.md
+  - https://docs.nmi.com/reference/add-processor-service.md
+  - https://docs.nmi.com/reference/add-shipping-address-v5.md
+  - https://docs.nmi.com/reference/adding-apple-pay.md
+  - https://docs.nmi.com/reference/cancel-device-display-v5.md
+  - https://docs.nmi.com/reference/cancel-device-payment-request-v5.md
+  - https://docs.nmi.com/reference/capture-payment-v5.md
+  - https://docs.nmi.com/reference/card-type.md
+  - https://docs.nmi.com/reference/check-services.md
+  - https://docs.nmi.com/reference/check-username-availability.md
+  - https://docs.nmi.com/reference/close-invoice-v5.md
+  - https://docs.nmi.com/reference/create-auth-v5.md
+  - https://docs.nmi.com/reference/create-credit-v5.md
+  - https://docs.nmi.com/reference/create-customer-v5.md
+  - https://docs.nmi.com/reference/create-device-payment-request-auth-v5.md
+  - https://docs.nmi.com/reference/create-device-payment-request-credit-v5.md
+  - https://docs.nmi.com/reference/create-device-payment-request-sale-v5.md
+  - https://docs.nmi.com/reference/create-device-payment-request-validate-v5.md
+  - https://docs.nmi.com/reference/create-invoice-v5.md
+  - https://docs.nmi.com/reference/create-merchant-key.md
+  - https://docs.nmi.com/reference/create-merchant.md
+  - https://docs.nmi.com/reference/create-plan-v5.md
+  - https://docs.nmi.com/reference/create-product-v5.md
+  - https://docs.nmi.com/reference/create-sale-v5.md
+  - https://docs.nmi.com/reference/create-subscription-v5.md
+  - https://docs.nmi.com/reference/delete-billing-address-v5.md
+  - https://docs.nmi.com/reference/delete-customer-v5.md
+  - https://docs.nmi.com/reference/delete-plan-v5.md
+  - https://docs.nmi.com/reference/delete-product-v5.md
+  - https://docs.nmi.com/reference/delete-shipping-address-v5.md
+  - https://docs.nmi.com/reference/delete-subscription-v5.md
+  - https://docs.nmi.com/reference/deregister-device-v5.md
+  - https://docs.nmi.com/reference/display-device-qr-code-v5.md
+  - https://docs.nmi.com/reference/get-billing-address-v5.md
+  - https://docs.nmi.com/reference/get-customer-v5.md
+  - https://docs.nmi.com/reference/get-device-payment-request-status-v5.md
+  - https://docs.nmi.com/reference/get-device-prompt-menu-status-v5.md
+  - https://docs.nmi.com/reference/get-device-prompt-sign-status-v5.md
+  - https://docs.nmi.com/reference/get-device-prompt-yes-no-status-v5.md
+  - https://docs.nmi.com/reference/get-device-v5.md
+  - https://docs.nmi.com/reference/get-fees-in-schedule.md
+  - https://docs.nmi.com/reference/get-invoice-v5.md
+  - https://docs.nmi.com/reference/get-merchant-list.md
+  - https://docs.nmi.com/reference/get-merchant-partner-user-info.md
+  - https://docs.nmi.com/reference/get-merchant-processors-value-added-services.md
+  - https://docs.nmi.com/reference/get-payment-v5.md
+  - https://docs.nmi.com/reference/get-plan-v5.md
+  - https://docs.nmi.com/reference/get-processor-config.md
+  - https://docs.nmi.com/reference/get-product-v5.md
+  - https://docs.nmi.com/reference/get-settlement-time.md
+  - https://docs.nmi.com/reference/get-shipping-address-v5.md
+  - https://docs.nmi.com/reference/get-specific-merchant-information.md
+  - https://docs.nmi.com/reference/get-sub-affiliate-list.md
+  - https://docs.nmi.com/reference/get-subscription-v5.md
+  - https://docs.nmi.com/reference/get-transaction-data.md
+  - https://docs.nmi.com/reference/list-customers-v5.md
+  - https://docs.nmi.com/reference/list-devices-v5.md
+  - https://docs.nmi.com/reference/list-invoices-v5.md
+  - https://docs.nmi.com/reference/list-plans-v5.md
+  - https://docs.nmi.com/reference/list-products-v5.md
+  - https://docs.nmi.com/reference/list-subscriptions-v5.md
+  - https://docs.nmi.com/reference/patch_v4-merchants-gateway-id-1.md
+  - https://docs.nmi.com/reference/prompt-device-menu-v5.md
+  - https://docs.nmi.com/reference/prompt-device-sign-v5.md
+  - https://docs.nmi.com/reference/prompt-device-yes-no-v5.md
+  - https://docs.nmi.com/reference/pull-all-fee-schedules.md
+  - https://docs.nmi.com/reference/query.md
+  - https://docs.nmi.com/reference/querying-merchants-apple-pay-status.md
+  - https://docs.nmi.com/reference/refund-payment-v5.md
+  - https://docs.nmi.com/reference/register-device-v5.md
+  - https://docs.nmi.com/reference/see-merchant-billing.md
+  - https://docs.nmi.com/reference/see-your-commission.md
+  - https://docs.nmi.com/reference/send-invoice-v5.md
+  - https://docs.nmi.com/reference/update-billing-address-v5.md
+  - https://docs.nmi.com/reference/update-customer-v5.md
+  - https://docs.nmi.com/reference/update-device-v5.md
+  - https://docs.nmi.com/reference/update-invoice-v5.md
+  - https://docs.nmi.com/reference/update-plan-v5.md
+  - https://docs.nmi.com/reference/update-product-v5.md
+  - https://docs.nmi.com/reference/update-shipping-address-v5.md
+  - https://docs.nmi.com/reference/update-subscription-v5.md
+  - https://docs.nmi.com/reference/updating-settlement-time.md
+  - https://docs.nmi.com/reference/validate-payment-v5.md
+  - https://docs.nmi.com/reference/void-payment-v5.md
+  merge:
+    pages: 84
+    deduped: 4356
+    conflicts_kept_first: 0

@@ -1,0 +1,590 @@
+openapi: 3.2.0
+info:
+  version: 1.0.0
+  title: Payments Fee Schedule API
+  description: Our payments platform exposes two generations of API.
+  x-logo:
+    url: https://www.nmi.com/app/themes/nmi/images/NMI_Logo_Primary.webp
+servers:
+- url: https://sandbox.nmi.com/api
+security: []
+tags:
+- name: Fee Schedule
+paths:
+  /v4/fee_schedules/search:
+    post:
+      tags:
+      - Fee Schedule
+      operationId: pullAllFeeSchedules
+      security: []
+      summary: Pull All Fee Schedules
+      description: 'Usage
+
+        This request will pull all fee schedules available on your account.'
+      parameters:
+      - $ref: '#/components/parameters/ContentType'
+      - $ref: '#/components/parameters/Authorization'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PullAllFeeSchedulesRequest'
+            examples:
+              Pull All Fee Schedules:
+                $ref: '#/components/examples/PullAllFeeSchedulesExampleRequest'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PullAllFeeSchedulesResponse'
+              examples:
+                Pull All Fee Schedules:
+                  $ref: '#/components/examples/PullAllFeeSchedulesExampleResponse'
+  /v4/fee_schedules/{id}/fees:
+    get:
+      tags:
+      - Fee Schedule
+      operationId: getFeesInSchedule
+      security: []
+      summary: Get Fees Inside a Fee Schedule
+      description: 'Usage
+
+        Use this request to get a full list of all fees currently set on an existing fee schedule.'
+      parameters:
+      - $ref: '#/components/parameters/GetFeesInScheduleRequest'
+      - $ref: '#/components/parameters/ContentType'
+      - $ref: '#/components/parameters/Authorization'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetFeesInScheduleResponse'
+              examples:
+                Get Fees Inside a Fee Schedule:
+                  $ref: '#/components/examples/GetFeesInScheduleExampleResponse'
+components:
+  parameters:
+    GetFeesInScheduleRequest:
+      name: id
+      in: path
+      required: true
+      schema:
+        type: number
+      description: The id of the desired fee schedule.
+      example: '999'
+    ContentType:
+      name: Content-Type
+      in: header
+      required: true
+      schema:
+        type: string
+      description: The Content-Type representation header is used to indicate the original media type of the resource (prior to any content encoding applied for sending).
+      example: application/json
+    Authorization:
+      name: Authorization
+      in: header
+      required: true
+      schema:
+        type: string
+      description: Your v4 API key that was generated in the Partner portal.
+  examples:
+    PullAllFeeSchedulesExampleRequest:
+      summary: Pull All Fee Schedules
+      description: This request will pull all fee schedules available on your account.
+      value:
+        maxResults: 1000
+        includeCustomFeeSchedules: false
+    PullAllFeeSchedulesExampleResponse:
+      summary: Pull All Fee Schedules
+      description: Gets All Fee Schedules
+      value:
+        objectType: searchResults
+        offset: 0
+        maxResults: 1000
+        totalResults: 3
+        hasMore: false
+        results:
+        - objectType: feeSchedule
+          id: '2'
+          name: My Default Fees
+          costPlan: '1'
+          currency: USD
+          merchants:
+          - '1'
+          - '3'
+          - '4'
+          - '5'
+          - '30'
+          - '31'
+          - '32'
+          - '33'
+          - '34'
+          - '36'
+          - '37'
+          - '38'
+          - '39'
+          - '40'
+          - '1579'
+          - '1583'
+          - '1584'
+          affiliates:
+          - '162'
+          isDefault: true
+          isCustom: false
+        - objectType: feeSchedule
+          id: '17'
+          name: Five Fees
+          costPlan: '1'
+          currency: USD
+          merchants: []
+          affiliates:
+          - '2'
+          - '10'
+          isDefault: false
+          isCustom: false
+        - objectType: feeSchedule
+          id: '37'
+          name: High Risk
+          costPlan: '1'
+          currency: USD
+          merchants:
+          - '3463'
+          - '457564'
+          affiliates:
+          - '14'
+          isDefault: false
+          isCustom: false
+    GetFeesInScheduleExampleResponse:
+      summary: Get Fees Inside a Fee Schedules
+      description: Two Processor Example
+      value:
+      - objectType: fee
+        feeType: '13'
+        name: Set Up Fee
+        sort: '1'
+        description: Billed once the service is boarded.
+        processor:
+          objectType: service
+          id: acu
+          name: Automatic Card Updater
+          type: feature
+          source: internal
+        billMe: false
+        value:
+          objectType: amount
+          amount: '0.00'
+          currency: USD
+        applyTo:
+        - gateway
+      - objectType: fee
+        feeType: '14'
+        name: Monthly Fee
+        sort: '2'
+        description: Billed monthly for each gateway account.
+        processor:
+          objectType: service
+          id: acu
+          name: Automatic Card Updater
+          type: feature
+          source: internal
+        billMe: false
+        value:
+          objectType: amount
+          amount: '5.00'
+          currency: USD
+        applyTo:
+        - gateway
+      - objectType: fee
+        feeType: '15'
+        name: Per Transaction Fee
+        sort: '4'
+        description: Billed per updated record.
+        processor:
+          objectType: service
+          id: acu
+          name: Automatic Card Updater
+          type: feature
+          source: internal
+        billMe: false
+        value:
+          objectType: amount
+          amount: '0.20'
+          currency: USD
+        applyTo:
+        - mobile
+        - gateway
+      - objectType: fee
+        feeType: '13'
+        name: Set Up Fee
+        sort: '1'
+        description: Billed once when each processor instance is boarded.
+        processor:
+          objectType: service
+          id: bmshiso
+          name: Barclaycard HISO UK/EU - EMV
+          type: card
+          source: external
+        billMe: false
+        value:
+          objectType: amount
+          amount: '0.00'
+          currency: USD
+        applyTo:
+        - gateway
+      - objectType: fee
+        feeType: '14'
+        name: Monthly Fee
+        sort: '2'
+        description: Billed monthly for each processor instance (each processor ID).
+        processor:
+          objectType: service
+          id: bmshiso
+          name: Barclaycard HISO UK/EU - EMV
+          type: card
+          source: external
+        billMe: false
+        value:
+          objectType: amount
+          amount: '10.00'
+          currency: USD
+        applyTo:
+        - gateway
+      - objectType: fee
+        feeType: '52'
+        name: Monthly Card Present Only Fee
+        sort: '3'
+        description: Billed monthly for each processor instance (each processor ID) configured to accept only card present transactions.
+        processor:
+          objectType: service
+          id: bmshiso
+          name: Barclaycard HISO UK/EU - EMV
+          type: card
+          source: external
+        billMe: false
+        value:
+          objectType: amount
+          amount: '10.00'
+          currency: USD
+        applyTo:
+        - gateway
+      - objectType: fee
+        feeType: '15'
+        name: Per Transaction Fee
+        sort: '4'
+        description: Billed per sale, auth, capture, void, refund, credit, update, validate, and settle transaction.
+        processor:
+          objectType: service
+          id: bmshiso
+          name: Barclaycard HISO UK/EU - EMV
+          type: card
+          source: external
+        billMe: false
+        value:
+          objectType: amount
+          amount: '0.10'
+          currency: USD
+        applyTo:
+        - mobile
+        - gateway
+      - objectType: fee
+        feeType: '53'
+        name: Card Present Only Transaction Fee
+        sort: '5'
+        description: Billed per sale, auth, capture, void, refund, credit, update, validate, and settle transaction when configured to accept only card present transactions.
+        processor:
+          objectType: service
+          id: bmshiso
+          name: Barclaycard HISO UK/EU - EMV
+          type: card
+          source: external
+        billMe: false
+        value:
+          objectType: amount
+          amount: '0.10'
+          currency: USD
+        applyTo:
+        - mobile
+        - gateway
+  schemas:
+    GetFeesInScheduleResponse:
+      type: array
+      title: Response
+      items:
+        type: object
+        properties:
+          objectType:
+            type: string
+            enum:
+            - fee
+            description: The type of object that was returned as a result of the request.
+          feeType:
+            type: string
+            description: The type for this fee.
+          name:
+            type: string
+            description: The name for this fee.
+          sort:
+            type: string
+            description: The sort order assigned to this fee.
+          description:
+            type: string
+            description: The description for this fee.
+          processor:
+            type: object
+            description: The processor or service billing this fee.
+            properties:
+              objectType:
+                type: string
+                enum:
+                - service
+                description: Type of the returned response object
+              id:
+                type: string
+                description: The ID for the processor or service.
+              name:
+                type: string
+                description: The name of the processor or service.
+              type:
+                type: string
+                enum:
+                - card
+                - check
+                - feature
+                description: The payment type associated with the processor or indicating the service as an extra feature.
+              source:
+                type: string
+                enum:
+                - internal
+                - external
+                description: Indicates whether or not the processor or service is run by a third-party.
+          billMe:
+            type: bool
+            description: Whether or not this fee is billed to your partner account instead of the merchant's.
+          value:
+            type: object
+            description: The amount details of this fee.
+            properties:
+              objectType:
+                type: string
+                enum:
+                - amount
+                description: Type of the returned response object
+              amount:
+                type: string
+                description: The amount being billed for this fee.
+              currency:
+                type: string
+                description: The currency being billed for this fee.
+          applyTo:
+            type: array
+            description: The merchant account types this fee applies to.
+            items:
+              type: string
+              enum:
+              - gateway
+              - mobile
+              uniqueItems: true
+              minItems: 1
+        uniqueItems: true
+    PullAllFeeSchedulesResponse:
+      type: object
+      title: Response
+      properties:
+        objectType:
+          type: string
+          description: The type of object that was returned as a result of the request.
+        offset:
+          type: number
+          description: The first N skipped results.
+        maxResults:
+          type: number
+          description: The max number results.
+        totalResults:
+          type: number
+          description: The total number of results.
+        hasMore:
+          type: boolean
+          description: If are there more results for the search.
+        results:
+          type: array
+          description: Results for the search.
+          items:
+            type: object
+            properties:
+              objectType:
+                type: string
+                description: Type of the returned response object
+              id:
+                type: string
+                description: The ID for the row. You'll want the id value to assign to a merchant.
+              name:
+                type: string
+                description: The name of the fee schedule.
+              costPlan:
+                type: string
+                description: The numeric value associated with the cost plan.
+              currency:
+                type: string
+                description: Currency
+              merchants:
+                type: array
+                description: The merchants associated with the cost plan.
+                items:
+                  type: string
+              affiliates:
+                type: array
+                description: The affiliates associated with the cost plan.
+                items:
+                  type: string
+              isDefault:
+                type: string
+                description: Determination of whether or not the cost plan is default.
+              isCustom:
+                type: string
+                description: Determination of whether or not the cost plan is custom.
+    PullAllFeeSchedulesRequest:
+      title: Pull All Fee Schedules
+      allOf:
+      - type: object
+        required:
+        - maxResults
+        properties:
+          maxResults:
+            type: string
+            description: Required. Value must be between 1-1000.
+          includeCustomFeeSchedules:
+            type: boolean
+            description: Determines whether to include custom fee schedules.
+            enum:
+            - true
+            - false
+            default: true
+          parentAffiliateId:
+            type: string
+            description: "The ID of the affiliate directly above the merchant.\n  \nNote: You can pass in parentAffiliateId to narrow down fee schedules to a specific affiliate's fee schedules. If parentAffiliateId is not specified, all fee schedules in the affiliate tree will be loaded."
+  securitySchemes:
+    merchantApiKey:
+      type: apiKey
+      in: header
+      name: Authorization
+      description: Merchant API key for RESTful API authentication. This key is used for merchant-specific API access and can be generated from the merchant portal.
+externalDocs:
+  url: https://www.postman.com/nmi-integration-support/workspace/nmi-public-documentation/request/5480015-f4b0ec7b-bd84-4094-98c2-67c0b6508a7f
+  description: Public Documentation (Postman)
+x-tagGroups:
+- name: REST API (recommended)
+  tags:
+  - Payments
+  - Plans
+  - Subscriptions
+  - Products
+  - Invoicing
+  - Customers
+  - Devices
+- name: Classic API
+  tags:
+  - Payment Processing
+  - Data and Transaction Reporting
+  - Webhook Events
+  - Gateway Features
+  - Processors and Services
+  - Apple Pay
+x-provenance:
+  method: searched
+  source: https://docs.nmi.com/reference
+  harvested: '2026-10-14'
+  tool: harvest-readme-openapi.py
+  note: Assembled verbatim from the OpenAPI definition ReadMe embeds in each operation page of the provider's developer portal; paths and components merged by API title, nothing authored.
+  assembled_from:
+  - https://docs.nmi.com/reference/add-billing-address-v5.md
+  - https://docs.nmi.com/reference/add-processor-service.md
+  - https://docs.nmi.com/reference/add-shipping-address-v5.md
+  - https://docs.nmi.com/reference/adding-apple-pay.md
+  - https://docs.nmi.com/reference/cancel-device-display-v5.md
+  - https://docs.nmi.com/reference/cancel-device-payment-request-v5.md
+  - https://docs.nmi.com/reference/capture-payment-v5.md
+  - https://docs.nmi.com/reference/card-type.md
+  - https://docs.nmi.com/reference/check-services.md
+  - https://docs.nmi.com/reference/check-username-availability.md
+  - https://docs.nmi.com/reference/close-invoice-v5.md
+  - https://docs.nmi.com/reference/create-auth-v5.md
+  - https://docs.nmi.com/reference/create-credit-v5.md
+  - https://docs.nmi.com/reference/create-customer-v5.md
+  - https://docs.nmi.com/reference/create-device-payment-request-auth-v5.md
+  - https://docs.nmi.com/reference/create-device-payment-request-credit-v5.md
+  - https://docs.nmi.com/reference/create-device-payment-request-sale-v5.md
+  - https://docs.nmi.com/reference/create-device-payment-request-validate-v5.md
+  - https://docs.nmi.com/reference/create-invoice-v5.md
+  - https://docs.nmi.com/reference/create-merchant-key.md
+  - https://docs.nmi.com/reference/create-merchant.md
+  - https://docs.nmi.com/reference/create-plan-v5.md
+  - https://docs.nmi.com/reference/create-product-v5.md
+  - https://docs.nmi.com/reference/create-sale-v5.md
+  - https://docs.nmi.com/reference/create-subscription-v5.md
+  - https://docs.nmi.com/reference/delete-billing-address-v5.md
+  - https://docs.nmi.com/reference/delete-customer-v5.md
+  - https://docs.nmi.com/reference/delete-plan-v5.md
+  - https://docs.nmi.com/reference/delete-product-v5.md
+  - https://docs.nmi.com/reference/delete-shipping-address-v5.md
+  - https://docs.nmi.com/reference/delete-subscription-v5.md
+  - https://docs.nmi.com/reference/deregister-device-v5.md
+  - https://docs.nmi.com/reference/display-device-qr-code-v5.md
+  - https://docs.nmi.com/reference/get-billing-address-v5.md
+  - https://docs.nmi.com/reference/get-customer-v5.md
+  - https://docs.nmi.com/reference/get-device-payment-request-status-v5.md
+  - https://docs.nmi.com/reference/get-device-prompt-menu-status-v5.md
+  - https://docs.nmi.com/reference/get-device-prompt-sign-status-v5.md
+  - https://docs.nmi.com/reference/get-device-prompt-yes-no-status-v5.md
+  - https://docs.nmi.com/reference/get-device-v5.md
+  - https://docs.nmi.com/reference/get-fees-in-schedule.md
+  - https://docs.nmi.com/reference/get-invoice-v5.md
+  - https://docs.nmi.com/reference/get-merchant-list.md
+  - https://docs.nmi.com/reference/get-merchant-partner-user-info.md
+  - https://docs.nmi.com/reference/get-merchant-processors-value-added-services.md
+  - https://docs.nmi.com/reference/get-payment-v5.md
+  - https://docs.nmi.com/reference/get-plan-v5.md
+  - https://docs.nmi.com/reference/get-processor-config.md
+  - https://docs.nmi.com/reference/get-product-v5.md
+  - https://docs.nmi.com/reference/get-settlement-time.md
+  - https://docs.nmi.com/reference/get-shipping-address-v5.md
+  - https://docs.nmi.com/reference/get-specific-merchant-information.md
+  - https://docs.nmi.com/reference/get-sub-affiliate-list.md
+  - https://docs.nmi.com/reference/get-subscription-v5.md
+  - https://docs.nmi.com/reference/get-transaction-data.md
+  - https://docs.nmi.com/reference/list-customers-v5.md
+  - https://docs.nmi.com/reference/list-devices-v5.md
+  - https://docs.nmi.com/reference/list-invoices-v5.md
+  - https://docs.nmi.com/reference/list-plans-v5.md
+  - https://docs.nmi.com/reference/list-products-v5.md
+  - https://docs.nmi.com/reference/list-subscriptions-v5.md
+  - https://docs.nmi.com/reference/patch_v4-merchants-gateway-id-1.md
+  - https://docs.nmi.com/reference/prompt-device-menu-v5.md
+  - https://docs.nmi.com/reference/prompt-device-sign-v5.md
+  - https://docs.nmi.com/reference/prompt-device-yes-no-v5.md
+  - https://docs.nmi.com/reference/pull-all-fee-schedules.md
+  - https://docs.nmi.com/reference/query.md
+  - https://docs.nmi.com/reference/querying-merchants-apple-pay-status.md
+  - https://docs.nmi.com/reference/refund-payment-v5.md
+  - https://docs.nmi.com/reference/register-device-v5.md
+  - https://docs.nmi.com/reference/see-merchant-billing.md
+  - https://docs.nmi.com/reference/see-your-commission.md
+  - https://docs.nmi.com/reference/send-invoice-v5.md
+  - https://docs.nmi.com/reference/update-billing-address-v5.md
+  - https://docs.nmi.com/reference/update-customer-v5.md
+  - https://docs.nmi.com/reference/update-device-v5.md
+  - https://docs.nmi.com/reference/update-invoice-v5.md
+  - https://docs.nmi.com/reference/update-plan-v5.md
+  - https://docs.nmi.com/reference/update-product-v5.md
+  - https://docs.nmi.com/reference/update-shipping-address-v5.md
+  - https://docs.nmi.com/reference/update-subscription-v5.md
+  - https://docs.nmi.com/reference/updating-settlement-time.md
+  - https://docs.nmi.com/reference/validate-payment-v5.md
+  - https://docs.nmi.com/reference/void-payment-v5.md
+  merge:
+    pages: 84
+    deduped: 4356
+    conflicts_kept_first: 0

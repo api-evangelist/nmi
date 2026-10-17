@@ -1,0 +1,342 @@
+openapi: 3.2.0
+info:
+  version: 1.0.0
+  title: Payments Apple Pay API
+  description: Our payments platform exposes two generations of API.
+  x-logo:
+    url: https://www.nmi.com/app/themes/nmi/images/NMI_Logo_Primary.webp
+servers:
+- url: https://sandbox.nmi.com/api
+security: []
+tags:
+- name: Apple Pay
+  description: Here you can find information about endpoints that are related to Apple Pay.
+paths:
+  /v4/merchants/{gateway_id}/apple_pay:
+    post:
+      tags:
+      - Apple Pay
+      operationId: addingApplePayToAMerchant
+      security: []
+      summary: Adding Apple Pay to a Merchant
+      description: 'This API allows partners to opt their merchants into Apple Pay and allow Collect.js to generate Apple Pay buttons on specific domains for these merchants.
+
+
+        Usage
+
+
+        The `gateway_id` in the POST URL refers to the "gateway ID" for the merchant you are updating, so this will change with each new merchant. This is accessible from the Merchant Details page in the partner portal, as well as returned in the Merchant Boarding API when creating a merchant account.
+
+
+        The `domains` value is expected to be an array of domains the merchant would like to be allowed to use Apple Pay.
+
+
+        > Please be aware that the domains posted to this endpoint should be the full list of domains allowed for this merchant. For example, if you made the same example request again, but only included abc.com as a domain, then example.com and store.acme.com would be removed.'
+      parameters:
+      - $ref: '#/components/parameters/ContentType'
+      - $ref: '#/components/parameters/Authorization'
+      - $ref: '#/components/parameters/GatewayId'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AddingApplePayToAMerchantRequest'
+            examples:
+              Adding Apple Pay To A Merchant:
+                $ref: '#/components/examples/AddingApplePayToAMerchantRequest'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AddingApplePayToAMerchantResponse'
+              examples:
+                Adding Apple Pay To A Merchant:
+                  $ref: '#/components/examples/AddingApplePayToAMerchantResponse'
+    get:
+      tags:
+      - Apple Pay
+      operationId: queryingAMerchantsApplePayStatus
+      security: []
+      summary: Querying A Merchant's Apple Pay Status
+      description: 'You may also want to check on the status of Apple Pay for a specific merchant without updating their settings. This is done by making a simple GET request to the same endpoint.
+
+
+        > If the merchant has not yet enabled Apple Pay, a `400 Bad Request` response will be returned.'
+      parameters:
+      - $ref: '#/components/parameters/Authorization'
+      - $ref: '#/components/parameters/GatewayId'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/QueryingAMerchantsApplePayStatus200Response'
+              examples:
+                Querying A Merchant's Apple Pay Status:
+                  $ref: '#/components/examples/QueryingAMerchantsApplePayStatus200Response'
+        '400':
+          description: Bad Request (Merchant has not enabled Apple Pay)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/QueryingAMerchantsApplePayStatus400Response'
+              examples:
+                Querying A Merchant's Apple Pay Status:
+                  $ref: '#/components/examples/QueryingAMerchantsApplePayStatus400Response'
+components:
+  examples:
+    QueryingAMerchantsApplePayStatus400Response:
+      summary: Querying A Merchant's Apple Pay Status
+      description: Querying A Merchant's Apple Pay Status
+      value:
+        type: generalError
+        errorCode: E_GENERIC_ERROR
+        message: Apple Pay is not yet configured
+        refId: '56734654365'
+    AddingApplePayToAMerchantRequest:
+      summary: Adding Apple Pay to a Merchant
+      description: Adding Apple Pay to a Merchant
+      value:
+        domains:
+        - example.com
+        - store.acme.com
+    AddingApplePayToAMerchantResponse:
+      summary: Adding Apple Pay to a Merchant
+      description: Adding Apple Pay to a Merchant
+      value:
+        domains:
+        - objectType: applePayDomain
+          domain: example.com
+          created: '2024-09-30T15:14:54+00:00'
+        - objectType: applePayDomain
+          domain: store.acme.com
+          created: '2024-09-30T15:14:54+00:00'
+    QueryingAMerchantsApplePayStatus200Response:
+      summary: Querying A Merchant's Apple Pay Status
+      description: Querying A Merchant's Apple Pay Status
+      value:
+        domains:
+        - objectType: applePayDomain
+          domain: example.com
+          created: '2024-09-30T15:14:54+00:00'
+        - objectType: applePayDomain
+          domain: store.acme.com
+          created: '2024-09-30T15:14:54+00:00'
+  schemas:
+    AddingApplePayToAMerchantResponse:
+      title: Adding Apple Pay to a Merchant
+      allOf:
+      - type: object
+        properties:
+          domains:
+            type: array
+            description: Array of applePayDomain objects.
+            items:
+              type: object
+              properties:
+                objectType:
+                  type: string
+                  description: The type of object that was returned as a result of the request.
+                domain:
+                  type: string
+                  description: The domain for which Apple Pay was added.
+                created:
+                  type: string
+                  description: The date and time of when the domain was added.
+    QueryingAMerchantsApplePayStatus200Response:
+      title: Querying A Merchant's Apple Pay Status
+      allOf:
+      - type: object
+        properties:
+          domains:
+            type: array
+            description: Array of applePayDomain objects.
+            items:
+              type: object
+              properties:
+                objectType:
+                  type: string
+                  description: The type of object that was returned as a result of the request.
+                domain:
+                  type: string
+                  description: The domain for which Apple Pay was added.
+                created:
+                  type: string
+                  description: The date and time of when the domain was added.
+    QueryingAMerchantsApplePayStatus400Response:
+      title: Querying A Merchant's Apple Pay Status
+      allOf:
+      - type: object
+        properties:
+          type:
+            type: string
+            description: The type of error that was returned as a result of the request.
+          errorCode:
+            type: string
+            description: The code for the error that was returned as a result of the request.
+          message:
+            type: string
+            description: The message for the error that was returned as a result of the request.
+          refId:
+            type: string
+            description: The reference id for the error that was returned as a result of the request.
+    AddingApplePayToAMerchantRequest:
+      title: Adding Apple Pay to a Merchant
+      allOf:
+      - type: object
+        required:
+        - domains
+        properties:
+          domains:
+            type: array
+            items:
+              type: string
+            description: Array of domains allowed for this merchant.
+  parameters:
+    GatewayId:
+      name: gateway_id
+      in: path
+      required: true
+      schema:
+        type: string
+      description: The merchant ID that the request should operate on.
+    ContentType:
+      name: Content-Type
+      in: header
+      required: true
+      schema:
+        type: string
+      description: The Content-Type representation header is used to indicate the original media type of the resource (prior to any content encoding applied for sending).
+      example: application/json
+    Authorization:
+      name: Authorization
+      in: header
+      required: true
+      schema:
+        type: string
+      description: Your v4 API key that was generated in the Partner portal.
+  securitySchemes:
+    merchantApiKey:
+      type: apiKey
+      in: header
+      name: Authorization
+      description: Merchant API key for RESTful API authentication. This key is used for merchant-specific API access and can be generated from the merchant portal.
+externalDocs:
+  url: https://www.postman.com/nmi-integration-support/workspace/nmi-public-documentation/request/5480015-f4b0ec7b-bd84-4094-98c2-67c0b6508a7f
+  description: Public Documentation (Postman)
+x-tagGroups:
+- name: REST API (recommended)
+  tags:
+  - Payments
+  - Plans
+  - Subscriptions
+  - Products
+  - Invoicing
+  - Customers
+  - Devices
+- name: Classic API
+  tags:
+  - Payment Processing
+  - Data and Transaction Reporting
+  - Webhook Events
+  - Gateway Features
+  - Processors and Services
+  - Apple Pay
+x-provenance:
+  method: searched
+  source: https://docs.nmi.com/reference
+  harvested: '2026-10-14'
+  tool: harvest-readme-openapi.py
+  note: Assembled verbatim from the OpenAPI definition ReadMe embeds in each operation page of the provider's developer portal; paths and components merged by API title, nothing authored.
+  assembled_from:
+  - https://docs.nmi.com/reference/add-billing-address-v5.md
+  - https://docs.nmi.com/reference/add-processor-service.md
+  - https://docs.nmi.com/reference/add-shipping-address-v5.md
+  - https://docs.nmi.com/reference/adding-apple-pay.md
+  - https://docs.nmi.com/reference/cancel-device-display-v5.md
+  - https://docs.nmi.com/reference/cancel-device-payment-request-v5.md
+  - https://docs.nmi.com/reference/capture-payment-v5.md
+  - https://docs.nmi.com/reference/card-type.md
+  - https://docs.nmi.com/reference/check-services.md
+  - https://docs.nmi.com/reference/check-username-availability.md
+  - https://docs.nmi.com/reference/close-invoice-v5.md
+  - https://docs.nmi.com/reference/create-auth-v5.md
+  - https://docs.nmi.com/reference/create-credit-v5.md
+  - https://docs.nmi.com/reference/create-customer-v5.md
+  - https://docs.nmi.com/reference/create-device-payment-request-auth-v5.md
+  - https://docs.nmi.com/reference/create-device-payment-request-credit-v5.md
+  - https://docs.nmi.com/reference/create-device-payment-request-sale-v5.md
+  - https://docs.nmi.com/reference/create-device-payment-request-validate-v5.md
+  - https://docs.nmi.com/reference/create-invoice-v5.md
+  - https://docs.nmi.com/reference/create-merchant-key.md
+  - https://docs.nmi.com/reference/create-merchant.md
+  - https://docs.nmi.com/reference/create-plan-v5.md
+  - https://docs.nmi.com/reference/create-product-v5.md
+  - https://docs.nmi.com/reference/create-sale-v5.md
+  - https://docs.nmi.com/reference/create-subscription-v5.md
+  - https://docs.nmi.com/reference/delete-billing-address-v5.md
+  - https://docs.nmi.com/reference/delete-customer-v5.md
+  - https://docs.nmi.com/reference/delete-plan-v5.md
+  - https://docs.nmi.com/reference/delete-product-v5.md
+  - https://docs.nmi.com/reference/delete-shipping-address-v5.md
+  - https://docs.nmi.com/reference/delete-subscription-v5.md
+  - https://docs.nmi.com/reference/deregister-device-v5.md
+  - https://docs.nmi.com/reference/display-device-qr-code-v5.md
+  - https://docs.nmi.com/reference/get-billing-address-v5.md
+  - https://docs.nmi.com/reference/get-customer-v5.md
+  - https://docs.nmi.com/reference/get-device-payment-request-status-v5.md
+  - https://docs.nmi.com/reference/get-device-prompt-menu-status-v5.md
+  - https://docs.nmi.com/reference/get-device-prompt-sign-status-v5.md
+  - https://docs.nmi.com/reference/get-device-prompt-yes-no-status-v5.md
+  - https://docs.nmi.com/reference/get-device-v5.md
+  - https://docs.nmi.com/reference/get-fees-in-schedule.md
+  - https://docs.nmi.com/reference/get-invoice-v5.md
+  - https://docs.nmi.com/reference/get-merchant-list.md
+  - https://docs.nmi.com/reference/get-merchant-partner-user-info.md
+  - https://docs.nmi.com/reference/get-merchant-processors-value-added-services.md
+  - https://docs.nmi.com/reference/get-payment-v5.md
+  - https://docs.nmi.com/reference/get-plan-v5.md
+  - https://docs.nmi.com/reference/get-processor-config.md
+  - https://docs.nmi.com/reference/get-product-v5.md
+  - https://docs.nmi.com/reference/get-settlement-time.md
+  - https://docs.nmi.com/reference/get-shipping-address-v5.md
+  - https://docs.nmi.com/reference/get-specific-merchant-information.md
+  - https://docs.nmi.com/reference/get-sub-affiliate-list.md
+  - https://docs.nmi.com/reference/get-subscription-v5.md
+  - https://docs.nmi.com/reference/get-transaction-data.md
+  - https://docs.nmi.com/reference/list-customers-v5.md
+  - https://docs.nmi.com/reference/list-devices-v5.md
+  - https://docs.nmi.com/reference/list-invoices-v5.md
+  - https://docs.nmi.com/reference/list-plans-v5.md
+  - https://docs.nmi.com/reference/list-products-v5.md
+  - https://docs.nmi.com/reference/list-subscriptions-v5.md
+  - https://docs.nmi.com/reference/patch_v4-merchants-gateway-id-1.md
+  - https://docs.nmi.com/reference/prompt-device-menu-v5.md
+  - https://docs.nmi.com/reference/prompt-device-sign-v5.md
+  - https://docs.nmi.com/reference/prompt-device-yes-no-v5.md
+  - https://docs.nmi.com/reference/pull-all-fee-schedules.md
+  - https://docs.nmi.com/reference/query.md
+  - https://docs.nmi.com/reference/querying-merchants-apple-pay-status.md
+  - https://docs.nmi.com/reference/refund-payment-v5.md
+  - https://docs.nmi.com/reference/register-device-v5.md
+  - https://docs.nmi.com/reference/see-merchant-billing.md
+  - https://docs.nmi.com/reference/see-your-commission.md
+  - https://docs.nmi.com/reference/send-invoice-v5.md
+  - https://docs.nmi.com/reference/update-billing-address-v5.md
+  - https://docs.nmi.com/reference/update-customer-v5.md
+  - https://docs.nmi.com/reference/update-device-v5.md
+  - https://docs.nmi.com/reference/update-invoice-v5.md
+  - https://docs.nmi.com/reference/update-plan-v5.md
+  - https://docs.nmi.com/reference/update-product-v5.md
+  - https://docs.nmi.com/reference/update-shipping-address-v5.md
+  - https://docs.nmi.com/reference/update-subscription-v5.md
+  - https://docs.nmi.com/reference/updating-settlement-time.md
+  - https://docs.nmi.com/reference/validate-payment-v5.md
+  - https://docs.nmi.com/reference/void-payment-v5.md
+  merge:
+    pages: 84
+    deduped: 4356
+    conflicts_kept_first: 0

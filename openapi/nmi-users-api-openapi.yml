@@ -1,0 +1,438 @@
+openapi: 3.2.0
+info:
+  version: 1.0.0
+  title: Payments Users API
+  description: Our payments platform exposes two generations of API.
+  x-logo:
+    url: https://www.nmi.com/app/themes/nmi/images/NMI_Logo_Primary.webp
+servers:
+- url: https://sandbox.nmi.com/api
+security: []
+tags:
+- name: Users
+paths:
+  /v4/usernames/search:
+    post:
+      tags:
+      - Users
+      operationId: checkUsernameAvailability
+      security: []
+      summary: Username Availability
+      description: 'Usage
+
+        This is optional, but you can check to make sure a username is available before submitting your merchant creation request.
+
+
+        This can be useful if you want to do form validation on your website to prevent the user from entering a username that has already been taken.'
+      parameters:
+      - $ref: '#/components/parameters/ContentType'
+      - $ref: '#/components/parameters/Authorization'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CheckUsernameAvailabilityRequest'
+            examples:
+              Create Standard Merchant:
+                $ref: '#/components/examples/CheckUsernameAvailabilityExampleRequest'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CheckUsernameAvailabilityResponse'
+              examples:
+                Get Processor Config:
+                  $ref: '#/components/examples/CheckUsernameAvailabilityExampleResponse'
+  /v4/users/search:
+    post:
+      tags:
+      - Users
+      operationId: getMerchantOrPartnerUserInfo
+      security: []
+      summary: Get Merchant or Partner User Info
+      description: 'Usage
+
+        This will return information on all users associated with a specific merchant or sub-affiliate account.'
+      parameters:
+      - $ref: '#/components/parameters/ContentType'
+      - $ref: '#/components/parameters/Authorization'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GetMerchantOrPartnerUserInfoRequest'
+            examples:
+              Create Standard Merchant:
+                $ref: '#/components/examples/GetMerchantOrPartnerUserInfoExampleRequest'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetMerchantOrPartnerUserInfoResponse'
+              examples:
+                Get Processor Config:
+                  $ref: '#/components/examples/GetMerchantOrPartnerUserInfoExampleResponse'
+components:
+  schemas:
+    GetMerchantOrPartnerUserInfoRequest:
+      title: Get Merchant or Partner User Info.
+      allOf:
+      - type: object
+        required:
+        - maxResults
+        properties:
+          maxResults:
+            type: string
+            description: Number of max results, any integer number from 1 to 1000.
+          merchantId:
+            type: string
+            description: Merchant ID.
+          affiliateId:
+            type: string
+            description: Affiliate ID. To get user information for a sub-affiliate account, pass in `affiliateId` instead of `merchantId`.
+    GetMerchantOrPartnerUserInfoResponse:
+      type: array
+      title: Response
+      items:
+        type: object
+        properties:
+          id:
+            type: string
+            description: ID of merchant or partner.
+          created:
+            type: string
+            format: date-time
+            description: Timestamp when the merchant/partner was created.
+          updated:
+            type: string
+            format: date-time
+            description: Timestamp when the merchant/partner was last updated.
+          firstName:
+            type: string
+            description: First name of the merchant/partner.
+          lastName:
+            type: string
+            description: Last name of the merchant/partner.
+          title:
+            type: string
+            description: Title of the merchant/partner.
+          email:
+            type: string
+            description: Email address of the merchant/partner.
+          username:
+            type: string
+            description: Username of the merchant/partner.
+          isTwoFactorEnabled:
+            type: boolean
+            description: Indicates if two-factor authentication is enabled for the merchant/partner.
+          permissions:
+            type: object
+            description: Permissions assigned to the merchant/partner.
+            title: Permissions
+            properties:
+              merchants:
+                type: boolean
+                description: Permission to manage merchants.
+              resellers:
+                type: boolean
+                description: Permission to manage resellers.
+              transactions:
+                type: boolean
+                description: Permission to manage transactions.
+              billing:
+                type: boolean
+                description: Permission to manage billing.
+              commission:
+                type: boolean
+                description: Permission to manage commissions.
+              options:
+                type: boolean
+                description: Permission to manage options.
+              fees:
+                type: boolean
+                description: Permission to manage fees.
+              sublogin:
+                type: boolean
+                description: Permission to manage sublogins.
+              twoFactorLogin:
+                type: boolean
+                description: Permission to manage two-factor login settings.
+              googleAuthenticatorLogin:
+                type: boolean
+                description: Permission to manage Google Authenticator login settings.
+              viewReleaseNotes:
+                type: boolean
+                description: Permission to view release notes.
+              webhookConfig:
+                type: boolean
+                description: Permission to configure webhooks.
+              orderDevices:
+                type: boolean
+                description: Permission to order devices.
+              orderDeviceHistory:
+                type: boolean
+                description: Permission to view order device history.
+              useCustomerVault:
+                type: boolean
+                description: Permission to use the customer vault.
+          notifications:
+            type: object
+            description: Notifications for the merchant/partner.
+            title: Notifications
+            properties:
+              releaseNotesEmails:
+                type: boolean
+                description: Indicates if the user receives release notes emails.
+              acuEmails:
+                type: boolean
+                description: Indicates if the user receives Automatic Card Updater emails.
+          viewVersion:
+            type: integer
+            description: Version of the view.
+          mainUser:
+            type: boolean
+            description: Indicates if the merchant/partner is the main user.
+          hasUsedCredentialsForApiLogin:
+            type: boolean
+            description: Indicates if the merchant/partner has used credentials for API login.
+          parent:
+            type: object
+            description: Parent entity information.
+            title: Parent
+            properties:
+              type:
+                type: string
+                description: Type of the parent entity.
+              id:
+                type: string
+                description: ID of the parent entity.
+          gatewayTitle:
+            type: string
+            description: Title of the gateway.
+    CheckUsernameAvailabilityRequest:
+      title: Check Username Availability
+      allOf:
+      - type: object
+        required:
+        - username
+        - type
+        properties:
+          username:
+            type: string
+            description: String representing the username to check.
+          type:
+            type: string
+            description: String representing the type of account to check the username availability.
+    CheckUsernameAvailabilityResponse:
+      type: object
+      title: Check Username Availability Response
+      properties:
+        username:
+          type: string
+          description: String representing the username to check.
+        available:
+          type: boolean
+          description: Boolean representing if the username is available.
+  examples:
+    GetMerchantOrPartnerUserInfoExampleRequest:
+      summary: Get Merchant or Partner User Info
+      description: This will return information on all users associated with a specific merchant or sub-affiliate account.
+      value:
+        maxResults: 100
+        merchantId: '1099191'
+    CheckUsernameAvailabilityExampleRequest:
+      summary: Check Username Availability
+      description: Checks if the username is available before creating a merchant.
+      value:
+        username: testuser
+        type: merchant
+    GetMerchantOrPartnerUserInfoExampleResponse:
+      summary: Get Merchant or Partner User Info
+      description: Get Merchant or Partner User Info
+      value:
+      - id: '234'
+        created: '2018-03-09T16:03:13+00:00'
+        updated: '2018-03-09T16:04:01+00:00'
+        firstName: John
+        lastName: Smith
+        title: ''
+        email: someone@example.com
+        username: myusernamehere
+        isTwoFactorEnabled: false
+        permissions:
+          useCustomerVault: true
+        notifications: []
+        viewVersion: 2
+        mainUser: true
+        hasUsedCredentialsForApiLogin: false
+        parent:
+          type: merchant
+          id: '33'
+        gatewayTitle: Payment Gateway
+      - id: '756'
+        created: '2007-03-23T16:13:49+00:00'
+        updated: '2023-02-03T14:51:36+00:00'
+        firstName: Holly
+        lastName: Golightly
+        title: ''
+        email: someoneelse@example.com
+        username: test123
+        isTwoFactorEnabled: false
+        permissions:
+          useCustomerVault: true
+        notifications: []
+        viewVersion: 2
+        mainUser: false
+        hasUsedCredentialsForApiLogin: true
+        parent:
+          type: merchant
+          id: '33'
+        gatewayTitle: Payment Gateway
+    CheckUsernameAvailabilityExampleResponse:
+      summary: Check Username Availability
+      description: If `available` returns as `false` then that username is already taken and you must try something else.
+      value:
+        username: testuser
+        available: true
+  parameters:
+    Authorization:
+      name: Authorization
+      in: header
+      required: true
+      schema:
+        type: string
+      description: Your v4 API key that was generated in the Partner portal.
+    ContentType:
+      name: Content-Type
+      in: header
+      required: true
+      schema:
+        type: string
+      description: The Content-Type representation header is used to indicate the original media type of the resource (prior to any content encoding applied for sending).
+      example: application/json
+  securitySchemes:
+    merchantApiKey:
+      type: apiKey
+      in: header
+      name: Authorization
+      description: Merchant API key for RESTful API authentication. This key is used for merchant-specific API access and can be generated from the merchant portal.
+externalDocs:
+  url: https://www.postman.com/nmi-integration-support/workspace/nmi-public-documentation/request/5480015-f4b0ec7b-bd84-4094-98c2-67c0b6508a7f
+  description: Public Documentation (Postman)
+x-tagGroups:
+- name: REST API (recommended)
+  tags:
+  - Payments
+  - Plans
+  - Subscriptions
+  - Products
+  - Invoicing
+  - Customers
+  - Devices
+- name: Classic API
+  tags:
+  - Payment Processing
+  - Data and Transaction Reporting
+  - Webhook Events
+  - Gateway Features
+  - Processors and Services
+  - Apple Pay
+x-provenance:
+  method: searched
+  source: https://docs.nmi.com/reference
+  harvested: '2026-10-14'
+  tool: harvest-readme-openapi.py
+  note: Assembled verbatim from the OpenAPI definition ReadMe embeds in each operation page of the provider's developer portal; paths and components merged by API title, nothing authored.
+  assembled_from:
+  - https://docs.nmi.com/reference/add-billing-address-v5.md
+  - https://docs.nmi.com/reference/add-processor-service.md
+  - https://docs.nmi.com/reference/add-shipping-address-v5.md
+  - https://docs.nmi.com/reference/adding-apple-pay.md
+  - https://docs.nmi.com/reference/cancel-device-display-v5.md
+  - https://docs.nmi.com/reference/cancel-device-payment-request-v5.md
+  - https://docs.nmi.com/reference/capture-payment-v5.md
+  - https://docs.nmi.com/reference/card-type.md
+  - https://docs.nmi.com/reference/check-services.md
+  - https://docs.nmi.com/reference/check-username-availability.md
+  - https://docs.nmi.com/reference/close-invoice-v5.md
+  - https://docs.nmi.com/reference/create-auth-v5.md
+  - https://docs.nmi.com/reference/create-credit-v5.md
+  - https://docs.nmi.com/reference/create-customer-v5.md
+  - https://docs.nmi.com/reference/create-device-payment-request-auth-v5.md
+  - https://docs.nmi.com/reference/create-device-payment-request-credit-v5.md
+  - https://docs.nmi.com/reference/create-device-payment-request-sale-v5.md
+  - https://docs.nmi.com/reference/create-device-payment-request-validate-v5.md
+  - https://docs.nmi.com/reference/create-invoice-v5.md
+  - https://docs.nmi.com/reference/create-merchant-key.md
+  - https://docs.nmi.com/reference/create-merchant.md
+  - https://docs.nmi.com/reference/create-plan-v5.md
+  - https://docs.nmi.com/reference/create-product-v5.md
+  - https://docs.nmi.com/reference/create-sale-v5.md
+  - https://docs.nmi.com/reference/create-subscription-v5.md
+  - https://docs.nmi.com/reference/delete-billing-address-v5.md
+  - https://docs.nmi.com/reference/delete-customer-v5.md
+  - https://docs.nmi.com/reference/delete-plan-v5.md
+  - https://docs.nmi.com/reference/delete-product-v5.md
+  - https://docs.nmi.com/reference/delete-shipping-address-v5.md
+  - https://docs.nmi.com/reference/delete-subscription-v5.md
+  - https://docs.nmi.com/reference/deregister-device-v5.md
+  - https://docs.nmi.com/reference/display-device-qr-code-v5.md
+  - https://docs.nmi.com/reference/get-billing-address-v5.md
+  - https://docs.nmi.com/reference/get-customer-v5.md
+  - https://docs.nmi.com/reference/get-device-payment-request-status-v5.md
+  - https://docs.nmi.com/reference/get-device-prompt-menu-status-v5.md
+  - https://docs.nmi.com/reference/get-device-prompt-sign-status-v5.md
+  - https://docs.nmi.com/reference/get-device-prompt-yes-no-status-v5.md
+  - https://docs.nmi.com/reference/get-device-v5.md
+  - https://docs.nmi.com/reference/get-fees-in-schedule.md
+  - https://docs.nmi.com/reference/get-invoice-v5.md
+  - https://docs.nmi.com/reference/get-merchant-list.md
+  - https://docs.nmi.com/reference/get-merchant-partner-user-info.md
+  - https://docs.nmi.com/reference/get-merchant-processors-value-added-services.md
+  - https://docs.nmi.com/reference/get-payment-v5.md
+  - https://docs.nmi.com/reference/get-plan-v5.md
+  - https://docs.nmi.com/reference/get-processor-config.md
+  - https://docs.nmi.com/reference/get-product-v5.md
+  - https://docs.nmi.com/reference/get-settlement-time.md
+  - https://docs.nmi.com/reference/get-shipping-address-v5.md
+  - https://docs.nmi.com/reference/get-specific-merchant-information.md
+  - https://docs.nmi.com/reference/get-sub-affiliate-list.md
+  - https://docs.nmi.com/reference/get-subscription-v5.md
+  - https://docs.nmi.com/reference/get-transaction-data.md
+  - https://docs.nmi.com/reference/list-customers-v5.md
+  - https://docs.nmi.com/reference/list-devices-v5.md
+  - https://docs.nmi.com/reference/list-invoices-v5.md
+  - https://docs.nmi.com/reference/list-plans-v5.md
+  - https://docs.nmi.com/reference/list-products-v5.md
+  - https://docs.nmi.com/reference/list-subscriptions-v5.md
+  - https://docs.nmi.com/reference/patch_v4-merchants-gateway-id-1.md
+  - https://docs.nmi.com/reference/prompt-device-menu-v5.md
+  - https://docs.nmi.com/reference/prompt-device-sign-v5.md
+  - https://docs.nmi.com/reference/prompt-device-yes-no-v5.md
+  - https://docs.nmi.com/reference/pull-all-fee-schedules.md
+  - https://docs.nmi.com/reference/query.md
+  - https://docs.nmi.com/reference/querying-merchants-apple-pay-status.md
+  - https://docs.nmi.com/reference/refund-payment-v5.md
+  - https://docs.nmi.com/reference/register-device-v5.md
+  - https://docs.nmi.com/reference/see-merchant-billing.md
+  - https://docs.nmi.com/reference/see-your-commission.md
+  - https://docs.nmi.com/reference/send-invoice-v5.md
+  - https://docs.nmi.com/reference/update-billing-address-v5.md
+  - https://docs.nmi.com/reference/update-customer-v5.md
+  - https://docs.nmi.com/reference/update-device-v5.md
+  - https://docs.nmi.com/reference/update-invoice-v5.md
+  - https://docs.nmi.com/reference/update-plan-v5.md
+  - https://docs.nmi.com/reference/update-product-v5.md
+  - https://docs.nmi.com/reference/update-shipping-address-v5.md
+  - https://docs.nmi.com/reference/update-subscription-v5.md
+  - https://docs.nmi.com/reference/updating-settlement-time.md
+  - https://docs.nmi.com/reference/validate-payment-v5.md
+  - https://docs.nmi.com/reference/void-payment-v5.md
+  merge:
+    pages: 84
+    deduped: 4356
+    conflicts_kept_first: 0

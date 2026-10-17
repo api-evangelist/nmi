@@ -1,0 +1,2968 @@
+openapi: 3.2.0
+info:
+  title: Nmi Transactions API
+  version: 1.0.0
+  x-logo:
+    url: https://www.nmi.com/app/themes/nmi/images/NMI_Logo_Primary.webp
+  description: 'Operations tagged Transactions across 2 of this provider''s published API definitions: nmi-payments-openapi.yml, nmi-payments-api-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://sandbox.nmi.com/api
+security: []
+tags:
+- name: Transactions
+  description: Core payment processing operations including credit card, ACH, and cash transactions
+paths:
+  /transact.php:
+    post:
+      tags:
+      - Transactions
+      summary: Transaction Processing
+      description: 'Methodology
+
+
+        **Steps:**
+
+        1. The customer sends their payment information to the merchant''s web site.
+
+        2. The merchant web site posts the payment data to the Payment Gateway.
+
+        3. The Payment Gateway responds immediately with the results of the transactions.
+
+        4. The merchant web site displays the appropriate message to the customer.
+
+
+        The communication method used to send messages to the Payment Gateway''s server is the standard HTTP protocol over an SSL connection.
+
+
+        In the Payment API method, the communications with the cardholder (Steps 1 and 4) are developed completely by the merchant and therefore are not defined by the Payment Gateway. Step 1 should simply collect the payment data from the cardholder and Step 4 should display the appropriate transaction receipt or declined message.
+
+
+        In Step 2, transaction details should be delivered to the Payment Gateway using the POST method with the appropriate variables defined below posted along with the request.
+
+
+        In Step 3, the transaction responses are returned in the body of the HTTP response in a query string name/value format delimited by ampersands. For example: `variable1=value1&variable2=value2&variable3=value3`
+
+
+        ### Customer Vault
+
+        The Customer Vault was designed specifically for businesses of any size to address concerns about handling customer payment information. Visa and MasterCard have instituted the Payment Card Industry (PCI) Data Security to protect cardholder data, wherever it resides, ensuring that members, merchants, and service providers maintain the highest information security standards.
+
+
+        These associations have also deemed that merchants will be held liable for any breach of cardholder data. This has become a major concern for merchants who handle credit card or electronic check payments. The Customer Vault is designed for these merchants who desire to avoid the tremendous costs and resources involved in becoming PCI compliant under these circumstances.
+
+
+        The Customer Vault does this by allowing merchants to transmit their payment information through a Secure Sockets Layer (SSL) connection for storage in our Level 1 PCI certified data facility. Once the customer record has been securely transmitted to the Customer Vault, the merchant can then initiate transactions remotely without having to access cardholder information directly. This process is accomplished without the merchant storing the customer''s payment information in their local database or payment application.
+
+
+        Response Code Table
+
+
+        | Code | Description |
+
+        |:------|:-------------------------------------------------------------------|
+
+        | 100 | Transaction was approved. |
+
+        | 200 | Transaction was declined by processor. |
+
+        | 201 | Do not honor. |
+
+        | 202 | Insufficient funds. |
+
+        | 203 | Over limit. |
+
+        | 204 | Transaction not allowed. |
+
+        | 220 | Incorrect payment information. |
+
+        | 221 | No such card issuer. |
+
+        | 222 | No card number on file with issuer. |
+
+        | 223 | Expired card. |
+
+        | 224 | Invalid expiration date. |
+
+        | 225 | Invalid card security code. |
+
+        | 226 | Invalid PIN. |
+
+        | 240 | Call issuer for further information. |
+
+        | 250 | Pick up card. |
+
+        | 251 | Lost card. |
+
+        | 252 | Stolen card. |
+
+        | 253 | Fraudulent card. |
+
+        | 260 | Declined with further instructions available. (See response text) |
+
+        | 261 | Declined-Stop all recurring payments. |
+
+        | 262 | Declined-Stop this recurring program. |
+
+        | 263 | Declined-Update cardholder data available. |
+
+        | 264 | Declined-Retry in a few days. |
+
+        | 300 | Transaction was rejected by gateway. |
+
+        | 400 | Transaction error returned by processor. |
+
+        | 410 | Invalid merchant configuration. |
+
+        | 411 | Merchant account is inactive. |
+
+        | 420 | Communication error. |
+
+        | 421 | Communication error with issuer. |
+
+        | 430 | Duplicate transaction at processor. |
+
+        | 440 | Processor format error. |
+
+        | 441 | Invalid transaction information. |
+
+        | 460 | Processor feature not available. |
+
+        | 461 | Unsupported card type. |'
+      operationId: processTransaction
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              oneOf:
+              - $ref: '#/components/schemas/CreditCardSaleRequest'
+              - $ref: '#/components/schemas/CreditCardAuthorizeRequest'
+              - $ref: '#/components/schemas/CreditCardCaptureRequest'
+              - $ref: '#/components/schemas/CreditCardValidateRequest'
+              - $ref: '#/components/schemas/CreditCardCreditRequest'
+              - $ref: '#/components/schemas/CreditCardOfflineRequest'
+              - $ref: '#/components/schemas/CreditCardPaymentInFullPartialRequest'
+              - $ref: '#/components/schemas/VoidRequest'
+              - $ref: '#/components/schemas/RefundRequest'
+              - $ref: '#/components/schemas/ACHSaleRequest'
+              - $ref: '#/components/schemas/ACHCreditRequest'
+              - $ref: '#/components/schemas/CashSaleRequest'
+              - $ref: '#/components/schemas/TransactionUpdateRequest'
+              - $ref: '#/components/schemas/ACHTransactionUpdateRequest'
+            examples:
+              CreditCardSale:
+                $ref: '#/components/examples/CreditCardSale'
+              CreditCardDecline:
+                $ref: '#/components/examples/CreditCardDecline'
+              CreditCardAuth:
+                $ref: '#/components/examples/CreditCardAuth'
+              CreditCardValidate:
+                $ref: '#/components/examples/CreditCardValidate'
+              CreditCardCredit:
+                $ref: '#/components/examples/CreditCardCredit'
+              CreditCardOffline:
+                $ref: '#/components/examples/CreditCardOffline'
+              CreditCardRefund:
+                $ref: '#/components/examples/CreditCardRefund'
+              CreditCardVoid:
+                $ref: '#/components/examples/CreditCardVoid'
+              CreditCardCapture:
+                $ref: '#/components/examples/CreditCardCapture'
+              CreditCardPartialPaymentExample:
+                $ref: '#/components/examples/CreditCardPartialPaymentExample'
+              CreditCardPartialPaymentInFullExample:
+                $ref: '#/components/examples/CreditCardPartialPaymentInFullExample'
+              ACHSale:
+                $ref: '#/components/examples/ACHSale'
+              ACHRefund:
+                $ref: '#/components/examples/ACHRefund'
+              ACHVoid:
+                $ref: '#/components/examples/ACHVoid'
+              CashSale:
+                $ref: '#/components/examples/CashSale'
+              Update Transaction:
+                $ref: '#/components/examples/UpdateTransaction'
+              Update ACH Transaction:
+                $ref: '#/components/examples/UpdateACHTransaction'
+      responses:
+        '200':
+          description: Transaction processed successfully
+          content:
+            application/x-www-form-urlencoded:
+              schema:
+                $ref: '#/components/schemas/Response'
+              examples:
+                CreditCardSale:
+                  $ref: '#/components/examples/CreditCardSaleResponse'
+                CreditCardDeclined:
+                  $ref: '#/components/examples/CreditCardDeclinedResponse'
+                CreditCardAuth:
+                  $ref: '#/components/examples/CreditCardAuthResponse'
+                CreditCardValidate:
+                  $ref: '#/components/examples/CreditCardValidateResponse'
+                CreditCardCredit:
+                  $ref: '#/components/examples/CreditCardCreditResponse'
+                CreditCardOffline:
+                  $ref: '#/components/examples/CreditCardOfflineResponse'
+                CreditCardRefund:
+                  $ref: '#/components/examples/CreditCardRefundResponse'
+                CreditCardVoid:
+                  $ref: '#/components/examples/CreditCardVoidResponse'
+                CreditCardCapture:
+                  $ref: '#/components/examples/CreditCardCaptureResponse'
+                CreditCardPartialPayment:
+                  $ref: '#/components/examples/CreditCardPartialPayment'
+                CreditCardPartialPaymentInFull:
+                  $ref: '#/components/examples/CreditCardPartialPaymentInFull'
+                ACHSale:
+                  $ref: '#/components/examples/ACHSaleResponse'
+                ACHRefund:
+                  $ref: '#/components/examples/ACHRefundResponse'
+                ACHVoid:
+                  $ref: '#/components/examples/ACHVoidResponse'
+                CashSale:
+                  $ref: '#/components/examples/CashSaleResponse'
+                Transaction Updated:
+                  $ref: '#/components/examples/TransactionUpdated'
+                Declined Request:
+                  $ref: '#/components/examples/DeclinedResponse'
+    servers:
+    - url: https://sandbox.nmi.com/api
+  /v4/transactions/reports:
+    post:
+      tags:
+      - Transactions
+      operationId: getTransactionData
+      security: []
+      summary: Get Transaction Data
+      description: 'Usage
+
+        This is a query to find live transactions by merchants under your partner account. The query will respond in Universal Time Coordinated (UTC).
+
+
+        If you provide a specific transaction id, then it will return that transaction.
+
+
+        If you provide a sub-affiliates'' merchant id in the merchant id list, it will return that merchant''s transactions.'
+      parameters:
+      - $ref: '#/components/parameters/ContentType'
+      - $ref: '#/components/parameters/Authorization'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GetTransactionDataRequest'
+            examples:
+              Create Standard Merchant:
+                $ref: '#/components/examples/GetTransactionDataExampleRequest'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetTransactionDataResponse'
+              examples:
+                Get Processor Config:
+                  $ref: '#/components/examples/GetTransactionDataExampleResponse'
+    servers:
+    - url: https://sandbox.nmi.com/api
+components:
+  examples:
+    UpdateACHTransaction:
+      summary: Update ACH Transaction
+      description: Update ACH transaction - change tracking number
+      value:
+        type: update
+        transactionid: '8543919398'
+        payment: check
+        tracking_number: 123456
+        security_key: 6457Thfj624V5r7WUwc5v6a68Zsd6YEm
+    CreditCardRefundResponse:
+      summary: Credit Card Transaction Refunded
+      description: Credit card transaction has been successfully refunded
+      value:
+        response: '1'
+        responsetext: SUCCESS
+        authcode: '123456'
+        transactionid: '8564972358'
+        avsresponse: ''
+        cvvresponse: ''
+        orderid: ''
+        type: refund
+        response_code: '100'
+    CreditCardValidateResponse:
+      summary: Credit Card Transaction Validated
+      description: Credit card transaction has been successfully validated
+      value:
+        response: '1'
+        responsetext: SUCCESS
+        authcode: ''
+        transactionid: '8559444951'
+        avsresponse: ''
+        cvvresponse: ''
+        orderid: ''
+        type: validate
+        response_code: '100'
+    ACHVoidResponse:
+      summary: ACH Transaction Voided
+      description: ACH transaction has been successfully voided
+      value:
+        response: '1'
+        responsetext: SUCCESS
+        authcode: '123456'
+        transactionid: '8564875333'
+        avsresponse: ''
+        cvvresponse: ''
+        orderid: ''
+        type: void
+        response_code: '100'
+    ACHSaleResponse:
+      summary: ACH Sale Transaction
+      description: A successful ACH sale transaction
+      value:
+        response: '1'
+        responsetext: SUCCESS
+        authcode: '123456'
+        transactionid: '8561989100'
+        avsresponse: ''
+        cvvresponse: ''
+        orderid: ''
+        type: sale
+        response_code: '100'
+    CreditCardDeclinedResponse:
+      summary: Credit Card Transaction Declined
+      description: Credit card transaction has been declined
+      value:
+        response: '2'
+        responsetext: DECLINE
+        authcode: ''
+        transactionid: '8558718571'
+        avsresponse: ''
+        cvvresponse: ''
+        orderid: ''
+        type: sale
+        response_code: '200'
+    CreditCardRefund:
+      summary: Refund Credit Card Transaction
+      description: Refund full amount of a credit card transaction
+      value:
+        type: refund
+        transactionid: '8564830211'
+        security_key: 6457Thfj624V5r7WUwc5v6a68Zsd6YEm
+    CashSale:
+      summary: Cash Sale
+      description: Create cash sale transaction
+      value:
+        type: sale
+        payment: cash
+        amount: '10'
+        security_key: 6457Thfj624V5r7WUwc5v6a68Zsd6YEm
+    CreditCardPartialPaymentInFullExample:
+      summary: Partial Payment Pay in Full
+      description: Pay partial payment in full
+      value:
+        type: complete_partial_payment
+        ccnumber: '4111111111111111'
+        ccexp: '1025'
+        cvv: '123'
+        amount: '100'
+        partial_payment_id: '123456789'
+        partial_payments: payment_in_full
+        security_key: 6457Thfj624V5r7WUwc5v6a68Zsd6YEm
+    CreditCardVoidResponse:
+      summary: Credit Card Transaction Voided
+      description: Credit card transaction has been successfully voided
+      value:
+        response: '1'
+        responsetext: Transaction Void Successful
+        authcode: '123456'
+        transactionid: '8564830211'
+        avsresponse: ''
+        cvvresponse: ''
+        orderid: ''
+        type: void
+        response_code: '100'
+    CreditCardSale:
+      summary: Credit Card Sale
+      description: Create credit card sale transaction
+      value:
+        type: sale
+        ccnumber: '4111111111111111'
+        ccexp: '1025'
+        cvv: '123'
+        amount: '1'
+        security_key: 6457Thfj624V5r7WUwc5v6a68Zsd6YEm
+    CreditCardCredit:
+      summary: Credit Card Credit Transaction
+      description: Credit the credit card with the given amount
+      value:
+        type: sale
+        ccnumber: '4111111111111111'
+        ccexp: '1025'
+        cvv: '123'
+        amount: '1'
+        security_key: 6457Thfj624V5r7WUwc5v6a68Zsd6YEm
+    ACHRefund:
+      summary: Refund ACH Transaction
+      description: Refund full amount of an ACH transaction
+      value:
+        type: refund
+        transactionid: '8564830211'
+        payment: check
+        security_key: 6457Thfj624V5r7WUwc5v6a68Zsd6YEm
+    CreditCardAuth:
+      summary: Credit Card Authorize
+      description: Authorize credit card transaction
+      value:
+        type: auth
+        ccnumber: '4111111111111111'
+        ccexp: '1025'
+        cvv: '123'
+        amount: '10'
+        security_key: 6457Thfj624V5r7WUwc5v6a68Zsd6YEm
+    CreditCardCaptureResponse:
+      summary: Credit Card Transaction Captured
+      description: Credit card transaction with the given amount has been successfully captured
+      value:
+        response: '1'
+        responsetext: SUCCESS
+        authcode: '123456'
+        transactionid: '8564830211'
+        avsresponse: ''
+        cvvresponse: ''
+        orderid: ''
+        type: capture
+        response_code: '100'
+    CreditCardCreditResponse:
+      summary: Credit Card Transaction Credited
+      description: Amount has been credited to the credit card
+      value:
+        response: '1'
+        responsetext: SUCCESS
+        authcode: ''
+        transactionid: '8559453367'
+        avsresponse: ''
+        cvvresponse: ''
+        orderid: ''
+        type: credit
+        response_code: '100'
+    ACHVoid:
+      summary: Void ACH Transaction
+      description: Void ACH transaction
+      value:
+        type: void
+        transactionid: '8564875333'
+        payment: check
+        security_key: 6457Thfj624V5r7WUwc5v6a68Zsd6YEm
+    CreditCardOffline:
+      summary: Credit Card Offline Transaction
+      description: Create credit card offline transaction
+      value:
+        type: offline
+        ccnumber: '4111111111111111'
+        ccexp: '1025'
+        cvv: '123'
+        amount: '10'
+        authorization_code: '123456'
+        security_key: 6457Thfj624V5r7WUwc5v6a68Zsd6YEm
+    TransactionUpdated:
+      summary: Transaction Updated
+      description: Transaction has been updated successfully
+      value:
+        response: '1'
+        responsetext: Transaction Updated Successfully
+        authcode: '123456'
+        transactionid: '8558644015'
+        avsresponse: ''
+        cvvresponse: ''
+        orderid: '123456789'
+        response_code: '100'
+    CreditCardPartialPayment:
+      summary: Credit Card Partial Payment
+      description: Partial payment for credit card sale transaction created
+      value:
+        response: '1'
+        responsetext: APPROVED
+        authcode: ''
+        avsresponse: ''
+        cvvresponse: ''
+        orderid: ''
+        type: sale
+        response_code: '100'
+        partial_payment_id: '123456789'
+        partial_payment_balance: '70'
+        amount_authorized: '30'
+    CreditCardCapture:
+      summary: Capture Credit Card Transaction
+      description: Capture credit card transaction
+      value:
+        type: capture
+        transactionid: '8564830211'
+        amount: '10'
+        security_key: 6457Thfj624V5r7WUwc5v6a68Zsd6YEm
+    ACHSale:
+      summary: ACH Sale
+      description: Create ACH sale transaction
+      value:
+        type: sale
+        payment: check
+        checkname: Smith
+        checkaba: '123123123'
+        checkaccount: '123123123'
+        amount: '10'
+        security_key: 6457Thfj624V5r7WUwc5v6a68Zsd6YEm
+    DeclinedResponse:
+      summary: Failed to Create Plan
+      description: Failed to create a new plan
+      value:
+        response: '3'
+        responsetext: There is already a plan using the SKU you have specified. REFID:1203610329
+        authcode: ''
+        transactionid: ''
+        avsresponse: ''
+        cvvresponse: ''
+        orderid: ''
+        type: ''
+        response_code: '100'
+    UpdateTransaction:
+      summary: Update Transaction
+      description: Update transaction - change tracking number
+      value:
+        type: update
+        transactionid: '8543919398'
+        tracking_number: 123456
+        security_key: 6457Thfj624V5r7WUwc5v6a68Zsd6YEm
+    CreditCardDecline:
+      summary: Credit Card Decline
+      description: Decline a credit card sale transaction
+      value:
+        type: sale
+        ccnumber: '4111111111111111'
+        ccexp: '1025'
+        cvv: '123'
+        amount: '0.5'
+        security_key: 6457Thfj624V5r7WUwc5v6a68Zsd6YEm
+    CreditCardVoid:
+      summary: Void Credit Card Transaction
+      description: Void credit card transaction
+      value:
+        type: void
+        transactionid: '8564830211'
+        security_key: 6457Thfj624V5r7WUwc5v6a68Zsd6YEm
+    CreditCardPartialPaymentInFull:
+      summary: Partial Payment Pay in Full
+      description: Partial payment payed in full
+      value:
+        response: '1'
+        responsetext: APPROVED
+        authcode: ''
+        avsresponse: ''
+        cvvresponse: ''
+        orderid: ''
+        type: complete_partial_payment
+        response_code: '100'
+        partial_payment_id: '123456789'
+        partial_payment_balance: '0'
+        amount_authorized: '70'
+    CreditCardAuthResponse:
+      summary: Credit Card Transaction Authorized
+      description: Credit card transaction with the given amount has been successfully authorized
+      value:
+        response: '1'
+        responsetext: SUCCESS
+        authcode: '123456'
+        transactionid: '8558644015'
+        avsresponse: ''
+        cvvresponse: ''
+        orderid: ''
+        type: auth
+        response_code: '100'
+    CreditCardValidate:
+      summary: Validate Credit Card
+      description: Validate credit card transaction
+      value:
+        type: validate
+        ccnumber: '4111111111111111'
+        ccexp: '1025'
+        cvv: '123'
+        security_key: 6457Thfj624V5r7WUwc5v6a68Zsd6YEm
+    CreditCardOfflineResponse:
+      summary: Credit Card Offline Transaction Created
+      description: Offline credit card transaction has been created
+      value:
+        response: '1'
+        responsetext: SUCCESS
+        authcode: ''
+        transactionid: '8558644018'
+        avsresponse: ''
+        cvvresponse: ''
+        orderid: ''
+        type: offline
+        response_code: '100'
+    ACHRefundResponse:
+      summary: ACH Transaction Refunded
+      description: ACH transaction has been successfully refunded
+      value:
+        response: '1'
+        responsetext: SUCCESS
+        authcode: '123456'
+        transactionid: '8564972359'
+        avsresponse: ''
+        cvvresponse: ''
+        orderid: ''
+        type: refund
+        response_code: '100'
+    CreditCardPartialPaymentExample:
+      summary: Credit Card Partial Payment
+      description: Create a partial payment for credit card sale transaction
+      value:
+        type: sale
+        ccnumber: '4111111111111111'
+        ccexp: '1025'
+        cvv: '123'
+        amount: '100'
+        partial_payment_id: '123456789'
+        partial_payments: settle_partial
+        security_key: 6457Thfj624V5r7WUwc5v6a68Zsd6YEm
+    CashSaleResponse:
+      summary: Cash Sale Transaction
+      description: A successful cash sale transaction
+      value:
+        response: '1'
+        responsetext: APPROVED
+        authcode: ''
+        transactionid: '8561993922'
+        avsresponse: ''
+        cvvresponse: ''
+        orderid: ''
+        type: sale
+        response_code: '100'
+    CreditCardSaleResponse:
+      summary: Credit Card Sale Transaction
+      description: A successful credit card sale transaction
+      value:
+        response: '1'
+        responsetext: SUCCESS
+        authcode: '123456'
+        transactionid: '8558644015'
+        avsresponse: ''
+        cvvresponse: ''
+        orderid: ''
+        type: sale
+        response_code: '100'
+    GetTransactionDataExampleRequest:
+      summary: Get Transaction Data
+      description: 'Below is an example of a request that’s searching for all available fields. You can pick and choose which ones you’d like to actually search for.
+
+        Note - there’s `merchantId` (singular search) and `merchantIds` (an array of ids to search for)
+
+        `maxResults` is the only required argument, and it must be between 1-1000'
+      value:
+        maxResults: 100
+        offset: 0
+        orderId: '2'
+        par: '5'
+        hmac: '6'
+        merchantIds:
+        - '33'
+        serviceId: tsys
+        platformId: '3'
+        firstName: Jane
+        lastName: Doe
+        email: someone@example.com
+        accountNumber: '123123123'
+        transactionType: check
+        customerId: '456342523'
+        phone: '5555555555'
+        transactionIds:
+        - '34643323456345'
+        - '34643323456346'
+        statuses:
+        - complete
+        actionTypes:
+        - sale
+        - auth
+        - void
+        - refund
+        - credit
+        - validate
+        amount:
+          min: 1
+          max: 100
+        date:
+          start: '2021-08-01T05:00:00Z'
+          end: '2021-09-01T04:59:00Z'
+    GetTransactionDataExampleResponse:
+      summary: Get Transaction Data response
+      description: <b>Note</b> - the `objectType` is included in all responses and they are shared types that exist throughout the v4 api. Anytime you get back an object, if it has a specific `objectType`, it will always have the exact same structure as any other response that includes that same object type.
+      value:
+        objectType: report
+        reportId: 46345
+        offset: 0
+        maxResults: 50
+        totalResults: 320
+        hasMore: true
+        links:
+          first: https://sandbox.nmi.com/api/v4/transactions/reports/46345?maxResults= 50
+          last: https://sandbox.nmi.com/api/v4/transactions/reports/46345?offset=50&m axResults=50
+          next: https://sandbox.nmi.com/api/v4/transactions/reports/46345?offset=50&m axResults=50
+          previous: https://sandbox.nmi.com/api/v4/transactions/reports/46345?offset=0&ma xResults=50
+        results:
+        - objectType: cardTransaction
+          id: '281474976710713'
+          created: '2021-08-19T19:55:32+00:00'
+          updated: '2021-08-19T19:55:32+00:00'
+          billingAddress:
+            objectType: billingAddress
+            firstName: ''
+            lastName: ''
+            company: ''
+            email: ''
+            phone: ''
+            fax: ''
+            website: ''
+            address1: ''
+            address2: ''
+            city: ''
+            state: ''
+            postalCode: ''
+            country: US
+            cellPhone: ''
+          shippingAddress:
+            objectType: shippingAddress
+            company: ''
+            country: US
+            postalCode: ''
+            state: ''
+            city: ''
+            address1: ''
+            address2: ''
+            firstName: ''
+            lastName: ''
+            email: ''
+            phone: ''
+            fax: ''
+          shipping:
+            objectType: shipping
+            carrier: ''
+            trackingNumber: ''
+            date: null
+            fromPostalCode: ''
+            amount:
+              objectType: amount
+              amount: '0.00'
+              currency: USD
+          merchantId: '33'
+          platformId: ''
+          customerId: ''
+          orderId: ''
+          orderDescription: null
+          processorId: '421'
+          poNumber: ''
+          refId: '0'
+          authorizationCode: VTLMC1
+          status: pendingSettlement
+          driversLicense:
+            objectType: driversLicense
+            dateOfBirth: ''
+            number: ''
+            state: ''
+          tax:
+            objectType: amount
+            amount: '0.00'
+            currency: USD
+          tip:
+            objectType: amount
+            amount: ''
+            currency: USD
+          merchantDefinedFields: {}
+          vat:
+            objectType: vat
+            taxRate:
+              objectType: amount
+              amount: '0.00'
+              currency: USD
+            invoiceReferenceNumber: ''
+            customerVatRegistration: ''
+            merchantVatRegistration: ''
+          summaryCommodityCode: ''
+          orderDate: null
+          installmentBilling:
+            objectType: installmentBilling
+            billingNumber: '0'
+            billingTotal:
+              objectType: amount
+              amount: '0.00'
+              currency: USD
+          alternateTaxId: ''
+          customerTaxId: ''
+          website: ''
+          socialSecurityNumber: ''
+          serviceId: vital
+          surcharge:
+            objectType: amount
+            amount: ''
+            currency: USD
+          partialPayment:
+            objectType: partialPayment
+            id: ''
+            balance:
+              objectType: amount
+              amount: ''
+              currency: USD
+          refundableBalance:
+            objectType: amount
+            amount: '5.00'
+            currency: USD
+          actions:
+          - objectType: action
+            amount:
+              objectType: amount
+              amount: '5.00'
+              currency: USD
+            actionType: sale
+            date: '2021-08-19T19:55:32+00:00'
+            success: true
+            ipAddress: 10.8.5.19
+            source: virtualTerminal
+            apiMethod: ''
+            username: testuser
+            responseText: Approved
+            batchId: '0'
+            platformBatchId: ''
+            responseCode: '100'
+            platformResponseText: ' NO MATCH '
+            platformResponseCode: '00'
+            deviceLicenseNumber: null
+            deviceNickname: null
+          items: []
+          emv:
+            objectType: emv
+            applicationId: ''
+            applicationPreferredName: ''
+            applicationLabels: ''
+            terminalStatusId: ''
+          paymentInfo:
+            objectType: cardPayment
+            cardNumber: 411111******1111
+            cardExp: '1025'
+            cardHash: f6c609e195d9d4c185dcc8ca662f0180
+            avsResponse: N
+            cardholderAuth: ''
+            cscResponse: M
+            cardStartDate: ''
+            cardIssueNumber: ''
+            cardBalance: ''
+            cardAvailableBalance: ''
+            entryMode: ''
+            cardBin: '411111'
+            cardType: visa
+            cardHolderAuthentication:
+              objectType: cardHolderAuthentication
+              xid: ''
+              eci: ''
+              cavv: ''
+              cavvResult: ''
+              directoryServerId: null
+              threeDsVersion: null
+          storedCredentials:
+            objectType: storedCredentials
+            initiatedBy: ''
+            initialTransactionId: ''
+            storedIndicator: ''
+            credentialOnFileSupported: false
+          authorizationState: ''
+          cardholderVerificationMethod: ''
+  schemas:
+    CustomerTokenVaultFields:
+      type: object
+      properties:
+        network_tokenize:
+          type: string
+          enum:
+          - '0'
+          - '1'
+          description: Overrides the Customer Token Vault settings and tokenizes the transaction if eligible. Default - `0`.
+          x-group-key: Customer Token Vault
+    CreditCardPaymentInFullPartialRequest:
+      title: Credit Card - Complete Partial Payment in Full
+      allOf:
+      - type: object
+        required:
+        - type
+        - ccnumber
+        - ccexp
+        - amount
+        - partial_payment_id
+        - partial_payments
+        - security_key
+        properties:
+          security_key:
+            $ref: '#/components/schemas/SecurityKey'
+          type:
+            type: string
+            enum:
+            - complete_partial_payment
+            description: Will complete a `payment_in_full` transaction that has not been collected in full. This allows industries that require `payment_in_full` but subsequently decide to still settle the transaction even though it has not been collected in full.
+          partial_payments:
+            type: string
+            enum:
+            - payment_in_full
+            description: '`payment_in_full`: Required that any split tendered transaction is collected in-full before settlement gets initiated.'
+      - additionalProperties:
+          type: string
+          description: Up to 20 `merchant_defined_field_#` are allowed.
+      - $ref: '#/components/schemas/PartialPaymentInfo'
+      - $ref: '#/components/schemas/CreditCardWithCvv'
+      - $ref: '#/components/schemas/Amount'
+      - $ref: '#/components/schemas/BaseTransaction'
+      - $ref: '#/components/schemas/Industry'
+      - $ref: '#/components/schemas/SignatureImage'
+    BaseUpdateTransaction:
+      type: object
+      properties:
+        type:
+          type: string
+          enum:
+          - update
+          description: Type of transactions.
+        transactionid:
+          type: string
+          description: Original payment gateway transaction id
+        tracking_number:
+          type: integer
+          description: Shipping tracking number
+        shipping:
+          type: number
+          description: 'Total shipping amount.
+
+
+            Format: `x.xx`'
+        shipping_postal:
+          type: integer
+          description: Postal/ZIP code of the address where purchased goods will be delivered. This field can be identical to the `ship_from_postal` if the customer is present and takes immediate possession of the goods.
+        shipping_country:
+          type: string
+          description: "Shipping Country Code. *Country codes are as shown in ISO 3166-1 alpha-2*.\n  \nFormat: `CC`"
+        shipping_carrier:
+          type: string
+          enum:
+          - ups
+          - fedex
+          - dhl
+          - usps
+          description: Shipping carrier.
+        shipping_date:
+          type: string
+          format: date
+          description: 'Shipping date.
+
+
+            Format: `YYYYMMDD`'
+        order_description:
+          type: string
+          description: 'Order Description.
+
+
+            Legacy variable includes: orderdescription'
+        customer_receipt:
+          type: boolean
+          enum:
+          - true
+          - false
+          description: If set to true, when the customer is charged, they will be sent a transaction receipt.
+        signature_image:
+          type: string
+          description: 'Cardholder signature image.
+
+
+            Format: `base64 encoded raw PNG image. (16kiB maximum)`'
+        ponumber:
+          type: string
+          description: Cardholder's purchase order number.
+        summary_commodity_code:
+          type: string
+          minLength: 4
+          maxLength: 4
+          description: 4 character international description code of the overall goods or services being supplied. The acquirer or processor will provide a list of current codes.
+        duty_amount:
+          type: number
+          description: 'Amount included in the transaction amount associated with the import of purchased goods.
+
+
+            Format: `x.xx`'
+        discount_amount:
+          type: number
+          description: 'Amount included in the transaction amount of any discount applied to complete order by the merchant.
+
+
+            Format: `x.xx`'
+    Response:
+      type: object
+      title: Response
+      properties:
+        response:
+          type: string
+          enum:
+          - '1'
+          - '2'
+          - '3'
+          description: Status code for the operation. (1) - success, (2) - failed, (3) system error
+        responsetext:
+          type: string
+          description: Textual description of the operation's result.
+        authcode:
+          type: string
+          description: Authorization code for the operation.
+        amount_authorized:
+          type: string
+          description: (Conditional) This will optionally come back when requesting partial payment. Authorization amount.
+        transactionid:
+          type: string
+          description: (Conditional - Payment) Payment gateway transaction id.
+        invoice_id:
+          type: string
+          description: (Conditional - Invoice) Identifier for the invoice.
+        avsresponse:
+          type: string
+          description: Address Verification Service response code.
+        cvvresponse:
+          type: string
+          description: Card Verification Value response.
+        orderid:
+          type: string
+          description: Identifier for an order related to this invoice.
+        type:
+          type: string
+          enum:
+          - sale
+          - auth
+          - validate
+          - credit
+          - offline
+          - capture
+          - void
+          - refund
+          - complete_partial_payment
+          - add_invoice
+          - update_invoice
+          - send_invoice
+          - close_invoice
+          - add_plan
+          - edit_plan
+          - add_subscription
+          - ''
+          description: Type of operation that this response is for.
+        partial_payment_id:
+          type: string
+          description: (Conditional) This will optionally come back when requesting partial payment. A numeric identifier which is used when submitting subsequent transactions.
+        partial_payment_balance:
+          type: string
+          description: (Conditional) This will optionally come back when requesting partial payment. The payment's remaining balance.
+        platform_id:
+          type: string
+          description: Platform ID associated with the transaction.
+        response_code:
+          type: string
+          description: Another status or result code for the operation. See [Response Code Table](#section/Appendixes/Payment-API-Response-Codes)
+        subscription_id:
+          type: string
+          description: (Conditional - Subscription) The subscription ID that was created
+        emv_auth_response_data:
+          type: string
+          description: (Conditional) This will optionally come back when any chip card data is provided on the authorization. This data needs to be sent back to the SDK after an authorization.
+        payment_terms:
+          type: string
+          description: (Conditional - Invoice) The terms of payment for the invoice.
+        customer_vault_id:
+          type: string
+          description: '(Conditional - Customer Vault) The original customer_vault_id passed in the transaction request or the resulting customer_vault_id created on an approved transaction.
+
+
+            Note: Only returned when the "Customer Vault" service is active.'
+        kount_score:
+          type: string
+          description: 'The Kount "Omniscore" indicating the level of risk on a given transaction. The higher the score, the lower the risk.
+
+
+            Note: Only returned when the "Kount" service is active.'
+    ACHTransactionUpdateRequest:
+      title: Update ACH Transaction
+      allOf:
+      - type: object
+        required:
+        - type
+        - transactionid
+        - payment
+        - security_key
+        properties:
+          security_key:
+            $ref: '#/components/schemas/SecurityKey'
+          payment:
+            type: string
+            enum:
+            - check
+            description: The type of payment.
+      - $ref: '#/components/schemas/BaseUpdateTransaction'
+      - $ref: '#/components/schemas/Tax'
+      - $ref: '#/components/schemas/MerchantDefinedField'
+    Industry:
+      type: object
+      properties:
+        industry:
+          type: string
+          enum:
+          - ecommerce
+          - moto
+          - retail
+          - restaurant
+          - lodging
+          description: The industry parameter is supported across multiple transaction types. Its purpose is to identify the merchant industry type for processing
+    CreditCardSaleRequest:
+      title: Credit Card - Sale
+      allOf:
+      - type: object
+        required:
+        - type
+        - ccnumber
+        - ccexp
+        - amount
+        - security_key
+        properties:
+          security_key:
+            $ref: '#/components/schemas/SecurityKey'
+          type:
+            type: string
+            description: The type of transaction to be processed. Must be `sale`
+          partial_payments:
+            type: string
+            enum:
+            - settle_partial
+            - payment_in_full
+            description: '`settle_partial`: Settles any amount of tender collected (captured partial auth''s and approved partial sales) at cut off.
+
+
+              `payment_in_full`: Required that any split tendered transaction is collected in-full before settlement gets initiated.'
+      - additionalProperties:
+          type: string
+          description: Up to 20 `merchant_defined_field_#` are allowed.
+      - $ref: '#/components/schemas/PartialPaymentInfo'
+      - $ref: '#/components/schemas/CreditCardWithCvv'
+      - $ref: '#/components/schemas/Amount'
+      - $ref: '#/components/schemas/BaseTransaction'
+      - $ref: '#/components/schemas/Industry'
+      - $ref: '#/components/schemas/SignatureImage'
+      - $ref: '#/components/schemas/CustomerTokenVaultFields'
+    BaseTransaction:
+      allOf:
+      - type: object
+        properties:
+          payment_token:
+            type: string
+            description: The tokenized version of the customer's card or check information, generated by the [Payment Component](../docs/payment-component) (npm packages / [Gateway.js](https://secure.networkmerchants.com/merchants/resources/integration/integration_portal.php#gjs_methodology)) and usable only once. Existing integrations may also supply a token from [Collect.js](https://secure.networkmerchants.com/merchants/resources/integration/integration_portal.php#cjs_methodology).
+          transaction_session_id:
+            type: string
+            minLength: 32
+            maxLength: 32
+            description: 'A single use session ID used by Kount to link the transaction and Data Collector information together.
+
+
+              * Should be generated every time a payment form is loaded by the cardholder.
+
+              * Should be random/unpredictable (do not use sequential IDs).
+
+              * Should not be reused within a 30 day period.
+
+
+              This can be used with [Collect.js](https://secure.networkmerchants.com/merchants/resources/integration/integration_portal.php#cjs_methodology) or the Payment API when using the [Kount DDC with Gateway.js](https://secure.networkmerchants.com/merchants/resources/integration/integration_portal.php#gjs_methodology).
+
+
+              Format: `alphanumeric`'
+          applepay_payment_data:
+            type: string
+            description: The encrypted token created when integration directly to the Apple Pay SDK.
+          googlepay_payment_data:
+            type: string
+            description: The encrypted token created when [integration directly to the Google Pay SDK](https://secure.networkmerchants.com/merchants/resources/integration/integration_portal.php#googlepay_variables).
+          surcharge:
+            type: string
+            description: "Surcharge amount.\n  \nFormat: `x.xx`"
+          convenience_fee:
+            type: string
+            description: "Convenience fee amount.\n  \nFormat: `x.xx`"
+          misc_fee:
+            type: string
+            description: "Miscellaneous fee amount.\n  \nFormat: `x.xx`"
+          misc_fee_name:
+            type: string
+            description: "Custom miscellaneous fee name.\n  \nDefault: `Miscellaneous Fee`"
+          tip:
+            type: number
+            description: "The final tip amount, included in the transaction, associated with the purchase.\n  \nFormat: `x.xx`"
+          currency:
+            type: string
+            description: "The transaction currency.\n  \nFormat: `ISO 4217`"
+          processor_id:
+            type: string
+            description: If using Multiple MIDs, route to this processor (*processor_id* is obtained under Settings → Transaction Routing in the Control Panel).
+          dup_seconds:
+            type: integer
+            maximum: 7862400
+            description: Sets the time in seconds for duplicate transaction checking on supported processors. Set to *0* to disable duplicate checking.
+      - $ref: '#/components/schemas/Descriptor'
+      - type: object
+        properties:
+          billing_method:
+            type: string
+            enum:
+            - initial_recurring
+            - recurring
+            - installment
+            description: 'Recurring or installment classification for the processor.
+
+
+              - `initial_recurring`: First transaction in a recurring sequence only.
+
+              - `recurring`: Later charges in that sequence.
+
+              - `installment`: Installment transactions; use `billing_number` and `billing_total` on supported processors.
+
+
+              Which values apply depends on the processor.'
+          billing_number:
+            type: integer
+            minimum: 0
+            maximum: 99
+            description: Specify installment billing number, on supported processors. For use when `billing_method` is set to "installment".
+          billing_total:
+            type: string
+            description: Specify installment billing total on supported processors. For use when `billing_method` is set to "installment".
+          order_template:
+            type: string
+            description: Order template ID.
+          order_description:
+            type: string
+            description: Order description.
+          orderid:
+            type: string
+            description: Order Id.
+          ipaddress:
+            type: string
+            description: "IP address of cardholder, this field is recommended.\n  \nFormat: `xxx.xxx.xxx.xxx`"
+      - type: object
+        properties:
+          first_name:
+            type: string
+            description: Cardholder's first name.
+          last_name:
+            type: string
+            description: Cardholder's last name
+          company:
+            type: string
+            description: Cardholder's company
+          address1:
+            type: string
+            description: Card billing address
+          address2:
+            type: string
+            description: Card billing address, line 2
+          city:
+            type: string
+            description: Card billing city
+          state:
+            type: string
+            description: "Card billing state.\n  \nFormat: `CC`"
+          zip:
+            type: string
+            description: Card billing zip code
+          country:
+            type: string
+            description: "Card billing country. *Country codes are as shown in ISO 3166-1 alpha-2*.\n  \nFormat: `CC`"
+          phone:
+            type: string
+            description: Billing phone number
+          fax:
+            type: string
+            description: Billing fax number
+          email:
+            type: string
+            format: email
+            description: Billing email address
+      - $ref: '#/components/schemas/DriversLicense'
+      - $ref: '#/components/schemas/Shipping'
+      - $ref: '#/components/schemas/MerchantDefinedField'
+      - type: object
+        properties:
+          customer_receipt:
+            type: string
+            enum:
+            - 'true'
+            - 'false'
+            description: If set to true, when the customer is charged, they will be sent a transaction receipt.
+          cardholder_auth:
+            type: string
+            enum:
+            - verified
+            - attempted
+            description: "Set 3D Secure condition. Value used to determine E-commerce indicator (ECI).\n  \n**Required for 3D Secure transactions**"
+          cavv:
+            type: string
+            description: "Cardholder authentication verification value.\n  \nFormat: `base64 encoded` **Required for 3D Secure transactions**"
+          xid:
+            type: string
+            description: "Cardholder authentication transaction id.\n  \nFormat: `base64 encoded` **Required for 3D Secure transactions**"
+          three_ds_version:
+            type: string
+            enum:
+            - 2.0.0
+            - 2.2.0
+            description: 3DSecure version. **Required for 3D Secure transactions**
+          directory_server_id:
+            type: string
+            description: "Directory Server Transaction ID. May be provided as part of 3DSecure 2.0 authentication.\n  \nFormat: `xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx`"
+          source_transaction_id:
+            type: string
+            description: Specifies a payment gateway transaction id in order to associate payment information with a Subscription or Customer Vault record. Must be set with a 'recurring' or 'customer_vault' action.
+          pinless_debit_override:
+            type: string
+            description: Set to 'Y' if you have Pinless Debit Conversion enabled but want to opt out for this transaction. Feature applies to selected processors only.
+      - type: object
+        properties:
+          recurring:
+            type: string
+            enum:
+            - add_subscription
+            description: '**Recurring Field:** Recurring action to be processed.'
+            x-group-key: Recurring
+          plan_id:
+            type: string
+            description: '**Recurring Field:** Create a subscription tied to a Plan ID if the sale/auth transaction is successful.
+
+
+              Required when **recurring** variable is set to `add_subscription`'
+            x-group-key: Recurring
+          plan_payments:
+            type: integer
+            description: '**Recurring Field:** The number of payments before the recurring plan is complete.
+
+
+              Note: Use ''0'' for until canceled
+
+
+              Required when **recurring** variable is set to `add_subscription`'
+            x-group-key: Recurring
+          plan_amount:
+            type: number
+            description: '**Recurring Field:** The plan amount to be charged each billing cycle.
+
+
+              Format: `x.xx`
+
+
+              Required when **recurring** variable is set to `add_subscription`'
+            x-group-key: Recurring
+          month_frequency:
+            type: integer
+            minimum: 1
+            maximum: 24
+            description: "**Recurring Field:** How often, in months, to charge the customer. Cannot be set with 'day_frequency'. Must be set with 'day_of_month'. \n\nRequired when **recurring** variable is set to `add_subscription`"
+            x-group-key: Recurring
+          day_of_month:
+            type: integer
+            minimum: 1
+            maximum: 31
+            description: '**Recurring Field:** The day that the customer will be charged. Cannot be set with ''day_frequency''. Must be set with ''month_frequency''. For months without 29, 30, or 31 days, the charge will be on the last day
+
+
+              Required when **recurring** variable is set to `add_subscription`'
+            x-group-key: Recurring
+          day_frequency:
+            type: integer
+            description: '**Recurring Field:** How often, in days, to charge the customer. Cannot be set with ''month_frequency'' or ''day_of_month''.
+
+
+              Required when **recurring** variable is set to `add_subscription`'
+            x-group-key: Recurring
+          start_date:
+            type: string
+            format: date
+            description: '**Recurring Field:** The first day that the customer will be charged.
+
+
+              Format: `YYYYMMDD`
+
+
+              Required when **recurring** variable is set to `add_subscription`'
+            x-group-key: Recurring
+      - $ref: '#/components/schemas/CustomerVaultFields'
+      - $ref: '#/components/schemas/StoredCredentialsFields'
+      - $ref: '#/components/schemas/LevelThreeOrderFields'
+      - $ref: '#/components/schemas/LevelThreeLineItemDetailFields'
+      - $ref: '#/components/schemas/PaymentFacilitatorFields'
+    LevelThreeLineItemDetailFields:
+      type: object
+      properties:
+        item_product_code_1:
+          type: string
+          description: '**Level III - Line Item:** Merchant defined description code of the item being purchased.
+
+
+            *Up to 99 sets of item_* fields are allowed.*'
+          x-group-key: Level III - Line Item(s)
+        item_description_1:
+          type: string
+          description: '**Level III - Line Item:** Description of the item(s) being supplied.'
+          x-group-key: Level III - Line Item(s)
+        item_commodity_code_1:
+          type: string
+          description: '**Level III - Line Item:** International description code of the individual good or service being supplied. The acquirer or processor will provide a list of current codes.'
+          x-group-key: Level III - Line Item(s)
+        item_unit_of_measure_1:
+          type: string
+          description: '**Level III - Line Item:** Code for units of measurement as used in international trade. Default - `EACH`.'
+          x-group-key: Level III - Line Item(s)
+        item_unit_cost_1:
+          type: number
+          description: '**Level III - Line Item:** Unit cost of item purchased, may contain up to 4 decimal places.'
+          x-group-key: Level III - Line Item(s)
+        item_quantity_1:
+          type: integer
+          description: '**Level III - Line Item:** Quantity of the item(s) being purchased. Default - `1`.'
+          x-group-key: Level III - Line Item(s)
+        item_total_amount_1:
+          type: number
+          description: '**Level III - Line Item:** Purchase amount associated with the item. Defaults to: ''item_unit_cost_#'' x ''item_quantity_#'' rounded to the nearest penny.'
+          x-group-key: Level III - Line Item(s)
+        item_tax_amount_1:
+          type: number
+          description: '**Level III - Line Item:** Amount of sales tax on specific item. Amount should not be included in ''total_amount_#''. Default - `0.00`.
+
+
+            Format: `x.xx`'
+          x-group-key: Level III - Line Item(s)
+        item_tax_rate_1:
+          type: number
+          description: '**Level III - Line Item:** Percentage representing the value-added tax applied. Default - `0.00`.
+
+
+            Format: `x.xx`'
+          x-group-key: Level III - Line Item(s)
+        item_discount_amount_1:
+          type: number
+          description: '**Level III - Line Item:** Discount amount which can have been applied by the merchant on the sale of the specific item. Amount should not be included in ''total_amount_#''.'
+          x-group-key: Level III - Line Item(s)
+        item_discount_rate_1:
+          type: number
+          description: '**Level III - Line Item:** Discount rate for the line item. Default - `0.00`.
+
+
+            Format: `x.xx`'
+          x-group-key: Level III - Line Item(s)
+        item_tax_type_1:
+          type: string
+          description: '**Level III - Line Item:** Type of value-added taxes that are being used.'
+          x-group-key: Level III - Line Item(s)
+        item_alternate_tax_id_1:
+          type: string
+          description: '**Level III - Line Item:** Tax identification number of the merchant that reported the alternate tax amount.'
+          x-group-key: Level III - Line Item(s)
+    CreditCardOfflineRequest:
+      title: Credit Card - Offline
+      allOf:
+      - type: object
+        required:
+        - type
+        - ccnumber
+        - ccexp
+        - amount
+        - authorization_code
+        - security_key
+        properties:
+          security_key:
+            $ref: '#/components/schemas/SecurityKey'
+          type:
+            type: string
+            enum:
+            - offline
+            description: The type of transaction to be processed. **Note** that offline transactions need to be enabled.
+          authorization_code:
+            type: string
+            description: Specify authorization code.
+      - additionalProperties:
+          type: string
+          description: Up to 20 `merchant_defined_field_#` are allowed.
+      - $ref: '#/components/schemas/CreditCardWithCvv'
+      - $ref: '#/components/schemas/Amount'
+      - $ref: '#/components/schemas/BaseTransaction'
+      - $ref: '#/components/schemas/Industry'
+      - $ref: '#/components/schemas/SignatureImage'
+    CreditCard:
+      type: object
+      properties:
+        ccnumber:
+          type: string
+          enum:
+          - '4111111111111111'
+          - '5431111111111111'
+          - '6011000991300009'
+          - '341111111111111'
+          - '30205252489926'
+          - '3541963594572595'
+          - '6799990100000000019'
+          description: 'Credit card number.
+
+
+            <details>
+
+            <summary>Allowed Card Numbers:</summary>
+
+
+            | Card Type         | Test Card Number     |
+
+            |:------------------|:---------------------|
+
+            | Visa              | 4111111111111111     |
+
+            | MasterCard        | 5431111111111111     |
+
+            | Discover          | 6011000991300009     |
+
+            | American Express  | 341111111111111      |
+
+            | Diner''s Club      | 30205252489926       |
+
+            | JCB               | 3541963594572595     |
+
+            | Maestro           | 6799990100000000019  |
+
+            </details>'
+        ccexp:
+          type: string
+          description: "Credit card expiration date.\n  \nFormat: `MMYY`"
+    ACHCreditRequest:
+      title: ACH - Credit
+      allOf:
+      - type: object
+        required:
+        - type
+        - checkname
+        - checkaba
+        - checkaccount
+        - payment
+        - security_key
+        properties:
+          security_key:
+            $ref: '#/components/schemas/SecurityKey'
+          type:
+            type: string
+            enum:
+            - credit
+            description: The type of transaction to be processed. Note that credits need to be enabled.
+          payment:
+            type: string
+            description: The type of payment.
+            enum:
+            - check
+            - cash
+      - additionalProperties:
+          type: string
+          description: Up to 20 `merchant_defined_field_#` are allowed.
+      - $ref: '#/components/schemas/ACH'
+      - $ref: '#/components/schemas/Amount'
+      - $ref: '#/components/schemas/BaseTransaction'
+      - type: object
+        properties:
+          social_security_number:
+            type: string
+            description: Customer's social security number, checked against bad check writers database if check verification is enabled.
+      - $ref: '#/components/schemas/SignatureImage'
+    SignatureImage:
+      type: object
+      properties:
+        signature_image:
+          type: string
+          description: "Cardholder signature image.\n  \nFormat: `base64 encoded raw PNG image. (16kiB maximum)`"
+    Shipping:
+      type: object
+      properties:
+        shipping_firstname:
+          type: string
+          description: Shipping first name
+        shipping_lastname:
+          type: string
+          description: Shipping last name
+        shipping_company:
+          type: string
+          description: Shipping company
+        shipping_address1:
+          type: string
+          description: Shipping address
+        shipping_address2:
+          type: string
+          description: Shipping address, line 2
+        shipping_city:
+          type: string
+          description: Shipping city
+        shipping_state:
+          type: string
+          description: "Shipping state.\n  \nFormat: `CC`"
+        shipping_zip:
+          type: string
+          description: Shipping zip code
+        shipping_country:
+          type: string
+          description: "Shipping country. *Country codes are as shown in ISO 3166-1 alpha-2*.\n  \nFormat: `CC`"
+        shipping_email:
+          type: string
+          format: email
+          description: Shipping email address
+    Descriptor:
+      type: object
+      properties:
+        descriptor:
+          type: string
+          description: Set payment descriptor on supported processors.
+        descriptor_phone:
+          type: string
+          description: Set payment descriptor phone on supported processors.
+        descriptor_address:
+          type: string
+          description: Set payment descriptor address on supported processors.
+        descriptor_city:
+          type: string
+          description: Set payment descriptor city on supported processors.
+        descriptor_state:
+          type: string
+          description: Set payment descriptor state on supported processors.
+        descriptor_postal:
+          type: string
+          description: Set payment descriptor postal code on supported processors.
+        descriptor_country:
+          type: string
+          description: Set payment descriptor country on supported processors.
+        descriptor_mcc:
+          type: string
+          description: Set payment descriptor mcc on supported processors.
+        descriptor_merchant_id:
+          type: string
+          description: Set payment descriptor merchant id on supported processors.
+        descriptor_url:
+          type: string
+          description: Set payment descriptor url on supported processors.
+    CreditCardWithCvv:
+      allOf:
+      - $ref: '#/components/schemas/CreditCard'
+      - type: object
+        properties:
+          cvv:
+            type: string
+            description: The card security code. While this is not required, it is strongly recommended.
+    PaymentFacilitatorFields:
+      type: object
+      properties:
+        payment_facilitator_id:
+          type: string
+          description: '**Payment Facilitator:** Payment Facilitator/Aggregator/ISO''s ID Number'
+          x-group-key: Payment Facilitator
+        submerchant_id:
+          type: string
+          description: '**Payment Facilitator:** Sub-merchant Account ID'
+          x-group-key: Payment Facilitator
+        submerchant_name:
+          type: string
+          description: '**Payment Facilitator:** Sub-merchant''s Name'
+          x-group-key: Payment Facilitator
+        submerchant_address:
+          type: string
+          description: '**Payment Facilitator:** Sub-merchant''s Address'
+          x-group-key: Payment Facilitator
+        submerchant_city:
+          type: string
+          description: '**Payment Facilitator:** Sub-merchant''s City'
+          x-group-key: Payment Facilitator
+        submerchant_state:
+          type: string
+          description: '**Payment Facilitator:** Sub-merchant''s State'
+          x-group-key: Payment Facilitator
+        submerchant_postal:
+          type: string
+          description: '**Payment Facilitator:** Sub-merchant''s Zip/Postal Code'
+          x-group-key: Payment Facilitator
+        submerchant_country:
+          type: string
+          description: '**Payment Facilitator:** Sub-merchant''s Country'
+          x-group-key: Payment Facilitator
+        submerchant_phone:
+          type: string
+          description: '**Payment Facilitator:** Sub-merchant''s Phone Number'
+          x-group-key: Payment Facilitator
+        submerchant_email:
+          type: string
+          format: email
+          description: '**Payment Facilitator:** Sub-merchant''s Email Address'
+          x-group-key: Payment Facilitator
+    CreditCardValidateRequest:
+      title: Credit Card - Validate
+      allOf:
+      - type: object
+        required:
+        - type
+        - ccnumber
+        - ccexp
+        - security_key
+        properties:
+          security_key:
+            $ref: '#/components/schemas/SecurityKey'
+          type:
+            type: string
+            enum:
+            - validate
+            description: The type of transaction to be processed.
+      - additionalProperties:
+          type: string
+          description: Up to 20 `merchant_defined_field_#` are allowed.
+      - $ref: '#/components/schemas/CreditCardWithCvv'
+      - $ref: '#/components/schemas/BaseTransaction'
+      - $ref: '#/components/schemas/SignatureImage'
+    DriversLicense:
+      type: object
+      properties:
+        drivers_license_number:
+          type: string
+          description: Driver's license number.
+        drivers_license_dob:
+          type: string
+          description: Driver's license date of birth.
+        drivers_license_state:
+          type: string
+          description: The state that issued the customer's driver's license.
+    StoredCredentialsFields:
+      type: object
+      properties:
+        initiated_by:
+          type: string
+          enum:
+          - customer
+          - merchant
+          description: '**Stored Credentials (CIT/MIT):** Who initiated the transaction.'
+        initial_transaction_id:
+          type: string
+          description: '**Stored Credentials (CIT/MIT):** Original payment gateway transaction id.'
+        stored_credential_indicator:
+          type: string
+          enum:
+          - stored
+          - used
+          description: '**Stored Credentials (CIT/MIT):** The indicator of the stored credential.
+
+
+            Use **''stored''** when processing the initial transaction in which you are storing a customer''s payment details (customer credentials) in the Customer Vault or other third-party payment storage system.
+
+
+            Use **''used''** when processing a subsequent or follow-up transaction using the customer payment details (customer credentials) you have already stored to the Customer Vault or third-party payment storage method.'
+    ACH:
+      type: object
+      properties:
+        checkname:
+          type: string
+          description: The name on the customer's ACH account.
+        checkaba:
+          type: string
+          minLength: 9
+          maxLength: 9
+          description: The customer's bank routing number.
+        checkaccount:
+          type: string
+          description: The customer's bank account number.
+        account_holder_type:
+          type: string
+          enum:
+          - business
+          - personal
+          description: The type of ACH account the customer has.
+        account_type:
+          type: string
+          enum:
+          - checking
+          - savings
+          description: The type of ACH account the customer has.
+        sec_code:
+          type: string
+          enum:
+          - PPD
+          - WEB
+          - TEL
+          - CCD
+          description: The Standard Entry Class code of the ACH transaction.
+    LevelThreeOrderFields:
+      type: object
+      properties:
+        shipping:
+          type: number
+          description: '**Level II/III - Order Field:** Freight or shipping amount included in the transaction amount. Default - `0.00`.
+
+
+            Format: `x.xx`'
+          x-group-key: Level III - Order
+        tax:
+          type: number
+          description: '**Level II/III - Order Field:** The sales tax, included in the transaction amount, associated with the purchase. Setting tax equal to ''-1'' indicates an order that is exempt from sales tax. Default - `0.00`.
+
+
+            Format: `x.xx`'
+          x-group-key: Level III - Order
+        ponumber:
+          type: string
+          description: '**Level II/III - Order Field:** Purchase order number'
+          x-group-key: Level III - Order
+        orderid:
+          type: string
+          description: '**Level III - Order Field:** Identifier assigned by the merchant. This defaults to gateway transaction id.'
+          x-group-key: Level III - Order
+        shipping_country:
+          type: string
+          description: "**Level III - Order Field:** Shipping country (e.g. US).\n \nFormat: `CC` - ISO 3166-1 alpha-2"
+          x-group-key: Level III - Order
+        shipping_postal:
+          type: string
+          description: '**Level III - Order Field:** Postal/ZIP code of the address where purchased goods will be delivered. This field can be identical to the ''ship_from_postal'' if the customer is present and takes immediate possession of the goods.'
+          x-group-key: Level III - Order
+        ship_from_postal:
+          type: string
+          description: '**Level III - Order Field:** Postal/ZIP code of the address from where purchased goods are being shipped, defaults to merchant profile postal code.'
+          x-group-key: Level III - Order
+        summary_commodity_code:
+          type: string
+          description: '**Level III - Order Field:** 4 character international description code of the overall goods or services being supplied. The acquirer or processor will provide a list of current codes.'
+          x-group-key: Level III - Order
+        duty_amount:
+          type: number
+          description: '**Level III - Order Field:** Amount included in the transaction amount associated with the import of purchased goods. Default - `0.00`.
+
+
+            Format: `x.xx`'
+          x-group-key: Level III - Order
+        discount_amount:
+          type: number
+          description: '**Level III - Order Field:** Amount included in the transaction amount of any discount applied to complete order by the merchant. Default - `0.00`.
+
+
+            Format: `x.xx`'
+          x-group-key: Level III - Order
+        national_tax_amount:
+          type: number
+          description: '**Level III - Order Field:** The national tax amount included in the transaction amount. Default - `0.00`.
+
+
+            Format: `x.xx`'
+          x-group-key: Level III - Order
+        alternate_tax_amount:
+          type: number
+          description: '**Level III - Order Field:** Second tax amount included in the transaction amount in countries where more than one type of tax can be applied to the purchases. Default - `0.00`.
+
+
+            Format: `x.xx`'
+          x-group-key: Level III - Order
+        alternate_tax_id:
+          type: string
+          description: '**Level III - Order Field:** Tax identification number of the merchant that reported the alternate tax amount.'
+          x-group-key: Level III - Order
+        vat_tax_amount:
+          type: number
+          description: '**Level III - Order Field:** Contains the amount of any value added taxes which can be associated with the purchased item. Default - `0.00`.
+
+
+            Format: `x.xx`'
+          x-group-key: Level III - Order
+        vat_tax_rate:
+          type: number
+          description: '**Level III - Order Field:** Contains the tax rate used to calculate the sales tax amount appearing. Can contain up to 2 decimal places, e.g. 1% = 1.00. Default - `0.00`.
+
+
+            Format: `x.xx`'
+          x-group-key: Level III - Order
+        vat_invoice_reference_number:
+          type: string
+          description: '**Level III - Order Field:** Invoice number that is associated with the VAT invoice.'
+          x-group-key: Level III - Order
+        customer_vat_registration:
+          type: string
+          description: '**Level III - Order Field:** Value added tax registration number supplied by the cardholder.'
+          x-group-key: Level III - Order
+        merchant_vat_registration:
+          type: string
+          description: '**Level III - Order Field:** Government assigned tax identification number of the merchant for whom the goods or services were purchased from.'
+          x-group-key: Level III - Order
+        order_date:
+          type: string
+          format: date
+          description: '**Level III - Order Field:** Purchase order date, defaults to the date of the transaction.
+
+
+            Format: `YYMMDD`'
+          x-group-key: Level III - Order
+    Tax:
+      type: object
+      properties:
+        tax:
+          type: number
+          format: float
+          description: The sales tax, included in the transaction amount, associated with the purchase. Setting tax equal to '-1' indicates an order that is exempt from sales tax. Default - `0.00`.
+        national_tax_amount:
+          type: number
+          description: 'The national tax amount included in the transaction amount.
+
+
+            Format: `x.xx`'
+        alternate_tax_amount:
+          type: number
+          description: 'Second tax amount included in the transaction amount in countries where more than one type of tax can be applied to the purchases.
+
+
+            Format: `x.xx`'
+        alternate_tax_id:
+          type: integer
+          description: Tax identification number of the merchant that reported the alternate tax amount.
+        vat_tax_amount:
+          type: number
+          description: Contains the amount of any value added taxes which can be associated with the purchased item.
+        vat_tax_rate:
+          type: number
+          format: float
+          description: Contains the tax rate used to calculate the sales tax amount appearing. Can contain up to 2 decimal places, e.g. 1% = 1.00.
+        vat_invoice_reference_number:
+          type: number
+          description: Invoice number that is associated with the VAT invoice.
+        customer_vat_registration:
+          type: number
+          description: Value added tax registration number supplied by the cardholder.
+        merchant_vat_registration:
+          type: number
+          description: Government assigned tax identification number of the merchant for whom the goods or services were purchased from.
+    CreditCardCaptureRequest:
+      title: Credit Card - Capture
+      allOf:
+      - type: object
+        required:
+        - type
+        - transactionid
+        - amount
+        - security_key
+        properties:
+          security_key:
+            $ref: '#/components/schemas/SecurityKey'
+          type:
+            type: string
+            enum:
+            - capture
+            description: The type of transaction to be processed.
+          transactionid:
+            type: string
+            description: Original payment gateway transaction id.
+          amount:
+            type: string
+            description: "Total amount to be settled. This amount must be equal to or less than the original authorized amount.\n  \nFormat: `x.xx`"
+          tracking_number:
+            type: string
+            description: Shipping tracking number.
+          shipping_carrier:
+            type: string
+            enum:
+            - ups
+            - fedex
+            - dhl
+            - usps
+            description: Shipping carrier.
+          orderid:
+            type: string
+            description: Order ID.
+      - $ref: '#/components/schemas/SignatureImage'
+    MerchantDefinedField:
+      type: object
+      properties:
+        merchant_defined_field_1:
+          type: string
+          description: 'Merchant defined field. You can pass custom information in up to 20 fields.
+
+
+            Format: `merchant_defined_field_1=Value1`, `merchant_defined_field_2=Value2`, etc...'
+    ACHSaleRequest:
+      title: ACH - Sale
+      allOf:
+      - type: object
+        required:
+        - type
+        - checkname
+        - checkaba
+        - checkaccount
+        - amount
+        - payment
+        - security_key
+        properties:
+          security_key:
+            $ref: '#/components/schemas/SecurityKey'
+          type:
+            type: string
+            enum:
+            - sale
+            description: The type of transaction to be processed.
+          payment:
+            type: string
+            description: The type of payment.
+            enum:
+            - check
+      - additionalProperties:
+          type: string
+          description: Up to 20 `merchant_defined_field_#` are allowed.
+      - $ref: '#/components/schemas/ACH'
+      - $ref: '#/components/schemas/Amount'
+      - $ref: '#/components/schemas/BaseTransaction'
+      - type: object
+        properties:
+          social_security_number:
+            type: string
+            description: Customer's social security number, checked against bad check writers database if check verification is enabled.
+      - $ref: '#/components/schemas/SignatureImage'
+    CreditCardCreditRequest:
+      title: Credit Card - Credit
+      allOf:
+      - type: object
+        required:
+        - type
+        - ccnumber
+        - ccexp
+        - amount
+        - security_key
+        properties:
+          security_key:
+            $ref: '#/components/schemas/SecurityKey'
+          type:
+            type: string
+            enum:
+            - credit
+            description: The type of transaction to be processed.
+      - additionalProperties:
+          type: string
+          description: Up to 20 `merchant_defined_field_#` are allowed.
+      - $ref: '#/components/schemas/CreditCardWithCvv'
+      - $ref: '#/components/schemas/Amount'
+      - $ref: '#/components/schemas/BaseTransaction'
+      - $ref: '#/components/schemas/Industry'
+      - $ref: '#/components/schemas/SignatureImage'
+      - $ref: '#/components/schemas/CustomerTokenVaultFields'
+    RefundAmount:
+      type: object
+      properties:
+        amount:
+          type: string
+          description: "Total amount to be refunded. This amount may be equal to or less than the settled amount. Setting the amount to `0.00` will refund the entire amount.\n  \nFormat: `x.xx`"
+    SecurityKey:
+      type: string
+      description: API Security Key assigned to a merchant account. New keys can be generated from the merchant control panel in Settings > Security Keys
+    TransactionUpdateRequest:
+      title: Update Transaction
+      allOf:
+      - type: object
+        required:
+        - type
+        - transactionid
+        - security_key
+        properties:
+          security_key:
+            $ref: '#/components/schemas/SecurityKey'
+          payment:
+            type: string
+            enum:
+            - creditcard
+            description: The type of payment.
+      - $ref: '#/components/schemas/BaseUpdateTransaction'
+      - $ref: '#/components/schemas/Tax'
+      - $ref: '#/components/schemas/MerchantDefinedField'
+    CreditCardAuthorizeRequest:
+      title: Credit Card - Authorize
+      allOf:
+      - type: object
+        required:
+        - type
+        - ccnumber
+        - ccexp
+        - amount
+        - security_key
+        properties:
+          security_key:
+            $ref: '#/components/schemas/SecurityKey'
+          type:
+            type: string
+            enum:
+            - auth
+            description: The type of transaction to be processed.
+      - additionalProperties:
+          type: string
+          description: Up to 20 `merchant_defined_field_#` are allowed.
+      - $ref: '#/components/schemas/CreditCardWithCvv'
+      - $ref: '#/components/schemas/Amount'
+      - $ref: '#/components/schemas/BaseTransaction'
+      - $ref: '#/components/schemas/Industry'
+      - $ref: '#/components/schemas/SignatureImage'
+      - $ref: '#/components/schemas/CustomerTokenVaultFields'
+    Amount:
+      type: object
+      properties:
+        amount:
+          type: string
+          description: "Total amount to be charged.\n  \nFormat: `x.xx`"
+    VoidRequest:
+      title: Void Transaction
+      allOf:
+      - type: object
+        required:
+        - type
+        - transactionid
+        - security_key
+        properties:
+          security_key:
+            $ref: '#/components/schemas/SecurityKey'
+          type:
+            type: string
+            enum:
+            - void
+            description: The type of transaction to be processed.
+          transactionid:
+            type: string
+            description: Original payment gateway transaction id.
+          payment:
+            type: string
+            enum:
+            - check
+            - creditcard
+            description: '**Required for ACH** The type of payment. Default - `creditcard`.'
+          void_reason:
+            type: string
+            enum:
+            - fraud
+            - user_cancel
+            - icc_rejected
+            - icc_card_removed
+            - icc_no_confirmation
+            - pos_timeout
+            description: '**Conditionally Required** if Transaction is EMV. Reason the EMV transaction is being voided.'
+    PartialPaymentInfo:
+      type: object
+      properties:
+        partial_payment_id:
+          type: string
+          description: Unique identifier returned when making the original transaction. This should only be used for secondary transactions.
+    CustomerVaultFields:
+      type: object
+      properties:
+        customer_vault:
+          type: string
+          enum:
+          - add_customer
+          - update_customer
+          description: Associate payment information with a Customer Vault record if the transaction is successful.
+          x-group-key: Customer Vault
+        customer_vault_id:
+          type: string
+          description: Specifies a Customer Vault id. If not set, the payment gateway will randomly generate a Customer Vault id.
+          x-group-key: Customer Vault
+    CashSaleRequest:
+      title: Cash - Sale
+      allOf:
+      - type: object
+        required:
+        - type
+        - payment
+        - amount
+        - security_key
+        properties:
+          security_key:
+            $ref: '#/components/schemas/SecurityKey'
+          type:
+            type: string
+            enum:
+            - sale
+            description: The type of transaction to be processed.
+          payment:
+            type: string
+            description: The type of payment.
+            enum:
+            - cash
+      - additionalProperties:
+          type: string
+          description: Up to 20 `merchant_defined_field_#` are allowed.
+      - $ref: '#/components/schemas/Amount'
+      - $ref: '#/components/schemas/BaseTransaction'
+      - type: object
+        properties:
+          social_security_number:
+            type: string
+            description: Customer's social security number, checked against bad check writers database if check verification is enabled.
+      - $ref: '#/components/schemas/SignatureImage'
+    RefundRequest:
+      title: Refund Transaction
+      allOf:
+      - type: object
+        required:
+        - type
+        - transactionid
+        - security_key
+        properties:
+          security_key:
+            $ref: '#/components/schemas/SecurityKey'
+          type:
+            type: string
+            enum:
+            - refund
+            description: The type of transaction to be processed.
+          transactionid:
+            type: string
+            description: Original payment gateway transaction id.
+          payment:
+            type: string
+            enum:
+            - check
+            - creditcard
+            description: '**Required for ACH** The type of payment. Default - `creditcard`.'
+      - $ref: '#/components/schemas/RefundAmount'
+    GetTransactionDataResponse:
+      type: object
+      title: Response
+      properties:
+        objectType:
+          type: string
+          enum:
+          - serviceConfig
+          description: The type of object that was returned as a result of the request.
+        reportId:
+          type: number
+          description: The ID of the report.
+        offset:
+          type: number
+          description: The first N skipped results.
+        maxResults:
+          type: number
+          description: The max number results.
+        totalResults:
+          type: number
+          description: The total number of results.
+        hasMore:
+          type: boolean
+          description: Indicates if there are more results available beyond the current page.
+        links:
+          type: object
+          title: Links
+          description: Pagination links for navigating through the report results.
+          properties:
+            first:
+              type: string
+              format: uri
+              description: URL to the first page of results.
+            last:
+              type: string
+              format: uri
+              description: URL to the last page of results.
+            next:
+              type: string
+              format: uri
+              description: URL to the next page of results.
+            previous:
+              type: string
+              format: uri
+              description: URL to the previous page of results.
+        results:
+          type: array
+          description: Results for the search.
+          items:
+            type: object
+            properties:
+              objectType:
+                type: string
+                description: Type of the returned response object.
+              id:
+                type: string
+                description: The ID for the transaction.
+              created:
+                type: string
+                format: date-time
+                description: The timestamp indicating when the transaction was created.
+              updated:
+                type: string
+                format: date-time
+                description: The timestamp indicating when the transaction was last updated.
+              billingAddress:
+                type: object
+                title: Billing Address
+                description: Billing Address details.
+                properties:
+                  first_name:
+                    type: string
+                    description: The first name of the person associated with the billing address.
+                  last_name:
+                    type: string
+                    description: The last name of the person associated with the billing address.
+                  address_1:
+                    type: string
+                    description: The first line of the street address.
+                  address_2:
+                    type: string
+                    description: The second line of the street address.
+                  company:
+                    type: string
+                    description: The name of the company associated with the billing address.
+                  city:
+                    type: string
+                    description: The name of the city associated with the billing address.
+                  state:
+                    type: string
+                    description: "The name of the state or province associated with the billing address.\n  \nFormat: `CC`."
+                  postal_code:
+                    type: string
+                    description: The postal code or zip code associated with the billing address.
+                  country:
+                    type: string
+                    description: "The name of the country associated with the billing address. *Country codes are as shown in ISO 3166-1 alpha-2*.\n  \nFormat: `CC`."
+                  email:
+                    type: string
+                    format: email
+                    description: The email address associated with the billing address.
+                  phone:
+                    type: string
+                    format: phone
+                    description: The phone number associated with the billing address.
+                  cell_phone:
+                    type: string
+                    format: phone
+                    description: The cell phone number associated with the billing address.
+                  fax:
+                    type: string
+                    format: phone
+                    description: The fax number associated with the billing address.
+              shippingAddress:
+                type: object
+                title: Shipping Address
+                description: Shipping Address details.
+                properties:
+                  first_name:
+                    type: string
+                    description: The first name of the person associated with the shipping address.
+                  last_name:
+                    type: string
+                    description: The last name of the person associated with the shipping address.
+                  address_1:
+                    type: string
+                    description: The first line of the street address.
+                  address_2:
+                    type: string
+                    description: The second line of the street address.
+                  company:
+                    type: string
+                    description: The name of the company associated with the shipping address.
+                  city:
+                    type: string
+                    description: The city of the shipping address.
+                  state:
+                    type: string
+                    description: "The state or province of the shipping address.\n  \nFormat: `CC`."
+                  postal_code:
+                    type: string
+                    description: The postal or zip code of the shipping address.
+                  country:
+                    type: string
+                    description: "The country of the shipping address. *Country codes are as shown in ISO 3166-1 alpha-2*.\n  \nFormat: `CC`."
+                  email:
+                    type: string
+                    description: The email address associated with the shipping address.
+                  phone:
+                    type: string
+                    description: The phone number associated with the shipping address.
+                  fax:
+                    type: string
+                    description: The fax number associated with the shipping address.
+              shipping:
+                type: object
+                title: Shipping
+                properties:
+                  objectType:
+                    type: string
+                    description: The type of the object, representing shipping details.
+                  carrier:
+                    type: string
+                    description: The carrier used for shipping.
+                  trackingNumber:
+                    type: string
+                    description: The tracking number provided by the shipping carrier.
+                  date:
+                    type: string
+                    format: date-time
+                    nullable: true
+                    description: The date the item was shipped.
+                  fromPostalCode:
+                    type: string
+                    description: The postal code from where the item was shipped.
+                  amount:
+                    type: object
+                    properties:
+                      objectType:
+                        type: string
+                        description: The type of the object, representing the shipping amount.
+                      amount:
+                        type: string
+                        description: The monetary amount for shipping.
+                      currency:
+                        type: string
+                        description: The currency of the shipping amount.
+                    description: The amount details for shipping.
+                description: The shipping details associated with the transaction.
+              merchantId:
+                type: string
+                description: The ID for the merchant involved in the transaction.
+              platformId:
+                type: string
+                description: The ID for the platform facilitating the transaction.
+              customerId:
+                type: string
+                description: The ID for the customer involved in the transaction.
+              orderId:
+                type: string
+                description: The order ID associated with the transaction.
+              orderDescription:
+                type: string
+                nullable: true
+                description: A description of the order associated with the transaction.
+              processorId:
+                type: string
+                description: The ID for the payment processor handling the transaction.
+              poNumber:
+                type: string
+                description: The purchase order number associated with the transaction.
+              refId:
+                type: string
+                description: A reference identifier for the transaction.
+              authorizationCode:
+                type: string
+                description: The authorization code for the transaction, provided by the payment processor.
+              status:
+                type: string
+                description: The current status of the transaction.
+              driversLicense:
+                type: object
+                title: Drivers License
+                properties:
+                  objectType:
+                    type: string
+                    description: The type of the object, representing a driver's license.
+                  dateOfBirth:
+                    type: string
+                    format: date
+                    description: The birth date of the individual associated with the driver's license.
+                  number:
+                    type: string
+                    description: The unique number of the driver's license.
+                  state:
+                    type: string
+                    description: The state or province that issued the driver's license.
+                description: The driver's license details associated with the transaction.
+              tax:
+                type: object
+                title: Tax
+                properties:
+                  objectType:
+                    type: string
+                    description: The type of the object, representing the tax amount.
+                  amount:
+                    type: string
+                    description: The monetary amount for tax.
+                  currency:
+                    type: string
+                    description: The currency of the tax amount.
+                description: The tax details associated with the transaction.
+              tip:
+                type: object
+                title: Tip
+                properties:
+                  objectType:
+                    type: string
+                    description: The type of the object, representing the tip amount.
+                  amount:
+                    type: string
+                    description: The monetary amount for the tip.
+                  currency:
+                    type: string
+                    description: The currency of the tip amount.
+                description: The tip details associated with the transaction.
+              merchantDefinedFields:
+                type: object
+                title: Merchant Defined Fields
+                description: Custom fields defined by the merchant for additional information related to the transaction.
+              vat:
+                type: object
+                title: VAT
+                properties:
+                  objectType:
+                    type: string
+                    description: The type of the object, representing the VAT details.
+                  taxRate:
+                    type: object
+                    properties:
+                      objectType:
+                        type: string
+                        description: The type of the object, representing the tax rate.
+                      amount:
+                        type: string
+                        description: The VAT rate applied.
+                      currency:
+                        type: string
+                        description: The currency of the VAT rate.
+                    description: The VAT rate details.
+                  invoiceReferenceNumber:
+                    type: string
+                    description: The reference number for the invoice related to the VAT.
+                  customerVatRegistration:
+                    type: string
+                    description: The VAT registration number of the customer.
+                  merchantVatRegistration:
+                    type: string
+                    description: The VAT registration number of the merchant.
+                description: The VAT details associated with the transaction.
+              summaryCommodityCode:
+                type: string
+                description: The summary commodity code related to the transaction.
+              orderDate:
+                type: string
+                format: date-time
+                nullable: true
+                description: The date when the order was placed.
+              installmentBilling:
+                type: object
+                title: Installment Billing
+                properties:
+                  objectType:
+                    type: string
+                    description: The type of the object, representing installment billing details.
+                  billingNumber:
+                    type: string
+                    description: The current installment number being billed.
+                  billingTotal:
+                    type: object
+                    properties:
+                      objectType:
+                        type: string
+                        description: The type of the object, representing the total billing amount for the installment.
+                      amount:
+                        type: string
+                        description: The monetary amount for the total installment billing.
+                      currency:
+                        type: string
+                        description: The currency of the installment billing amount.
+                    description: The total billing amount details for the installment.
+                description: The installment billing details associated with the transaction.
+              alternateTaxId:
+                type: string
+                description: An alternate tax identifier for the transaction.
+              customerTaxId:
+                type: string
+                description: The tax identifier for the customer associated with the transaction.
+              website:
+                type: string
+                description: The website associated with the transaction.
+              socialSecurityNumber:
+                type: string
+                description: The social security number of the individual involved in the transaction.
+              serviceId:
+                type: string
+                description: The ID for the service used in the transaction.
+              surcharge:
+                type: object
+                title: Surcharge
+                properties:
+                  objectType:
+                    type: string
+                    description: The type of the object, representing the surcharge amount.
+                  amount:
+                    type: string
+                    description: The monetary amount for the surcharge.
+                  currency:
+                    type: string
+                    description: The currency of the surcharge amount.
+                description: The surcharge details associated with the transaction.
+              partialPayment:
+                type: object
+                title: Partial Payment
+                properties:
+                  objectType:
+                    type: string
+                    description: The type of the object, representing partial payment details.
+                  id:
+                    type: string
+                    description: The ID for the partial payment.
+                  balance:
+                    type: object
+                    title: Balance
+                    properties:
+                      objectType:
+                        type: string
+                        description: The type of the object, representing the balance amount.
+                      amount:
+                        type: string
+                        description: The remaining balance for the partial payment.
+                      currency:
+                        type: string
+                        description: The currency of the remaining balance amount.
+                    description: The balance details for the partial payment.
+                description: The partial payment details associated with the transaction.
+              refundableBalance:
+                type: object
+                title: Refundable Balance
+                properties:
+                  objectType:
+                    type: string
+                    description: The type of the object, representing the refundable balance.
+                  amount:
+                    type: string
+                    description: The monetary amount available for refund.
+                  currency:
+                    type: string
+                    description: The currency of the refundable balance.
+                description: The refundable balance details for the transaction.
+              actions:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    objectType:
+                      type: string
+                      description: The type of the object, representing an action.
+                    amount:
+                      type: object
+                      title: Amount
+                      properties:
+                        objectType:
+                          type: string
+                          description: The type of the object, representing the action amount.
+                        amount:
+                          type: string
+                          description: The monetary amount for the action.
+                        currency:
+                          type: string
+                          description: The currency of the action amount.
+                      description: The amount details for the action.
+                    actionType:
+                      type: string
+                      description: The type of action performed, such as 'sale' or 'refund'.
+                    date:
+                      type: string
+                      format: date-time
+                      description: The timestamp when the action was performed.
+                    success:
+                      type: boolean
+                      description: Indicates whether the action was successful.
+                    ipAddress:
+                      type: string
+                      description: The IP address from where the action was initiated.
+                    source:
+                      type: string
+                      description: The source from which the action was performed, such as 'virtualTerminal'.
+                    apiMethod:
+                      type: string
+                      description: The API method used to perform the action.
+                    username:
+                      type: string
+                      description: The username of the individual who performed the action.
+                    responseText:
+                      type: string
+                      description: The response text returned by the system for the action.
+                    batchId:
+                      type: string
+                      description: The identifier for the batch in which the action was included.
+                    platformBatchId:
+                      type: string
+                      description: The platform-specific batch identifier for the action.
+                    responseCode:
+                      type: string
+                      description: The response code returned by the system for the action.
+                    platformResponseText:
+                      type: string
+                      description: The platform-specific response text for the action.
+                    platformResponseCode:
+                      type: string
+                      description: The platform-specific response code for the action.
+                    deviceLicenseNumber:
+                      type: string
+                      nullable: true
+                      description: The license number of the device used for the action.
+                    deviceNickname:
+                      type: string
+                      nullable: true
+                      description: The nickname of the device used for the action.
+                  description: The details of actions performed within the transaction.
+                description: A list of actions associated with the transaction.
+              items:
+                type: array
+                items:
+                  type: object
+                  description: Details of individual items related to the transaction.
+                description: A list of items associated with the transaction.
+              emv:
+                type: object
+                title: EMV
+                properties:
+                  objectType:
+                    type: string
+                    description: The type of the object, representing EMV (Europay, Mastercard, and Visa) details.
+                  applicationId:
+                    type: string
+                    description: The ID for the EMV application.
+                  applicationPreferredName:
+                    type: string
+                    description: The preferred name of the EMV application.
+                  applicationLabels:
+                    type: string
+                    description: Labels associated with the EMV application.
+                  terminalStatusId:
+                    type: string
+                    description: The status identifier of the terminal processing the EMV transaction.
+                description: The EMV details associated with the transaction.
+              paymentInfo:
+                type: object
+                title: Payment Info
+                properties:
+                  objectType:
+                    type: string
+                    description: The type of the object, representing payment card information.
+                  cardNumber:
+                    type: string
+                    description: The masked card number used for the transaction.
+                  cardExp:
+                    type: string
+                    description: The expiration date of the card used for the transaction.
+                  cardHash:
+                    type: string
+                    description: A hash value of the card information used for transaction security.
+                  avsResponse:
+                    type: string
+                    description: The response from the Address Verification System (AVS) for the card.
+                  cardholderAuth:
+                    type: string
+                    description: The authentication response for the cardholder.
+                  cscResponse:
+                    type: string
+                    description: The response from the Card Security Code (CSC) verification.
+                  cardStartDate:
+                    type: string
+                    description: The start date of the card, if applicable.
+                  cardIssueNumber:
+                    type: string
+                    description: The issue number of the card, if applicable.
+                  cardBalance:
+                    type: string
+                    description: The balance available on the card, if applicable.
+                  cardAvailableBalance:
+                    type: string
+                    description: The available balance on the card, if applicable.
+                  entryMode:
+                    type: string
+                    description: The mode used to enter the card information, such as 'swiped' or 'keyed'.
+                  cardBin:
+                    type: string
+                    description: The Bank Identification Number (BIN) of the card used for the transaction.
+                  cardType:
+                    type: string
+                    description: The type of card used, such as 'visa' or 'mastercard'.
+                  cardHolderAuthentication:
+                    type: object
+                    title: Card Holder Authentication
+                    properties:
+                      objectType:
+                        type: string
+                        description: The type of the object, representing cardholder authentication details.
+                      xid:
+                        type: string
+                        description: The transaction identifier for cardholder authentication.
+                      eci:
+                        type: string
+                        description: The electronic commerce indicator for cardholder authentication.
+                      cavv:
+                        type: string
+                        description: The cardholder authentication verification value.
+                      cavvResult:
+                        type: string
+                        description: The result of the cardholder authentication verification.
+                      directoryServerId:
+                        type: string
+                        nullable: true
+                        description: The identifier for the directory server involved in cardholder authentication.
+                      threeDsVersion:
+                        type: string
+                        nullable: true
+                        description: The version of the 3D Secure protocol used for authentication.
+              storedCredentials:
+                type: object
+                title: Stored Credentials
+                properties:
+                  objectType:
+                    type: string
+                    description: The type of the object, representing stored credentials.
+                  initiatedBy:
+                    type: string
+                    description: The initiator of the transaction, indicating whether it was 'merchant' or 'cardholder' initiated.
+                  initialTransactionId:
+                    type: string
+                    description: The ID of the initial transaction for stored credentials.
+                  storedIndicator:
+                    type: string
+                    description: Indicates whether the credentials are stored, typically 'true' or 'false'.
+                  credentialOnFileSupported:
+                    type: boolean
+                    description: Indicates whether the system supports storing credentials on file.
+                description: The stored credentials details associated with the transaction.
+              authorizationState:
+                type: string
+                description: The state of authorization for the transaction.
+              cardholderVerificationMethod:
+                type: string
+                description: The method used for cardholder verification during the transaction.
+    GetTransactionDataRequest:
+      title: Get Transaction Data
+      allOf:
+      - type: object
+        required:
+        - maxResults
+        properties:
+          merchantId:
+            type: string
+            description: The merchant gateway ID to which the transactions belong.
+          merchantIds:
+            type: array
+            description: The merchants gateway IDs to which the transactions belong.
+            items:
+              type: string
+          maxResults:
+            type: string
+            description: Maximum number of results per page.
+          offset:
+            type: string
+            description: Offset value for pagination, or null if not used.
+          orderId:
+            type: string
+            description: The order ID of the transaction.
+          par:
+            type: string
+            description: The Payment Account Reference ID to search for.
+          hmac:
+            type: string
+            description: The Hash-based Message Authentication Code ID to search for.
+          serviceId:
+            type: string
+            description: The ID of the processor platform you want to search for.
+          platformId:
+            type: string
+            description: The ID of the platform.
+          firstName:
+            type: string
+            description: The first name of the merchant's company contact.
+          lastName:
+            type: string
+            description: The last name of the merchant's company contact.
+          email:
+            type: string
+            description: The email of the merchant's company contact.
+          accountNumber:
+            type: string
+            description: Account Number.
+          transactionType:
+            type: string
+            description: Transaction type.
+          customerId:
+            type: string
+            description: Customer ID.
+          phone:
+            type: string
+            description: The phone number of the merchant's company contact.
+          transactionIds:
+            type: array
+            description: Transactions IDs to search.
+            items:
+              type: string
+          statuses:
+            type: array
+            description: The list of statuses to query.
+            items:
+              type: string
+          actionTypes:
+            type: array
+            description: The type of transaction to query.
+            items:
+              type: string
+              enum:
+              - sale
+              - auth
+              - void
+              - refund
+              - credit
+              - validate
+          amount:
+            type: object
+            title: Amount
+            properties:
+              min:
+                type: number
+                description: Min amount.
+              max:
+                type: number
+                description: Max amount.
+            description: Min and max amount for transactions to search.
+          date:
+            type: object
+            title: Date
+            properties:
+              start:
+                type: string
+                description: Start date.
+              end:
+                type: string
+                description: End date.
+            description: Start and  End date for query transactions.
+  parameters:
+    ContentType:
+      name: Content-Type
+      in: header
+      required: true
+      schema:
+        type: string
+      description: The Content-Type representation header is used to indicate the original media type of the resource (prior to any content encoding applied for sending).
+      example: application/json
+    Authorization:
+      name: Authorization
+      in: header
+      required: true
+      schema:
+        type: string
+      description: Your v4 API key that was generated in the Partner portal.
+  securitySchemes:
+    merchantApiKey:
+      type: apiKey
+      in: header
+      name: Authorization
+      description: Merchant API key for RESTful API authentication. This key is used for merchant-specific API access and can be generated from the merchant portal.
+externalDocs:
+  url: https://www.postman.com/nmi-integration-support/workspace/nmi-public-documentation/request/5480015-f4b0ec7b-bd84-4094-98c2-67c0b6508a7f
+  description: Public Documentation (Postman)
+x-refined-from:
+- nmi-payments-openapi.yml
+- nmi-payments-api-openapi.yml
+x-provenance:
+  method: searched
+  source: https://docs.nmi.com/reference
+  harvested: '2026-10-14'
+  tool: harvest-readme-openapi.py
+  note: Assembled verbatim from the OpenAPI definition ReadMe embeds in each operation page of the provider's developer portal; paths and components merged by API title, nothing authored.
+  assembled_from:
+  - https://docs.nmi.com/reference/delete-v4-authvia-conversations-conversation-id.md
+  - https://docs.nmi.com/reference/get-v4-authvia-conversations-conversation-id.md
+  - https://docs.nmi.com/reference/get_v4-authvia-conversations.md
+  - https://docs.nmi.com/reference/post_v4-authvia-conversations.md
+  merge:
+    pages: 4
+    deduped: 28
+    conflicts_kept_first: 0

@@ -1,0 +1,625 @@
+openapi: 3.2.0
+info:
+  version: 1.0.0
+  title: Payments Affiliates API
+  description: Our payments platform exposes two generations of API.
+  x-logo:
+    url: https://www.nmi.com/app/themes/nmi/images/NMI_Logo_Primary.webp
+servers:
+- url: https://sandbox.nmi.com/api
+security: []
+tags:
+- name: Affiliates
+paths:
+  /v4/affiliates/reports:
+    post:
+      tags:
+      - Affiliates
+      operationId: getSubAffiliateList
+      security: []
+      summary: Get Sub-Affiliate List
+      description: 'Usage
+
+        This is a query to get all sub-affiliate accounts under your partner account.'
+      parameters:
+      - $ref: '#/components/parameters/ContentType'
+      - $ref: '#/components/parameters/Authorization'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GetSubAffiliatesListRequest'
+            examples:
+              Create Standard Merchant:
+                $ref: '#/components/examples/GetSubAffiliatesListExampleRequest'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetSubAffiliatesListResponse'
+              examples:
+                Get Processor Config:
+                  $ref: '#/components/examples/GetSubAffiliatesListExampleResponse'
+components:
+  parameters:
+    Authorization:
+      name: Authorization
+      in: header
+      required: true
+      schema:
+        type: string
+      description: Your v4 API key that was generated in the Partner portal.
+    ContentType:
+      name: Content-Type
+      in: header
+      required: true
+      schema:
+        type: string
+      description: The Content-Type representation header is used to indicate the original media type of the resource (prior to any content encoding applied for sending).
+      example: application/json
+  schemas:
+    GetSubAffiliatesListRequest:
+      title: Get Sub-Affiliate List
+      allOf:
+      - type: object
+        required:
+        - maxResults
+        properties:
+          maxResults:
+            type: string
+            description: Number of max results, any integer number from 1 to 1000.
+          ids:
+            type: array
+            description: An array of merchant ids.
+            items:
+              type: string
+          parentAffiliateId:
+            type: string
+            description: An affiliate id. Only merchants under this affiliate will be returned, rather than the full tree.
+          search:
+            type: string
+            description: 'Performs a search on this text as a case-insensitive search on any of the following: email, company name, first and last name, phone number, external id, or username.'
+          offset:
+            type: string
+            description: Like all reports and search endpoints, you can specify the offset, which is the start point for the responses.
+    GetSubAffiliatesListResponse:
+      type: object
+      title: Response
+      properties:
+        objectType:
+          type: string
+          description: Type of the object, in this case, 'report'.
+        reportId:
+          type: integer
+          description: ID for the report.
+        offset:
+          type: integer
+          nullable: true
+          description: Offset value for pagination, or null if not used.
+        maxResults:
+          type: integer
+          description: Maximum number of results per page.
+        totalResults:
+          type: integer
+          description: Total number of results available for the report.
+        hasMore:
+          type: boolean
+          description: Indicates if there are more results available beyond the current page.
+        links:
+          type: object
+          title: Links
+          description: Pagination links for navigating through the report results.
+          properties:
+            first:
+              type: string
+              format: uri
+              description: URL to the first page of results.
+            last:
+              type: string
+              format: uri
+              description: URL to the last page of results.
+            next:
+              type: string
+              format: uri
+              description: URL to the next page of results.
+            previous:
+              type: string
+              format: uri
+              description: URL to the previous page of results.
+        results:
+          type: array
+          title: Sub-Affiliates
+          description: List of sub-affiliate details.
+          items:
+            type: object
+            properties:
+              objectType:
+                type: string
+                description: Type of the object, typically 'affiliate' for sub-affiliate details.
+              id:
+                type: string
+                description: ID for the sub-affiliate.
+              firstName:
+                type: string
+                description: First name of the sub-affiliate.
+              lastName:
+                type: string
+                description: Last name of the sub-affiliate.
+              company:
+                type: string
+                description: Company name of the sub-affiliate.
+              email:
+                type: string
+                format: email
+                description: Email address of the sub-affiliate.
+              replyToEmail:
+                type: string
+                format: email
+                nullable: true
+                description: Reply-to email address for the sub-affiliate.
+              camAssignedName:
+                type: string
+                nullable: true
+                description: Name of the Customer Account Manager (CAM) assigned to the sub-affiliate. CAMs are assigned on top-level partner accounts, so this is null for a sub-affiliate with no CRM account of its own; read the CAM from its parent affiliate in that case.
+              phone:
+                type: string
+                description: Phone number of the sub-affiliate.
+              fax:
+                type: string
+                nullable: true
+                description: Fax number of the sub-affiliate.
+              url:
+                type: string
+                format: uri
+                nullable: true
+                description: Website URL of the sub-affiliate.
+              address1:
+                type: string
+                description: Primary address line for the sub-affiliate.
+              address2:
+                type: string
+                nullable: true
+                description: Secondary address line for the sub-affiliate.
+              city:
+                type: string
+                description: City of the sub-affiliate's address.
+              state:
+                type: string
+                description: State or region of the sub-affiliate's address.
+              zip:
+                type: string
+                description: Postal or ZIP code of the sub-affiliate's address.
+              country:
+                type: string
+                description: Country code of the sub-affiliate's address (ISO 3166-1 alpha-2).
+              timezone:
+                type: string
+                description: Time zone of the sub-affiliate.
+              features:
+                type: object
+                title: Features
+                description: Set of features available to the sub-affiliate.
+                properties:
+                  allowCredits:
+                    type: boolean
+                    description: Indicates if the sub-affiliate is allowed to issue credits.
+                  canOfferCashDiscount:
+                    type: boolean
+                    description: Indicates if the sub-affiliate can offer cash discounts.
+              status:
+                type: string
+                description: Current status of the sub-affiliate (e.g., active, inactive).
+              created:
+                type: string
+                format: date-time
+                description: Timestamp when the sub-affiliate was created.
+              updated:
+                type: string
+                format: date-time
+                description: Timestamp when the sub-affiliate was last updated.
+              parentAffiliateId:
+                type: string
+                description: ID for the parent affiliate of the sub-affiliate.
+              support:
+                type: object
+                title: Support
+                description: Contact details for various support roles within the sub-affiliate's organization.
+                properties:
+                  general:
+                    type: object
+                    title: General
+                    description: General support contact details.
+                    properties:
+                      email:
+                        type: string
+                        format: email
+                        description: Email address for general support.
+                      phone:
+                        type: string
+                        description: Phone number for general support.
+                      name:
+                        type: string
+                        description: Name of the general support contact.
+                  check:
+                    type: object
+                    title: Check
+                    description: Check support contact details.
+                    properties:
+                      email:
+                        type: string
+                        format: email
+                        nullable: true
+                        description: Email address for check support.
+                      phone:
+                        type: string
+                        nullable: true
+                        description: Phone number for check support.
+                      name:
+                        type: string
+                        nullable: true
+                        description: Name of the check support contact.
+                  accounting:
+                    type: object
+                    title: Accounting
+                    description: Accounting support contact details.
+                    properties:
+                      email:
+                        type: string
+                        format: email
+                        nullable: true
+                        description: Email address for accounting support.
+                      phone:
+                        type: string
+                        nullable: true
+                        description: Phone number for accounting support.
+                      name:
+                        type: string
+                        nullable: true
+                        description: Name of the accounting support contact.
+                  riskManagement:
+                    type: object
+                    title: Risk Management
+                    description: Risk management support contact details.
+                    properties:
+                      email:
+                        type: string
+                        format: email
+                        nullable: true
+                        description: Email address for risk management support.
+                      phone:
+                        type: string
+                        nullable: true
+                        description: Phone number for risk management support.
+                      name:
+                        type: string
+                        nullable: true
+                        description: Name of the risk management support contact.
+                  accountManagement:
+                    type: object
+                    title: Account Management
+                    description: Account management support contact details.
+                    properties:
+                      email:
+                        type: string
+                        format: email
+                        nullable: true
+                        description: Email address for account management support.
+                      phone:
+                        type: string
+                        nullable: true
+                        description: Phone number for account management support.
+                      name:
+                        type: string
+                        nullable: true
+                        description: Name of the account management support contact.
+                  marketing:
+                    type: object
+                    title: Marketing
+                    description: Marketing support contact details.
+                    properties:
+                      email:
+                        type: string
+                        format: email
+                        nullable: true
+                        description: Email address for marketing support.
+                      phone:
+                        type: string
+                        nullable: true
+                        description: Phone number for marketing support.
+                      name:
+                        type: string
+                        nullable: true
+                        description: Name of the marketing support contact.
+                  technical:
+                    type: object
+                    title: Technical
+                    description: Technical support contact details.
+                    properties:
+                      email:
+                        type: string
+                        format: email
+                        nullable: true
+                        description: Email address for technical support.
+                      phone:
+                        type: string
+                        nullable: true
+                        description: Phone number for technical support.
+                      name:
+                        type: string
+                        nullable: true
+                        description: Name of the technical support contact.
+                  emergency:
+                    type: object
+                    title: Emergency
+                    description: Emergency support contact details.
+                    properties:
+                      email:
+                        type: string
+                        format: email
+                        nullable: true
+                        description: Email address for emergency support.
+                      phone:
+                        type: string
+                        nullable: true
+                        description: Phone number for emergency support.
+                      name:
+                        type: string
+                        nullable: true
+                        description: Name of the emergency support contact.
+              branding:
+                type: object
+                title: Branding
+                description: Branding information for the sub-affiliate.
+                properties:
+                  gatewayTitle:
+                    type: string
+                    description: Title or name of the gateway as branded by the sub-affiliate.
+                  isBranded:
+                    type: boolean
+                    description: Indicates if the gateway is branded for the sub-affiliate.
+              accountInfo:
+                type: object
+                title: Account Info
+                description: Account information for the sub-affiliate.
+                properties:
+                  checkAba:
+                    type: string
+                    description: ABA routing number for check transactions.
+                  checkAccount:
+                    type: string
+                    description: Masked account number for check transactions.
+                  legalName:
+                    type: string
+                    description: Legal name of the sub-affiliate's business.
+                  businessType:
+                    type: string
+                    description: Type of business entity (e.g., LLC, Corporation).
+                  taxId:
+                    type: string
+                    description: Tax identification number, partially masked.
+              billTo:
+                type: string
+                description: Billing arrangement for the sub-affiliate (e.g., 'merchant').
+              rejectedCertificates:
+                type: string
+                description: Number of rejected certificates associated with the sub-affiliate.
+  examples:
+    GetSubAffiliatesListExampleResponse:
+      summary: Get Sub-affiliate List
+      description: Get Sub-Affiliate List
+      value:
+        objectType: report
+        reportId: 34567345
+        offset: null
+        maxResults: 100
+        totalResults: 43
+        hasMore: false
+        links:
+          first: https://sandbox.nmi.com/api/v4/merchants/reports/34567345?maxResults=100
+          last: https://sandbox.nmi.com/api/v4/merchants/reports/34567345?offset=0&maxResults=100
+          next: https://sandbox.nmi.com/api/v4/merchants/reports/34567345?offset=100&maxResults=100
+          previous: https://sandbox.nmi.com/api/v4/merchants/reports/34567345?offset=0&maxResults=100
+        results:
+        - objectType: affiliate
+          id: '10'
+          firstName: Jane
+          lastName: Doe
+          company: ACME, Merchants Inc.
+          email: someone@example.com
+          replyToEmail: ''
+          camAssignedName: John Smith
+          phone: 555-555-5555
+          fax: ''
+          url: ''
+          address1: 123 Main St
+          address2: ''
+          city: Chicago
+          state: IL
+          zip: '60601'
+          country: US
+          timezone: America/Chicago
+          features:
+            allowCredits: false
+            canOfferCashDiscount: false
+          status: active
+          created: '2012-04-26T14:30:02+00:00'
+          updated: '2012-04-26T15:31:51+00:00'
+          parentAffiliateId: '1'
+          support:
+            general:
+              email: support@acme.com
+              phone: 555-555-5555
+              name: Jane Doe
+            check:
+              email: ''
+              phone: ''
+              name: ''
+            accounting:
+              email: ''
+              phone: ''
+              name: ''
+            riskManagement:
+              email: ''
+              phone: ''
+              name: ''
+            accountManagement:
+              email: ''
+              phone: ''
+              name: ''
+            marketing:
+              email: ''
+              phone: ''
+              name: ''
+            technical:
+              email: ''
+              phone: ''
+              name: ''
+            emergency:
+              email: ''
+              phone: ''
+              name: ''
+          branding:
+            gatewayTitle: ''
+            isBranded: false
+          accountInfo:
+            checkAba: '123123123'
+            checkAccount: '*****9901'
+            legalName: ACME, Inc.
+            businessType: llcDisregardedEntity
+            taxId: '***-**-3123'
+          billTo: merchant
+          rejectedCertificates: '0'
+    GetSubAffiliatesListExampleRequest:
+      summary: Get Sub-Affiliate List
+      description: This is a query to get all sub-affiliate accounts under your partner account.
+      value:
+        maxResults: 100
+        ids:
+        - '10490'
+        parentAffiliateId: '10123'
+        search: ''
+        offset: 0
+  securitySchemes:
+    merchantApiKey:
+      type: apiKey
+      in: header
+      name: Authorization
+      description: Merchant API key for RESTful API authentication. This key is used for merchant-specific API access and can be generated from the merchant portal.
+externalDocs:
+  url: https://www.postman.com/nmi-integration-support/workspace/nmi-public-documentation/request/5480015-f4b0ec7b-bd84-4094-98c2-67c0b6508a7f
+  description: Public Documentation (Postman)
+x-tagGroups:
+- name: REST API (recommended)
+  tags:
+  - Payments
+  - Plans
+  - Subscriptions
+  - Products
+  - Invoicing
+  - Customers
+  - Devices
+- name: Classic API
+  tags:
+  - Payment Processing
+  - Data and Transaction Reporting
+  - Webhook Events
+  - Gateway Features
+  - Processors and Services
+  - Apple Pay
+x-provenance:
+  method: searched
+  source: https://docs.nmi.com/reference
+  harvested: '2026-10-14'
+  tool: harvest-readme-openapi.py
+  note: Assembled verbatim from the OpenAPI definition ReadMe embeds in each operation page of the provider's developer portal; paths and components merged by API title, nothing authored.
+  assembled_from:
+  - https://docs.nmi.com/reference/add-billing-address-v5.md
+  - https://docs.nmi.com/reference/add-processor-service.md
+  - https://docs.nmi.com/reference/add-shipping-address-v5.md
+  - https://docs.nmi.com/reference/adding-apple-pay.md
+  - https://docs.nmi.com/reference/cancel-device-display-v5.md
+  - https://docs.nmi.com/reference/cancel-device-payment-request-v5.md
+  - https://docs.nmi.com/reference/capture-payment-v5.md
+  - https://docs.nmi.com/reference/card-type.md
+  - https://docs.nmi.com/reference/check-services.md
+  - https://docs.nmi.com/reference/check-username-availability.md
+  - https://docs.nmi.com/reference/close-invoice-v5.md
+  - https://docs.nmi.com/reference/create-auth-v5.md
+  - https://docs.nmi.com/reference/create-credit-v5.md
+  - https://docs.nmi.com/reference/create-customer-v5.md
+  - https://docs.nmi.com/reference/create-device-payment-request-auth-v5.md
+  - https://docs.nmi.com/reference/create-device-payment-request-credit-v5.md
+  - https://docs.nmi.com/reference/create-device-payment-request-sale-v5.md
+  - https://docs.nmi.com/reference/create-device-payment-request-validate-v5.md
+  - https://docs.nmi.com/reference/create-invoice-v5.md
+  - https://docs.nmi.com/reference/create-merchant-key.md
+  - https://docs.nmi.com/reference/create-merchant.md
+  - https://docs.nmi.com/reference/create-plan-v5.md
+  - https://docs.nmi.com/reference/create-product-v5.md
+  - https://docs.nmi.com/reference/create-sale-v5.md
+  - https://docs.nmi.com/reference/create-subscription-v5.md
+  - https://docs.nmi.com/reference/delete-billing-address-v5.md
+  - https://docs.nmi.com/reference/delete-customer-v5.md
+  - https://docs.nmi.com/reference/delete-plan-v5.md
+  - https://docs.nmi.com/reference/delete-product-v5.md
+  - https://docs.nmi.com/reference/delete-shipping-address-v5.md
+  - https://docs.nmi.com/reference/delete-subscription-v5.md
+  - https://docs.nmi.com/reference/deregister-device-v5.md
+  - https://docs.nmi.com/reference/display-device-qr-code-v5.md
+  - https://docs.nmi.com/reference/get-billing-address-v5.md
+  - https://docs.nmi.com/reference/get-customer-v5.md
+  - https://docs.nmi.com/reference/get-device-payment-request-status-v5.md
+  - https://docs.nmi.com/reference/get-device-prompt-menu-status-v5.md
+  - https://docs.nmi.com/reference/get-device-prompt-sign-status-v5.md
+  - https://docs.nmi.com/reference/get-device-prompt-yes-no-status-v5.md
+  - https://docs.nmi.com/reference/get-device-v5.md
+  - https://docs.nmi.com/reference/get-fees-in-schedule.md
+  - https://docs.nmi.com/reference/get-invoice-v5.md
+  - https://docs.nmi.com/reference/get-merchant-list.md
+  - https://docs.nmi.com/reference/get-merchant-partner-user-info.md
+  - https://docs.nmi.com/reference/get-merchant-processors-value-added-services.md
+  - https://docs.nmi.com/reference/get-payment-v5.md
+  - https://docs.nmi.com/reference/get-plan-v5.md
+  - https://docs.nmi.com/reference/get-processor-config.md
+  - https://docs.nmi.com/reference/get-product-v5.md
+  - https://docs.nmi.com/reference/get-settlement-time.md
+  - https://docs.nmi.com/reference/get-shipping-address-v5.md
+  - https://docs.nmi.com/reference/get-specific-merchant-information.md
+  - https://docs.nmi.com/reference/get-sub-affiliate-list.md
+  - https://docs.nmi.com/reference/get-subscription-v5.md
+  - https://docs.nmi.com/reference/get-transaction-data.md
+  - https://docs.nmi.com/reference/list-customers-v5.md
+  - https://docs.nmi.com/reference/list-devices-v5.md
+  - https://docs.nmi.com/reference/list-invoices-v5.md
+  - https://docs.nmi.com/reference/list-plans-v5.md
+  - https://docs.nmi.com/reference/list-products-v5.md
+  - https://docs.nmi.com/reference/list-subscriptions-v5.md
+  - https://docs.nmi.com/reference/patch_v4-merchants-gateway-id-1.md
+  - https://docs.nmi.com/reference/prompt-device-menu-v5.md
+  - https://docs.nmi.com/reference/prompt-device-sign-v5.md
+  - https://docs.nmi.com/reference/prompt-device-yes-no-v5.md
+  - https://docs.nmi.com/reference/pull-all-fee-schedules.md
+  - https://docs.nmi.com/reference/query.md
+  - https://docs.nmi.com/reference/querying-merchants-apple-pay-status.md
+  - https://docs.nmi.com/reference/refund-payment-v5.md
+  - https://docs.nmi.com/reference/register-device-v5.md
+  - https://docs.nmi.com/reference/see-merchant-billing.md
+  - https://docs.nmi.com/reference/see-your-commission.md
+  - https://docs.nmi.com/reference/send-invoice-v5.md
+  - https://docs.nmi.com/reference/update-billing-address-v5.md
+  - https://docs.nmi.com/reference/update-customer-v5.md
+  - https://docs.nmi.com/reference/update-device-v5.md
+  - https://docs.nmi.com/reference/update-invoice-v5.md
+  - https://docs.nmi.com/reference/update-plan-v5.md
+  - https://docs.nmi.com/reference/update-product-v5.md
+  - https://docs.nmi.com/reference/update-shipping-address-v5.md
+  - https://docs.nmi.com/reference/update-subscription-v5.md
+  - https://docs.nmi.com/reference/updating-settlement-time.md
+  - https://docs.nmi.com/reference/validate-payment-v5.md
+  - https://docs.nmi.com/reference/void-payment-v5.md
+  merge:
+    pages: 84
+    deduped: 4356
+    conflicts_kept_first: 0

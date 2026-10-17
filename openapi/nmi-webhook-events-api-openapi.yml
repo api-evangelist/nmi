@@ -1,0 +1,3717 @@
+openapi: 3.2.0
+info:
+  title: Nmi Webhook Events API
+  version: 1.0.0
+  x-refined-note:
+  - x-logo differs across the merged source definitions and was not carried
+  description: 'Operations tagged Webhook Events across 2 of this provider''s published API definitions: nmi-payments-api-openapi.yml, nmi-payments-sign-up-api-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://sandbox.nmi.com/api
+- url: https://sandbox.signup.nmi.com/api/v1
+  description: Sandbox
+- url: https://secure.nmi.com/api/v5/signup
+  description: Production
+tags:
+- name: Webhook Events
+  description: Here you can find information about webhook events
+paths: {}
+webhooks:
+  transaction:
+    post:
+      tags:
+      - Webhook Events
+      security: []
+      summary: Transaction Event
+      description: Sales, auths, captures, voids, refunds, and credits. Each transaction type can be filtered by successful, failed, and unknown transactions.
+      operationId: transactionEvent
+      parameters:
+      - $ref: '#/components/parameters/WebhookSignature'
+      requestBody:
+        description: Event about a transaction
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - event_id
+              - event_type
+              - event_body
+              properties:
+                event_id:
+                  type: string
+                  description: Event ID
+                event_type:
+                  type: string
+                  enum:
+                  - transaction.sale.success
+                  - transaction.sale.failure
+                  - transaction.sale.unknown
+                  - transaction.auth.success
+                  - transaction.auth.failure
+                  - transaction.auth.unknown
+                  - transaction.capture.success
+                  - transaction.capture.failure
+                  - transaction.capture.unknown
+                  - transaction.void.success
+                  - transaction.void.failure
+                  - transaction.void.unknown
+                  - transaction.refund.success
+                  - transaction.refund.failure
+                  - transaction.refund.unknown
+                  - transaction.credit.success
+                  - transaction.credit.failure
+                  - transaction.credit.unknown
+                  - transaction.validate.success
+                  - transaction.validate.failure
+                  - transaction.validate.unknown
+                  description: Transaction Event Type
+                event_body:
+                  type: object
+                  title: Event Body
+                  description: Transaction Details
+                  properties:
+                    merchant:
+                      $ref: '#/components/schemas/Merchant'
+                    features:
+                      $ref: '#/components/schemas/Features'
+                    transaction_id:
+                      type: string
+                      description: Transaction ID
+                    transaction_type:
+                      type: string
+                      enum:
+                      - cc
+                      - ck
+                      - cs
+                      description: Transaction Type (cc - credit card, ck - check, cs - cash sale)
+                    condition:
+                      type: string
+                      enum:
+                      - pending
+                      - pendingsettlement
+                      - in_progress
+                      - abandoned
+                      - failed
+                      - canceled
+                      - complete
+                      - unknown
+                      description: Transaction condition
+                    processor_id:
+                      type: string
+                      description: Processor ID
+                    ponumber:
+                      type: string
+                      description: Purchase order number
+                    order_description:
+                      type: string
+                      description: Order description
+                    order_id:
+                      type: string
+                      description: Order ID
+                    customerid:
+                      type: string
+                      description: Customer ID
+                    customertaxid:
+                      type: string
+                      description: Customer tax ID
+                    website:
+                      type: string
+                      description: Website URL
+                    shipping:
+                      type: string
+                      description: Shipping amount
+                    currency:
+                      type: string
+                      description: Currency code
+                    tax:
+                      type: string
+                      description: Tax amount
+                    surcharge:
+                      type: string
+                      description: Surcharge amount.
+                    convenience_fee:
+                      type: string
+                      description: Convenience Fee amount.
+                    misc_fee:
+                      type: string
+                      description: Miscellaneous Fee amount.
+                    misc_fee_name:
+                      type: string
+                      description: Miscellaneous Fee Name.
+                    cash_discount:
+                      type: string
+                      description: 'How much less a customer paid due to a cash discount. Format: x.xx, only applicable to cash and check transactions'
+                    tip:
+                      type: string
+                      description: The final tip amount, included in the transaction, associated with the purchase
+                    requested_amount:
+                      type: string
+                      format: decimal
+                      description: Requested amount
+                    shipping_carrier:
+                      type: string
+                      enum:
+                      - ups
+                      - fedex
+                      - dhl
+                      - usps
+                      - ''
+                      description: Shipping carrier.
+                    tracking_number:
+                      type: string
+                      description: Shipping tracking number.
+                    shipping_date:
+                      type: string
+                      description: Shipping date.
+                    partial_payment_id:
+                      type: string
+                      description: A numeric identifier which is used when submitting subsequent transactions.
+                    partial_payment_balance:
+                      type: string
+                      description: The payment's remaining balance.
+                    platform_id:
+                      type: string
+                      description: Platform ID associated with the transaction.
+                    authorization_code:
+                      type: string
+                      description: Transaction authorization code.
+                    social_security_number:
+                      type: string
+                      description: Customer's social security number.
+                    drivers_license_number:
+                      type: string
+                      description: Driver's license number.
+                    drivers_license_state:
+                      type: string
+                      description: The state that issued the customer's driver's license.
+                    drivers_license_dob:
+                      type: string
+                      description: Driver's license date of birth.
+                    duty_amount:
+                      type: string
+                      description: Duty amount.
+                    discount_amount:
+                      type: string
+                      description: Discount amount.
+                    national_tax_amount:
+                      type: string
+                      description: National tax amount.
+                    summary_commodity_code:
+                      type: string
+                      description: Summary commodity code.
+                    alternate_tax_amount:
+                      type: string
+                      format: decimal
+                      description: Alternate tax amount.
+                    vat_tax_amount:
+                      type: string
+                      format: decimal
+                      description: VAT tax amount.
+                    vat_tax_rate:
+                      type: string
+                      format: decimal
+                      description: VAT tax rate.
+                    billing_address:
+                      $ref: '#/components/schemas/BillingAddress'
+                    shipping_address:
+                      $ref: '#/components/schemas/ShippingAddress'
+                    card:
+                      $ref: '#/components/schemas/CardDetails'
+                    check:
+                      $ref: '#/components/schemas/CheckDetails'
+                    emv_meta_data:
+                      $ref: '#/components/schemas/EmvMetaData'
+                    action:
+                      $ref: '#/components/schemas/TransactionAction'
+                    merchant_defined_fields:
+                      type: object
+                      description: Merchant defined fields
+                      additionalProperties:
+                        type: string
+            examples:
+              AuthSuccess:
+                $ref: '#/components/examples/auth-success'
+              AuthFailed:
+                $ref: '#/components/examples/auth-failed'
+              CaptureSuccess:
+                $ref: '#/components/examples/capture-success'
+              SaleSuccess:
+                $ref: '#/components/examples/sale-success'
+              SaleFailure:
+                $ref: '#/components/examples/sale-failure'
+              VoidSuccess:
+                $ref: '#/components/examples/void-success'
+              RefundSuccess:
+                $ref: '#/components/examples/refund-success'
+              ValidateSuccess:
+                $ref: '#/components/examples/validate-success'
+      responses:
+        '200':
+          description: Return a 200 status to indicate that the data was received successfully
+    servers:
+    - url: https://sandbox.nmi.com/api
+  recurring:
+    post:
+      tags:
+      - Webhook Events
+      security: []
+      summary: Recurring Event
+      description: Events related to Recurring transactions (plans, subscriptions).
+      operationId: recurringEvent
+      parameters:
+      - $ref: '#/components/parameters/WebhookSignature'
+      requestBody:
+        description: Recurring Event
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - event_id
+              - event_type
+              - event_body
+              properties:
+                event_id:
+                  type: string
+                  description: Event ID
+                event_type:
+                  type: string
+                  enum:
+                  - recurring.plan.add
+                  - recurring.plan.update
+                  - recurring.plan.delete
+                  - recurring.subscription.add
+                  - recurring.subscription.update
+                  - recurring.subscription.delete
+                  description: Recurring Event Type
+                event_body:
+                  $ref: '#/components/schemas/RecurringEventBody'
+            examples:
+              PlanAdded:
+                $ref: '#/components/examples/plan-added'
+              PlanUpdated:
+                $ref: '#/components/examples/plan-updated'
+              PlanDeleted:
+                $ref: '#/components/examples/plan-deleted'
+              SubscriptionAdded:
+                $ref: '#/components/examples/subscription-added'
+              SubscriptionUpdated:
+                $ref: '#/components/examples/subscription-updated'
+              SubscriptionDeleted:
+                $ref: '#/components/examples/subscription-deleted'
+      responses:
+        '200':
+          description: Return a 200 status to indicate that the data was received successfully
+    servers:
+    - url: https://sandbox.nmi.com/api
+  settlement:
+    post:
+      tags:
+      - Webhook Events
+      security: []
+      summary: Settlement Event
+      description: Events related to Settlement.
+      operationId: settlementEvent
+      parameters:
+      - $ref: '#/components/parameters/WebhookSignature'
+      requestBody:
+        description: Settlement Event
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - event_id
+              - event_type
+              - event_body
+              properties:
+                event_id:
+                  type: string
+                  description: Event ID
+                event_type:
+                  type: string
+                  enum:
+                  - settlement.batch.complete
+                  - settlement.batch.failure
+                  description: Settlement Event Type
+                event_body:
+                  $ref: '#/components/schemas/SettlementEventBody'
+            examples:
+              SettlementCompleted:
+                $ref: '#/components/examples/settlement-completed'
+              SettlementFailed:
+                $ref: '#/components/examples/settlement-failed'
+      responses:
+        '200':
+          description: Return a 200 status to indicate that the data was received successfully
+    servers:
+    - url: https://sandbox.nmi.com/api
+  acu:
+    post:
+      tags:
+      - Webhook Events
+      security: []
+      summary: Automatic Card Updater Event
+      description: Events related to Automatic Card Updater.
+      operationId: acuEvent
+      parameters:
+      - $ref: '#/components/parameters/WebhookSignature'
+      requestBody:
+        description: Automatic Card Updater (ACU) Event
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - event_id
+              - event_type
+              - event_body
+              properties:
+                event_id:
+                  type: string
+                  description: Event ID
+                event_type:
+                  type: string
+                  enum:
+                  - acu.summary.automaticallyupdated
+                  - acu.summary.contactcustomer
+                  - acu.summary.closedaccount
+                  description: Automatic Card Updater (ACU) Event Type
+                event_body:
+                  oneOf:
+                  - $ref: '#/components/schemas/AcuAutoUpdatedEventBody'
+                  - $ref: '#/components/schemas/AcuClosedAccountEventBody'
+                  - $ref: '#/components/schemas/AcuContactCustomerEventBody'
+            examples:
+              AcuAutomaticallyUpdated:
+                $ref: '#/components/examples/acu.summary.automaticallyupdated'
+              AcuClosedAccount:
+                $ref: '#/components/examples/acu.summary.closedaccount'
+              AcuContactCustomer:
+                $ref: '#/components/examples/acu.summary.contactcustomer'
+      responses:
+        '200':
+          description: Return a 200 status to indicate that the data was received successfully
+    servers:
+    - url: https://sandbox.nmi.com/api
+  chargeback:
+    post:
+      tags:
+      - Webhook Events
+      security: []
+      summary: Chargeback Event
+      description: Events related to Chargebacks.
+      operationId: chargebackEvent
+      parameters:
+      - $ref: '#/components/parameters/WebhookSignature'
+      requestBody:
+        description: Chargeback Event
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - event_id
+              - event_type
+              - event_body
+              properties:
+                event_id:
+                  type: string
+                  description: Chargeback Event ID
+                event_type:
+                  type: string
+                  enum:
+                  - chargeback.batch.complete
+                  description: Chargeback Event Type
+                event_body:
+                  type: object
+                  required:
+                  - merchant
+                  - processor
+                  - count
+                  - chargeback_amount
+                  - chargebacks
+                  description: Chargeback Event Body
+                  properties:
+                    merchant:
+                      $ref: '#/components/schemas/Merchant'
+                    processor:
+                      type: object
+                      title: Processor
+                      description: Processor information
+                      required:
+                      - id
+                      - name
+                      - type
+                      properties:
+                        id:
+                          type: string
+                          description: Processor ID
+                        name:
+                          type: string
+                          description: Processor Name
+                        type:
+                          type: string
+                          description: Processor Type
+                    count:
+                      type: integer
+                      description: Number of chargebacks
+                    chargeback_amount:
+                      type: string
+                      description: Total chargebacks amount
+                    chargebacks:
+                      type: array
+                      title: Chargebacks
+                      description: List of chargebacks
+                      items:
+                        type: object
+                        required:
+                        - id
+                        - date
+                        - customer_name
+                        - cc_number
+                        - amount
+                        - reason
+                        properties:
+                          id:
+                            type: string
+                            description: Chargeback ID
+                          date:
+                            type: string
+                            description: Chargeback Date
+                          customer_name:
+                            type: string
+                            description: Customer Name
+                          cc_number:
+                            type: string
+                            description: Masked Credit Card Number
+                          amount:
+                            type: string
+                            description: Chargeback Amount
+                          reason:
+                            type: string
+                            description: Chargeback Reason
+            examples:
+              ChargebackBatchCompleted:
+                $ref: '#/components/examples/chargeback.batch.complete'
+      responses:
+        '200':
+          description: Return a 200 status to indicate that the data was received successfully
+    servers:
+    - url: https://sandbox.nmi.com/api
+  application.updated.data.requested:
+    post:
+      tags:
+      - Webhook Events
+      summary: Underwriter Requested Information
+      description: This event is triggered when additional information is requested during underwriting process.
+      operationId: sendApplicationUpdatedDataRequestedEvent
+      security: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                event_id:
+                  type: string
+                  maxLength: 36
+                  example: 38cf9efa-8aec-4a4e-98e2-6bb2411fdc60
+                event_type:
+                  allOf:
+                  - $ref: '#/components/schemas/event-types'
+                  - example: application.updated.data.requested
+                event_body:
+                  type: object
+                  required:
+                  - app_id
+                  - dba
+                  - pending_reason
+                  properties:
+                    app_id:
+                      type: string
+                      minLength: 20
+                      maxLength: 20
+                      example: app_341c7b5b432a3158
+                    dba:
+                      type: string
+                      maxLength: 255
+                      example: Network Merchant Inc
+                    pending_reason:
+                      type: string
+                      maxLength: 255
+                      example: Credit
+                    partner_identifier:
+                      type:
+                      - string
+                      - 'null'
+                      maxLength: 255
+                      description: Optional partner-supplied identifier captured on the originating public sign-up form, echoed back so partners can correlate this event with their submission. Null when no identifier was captured for the lead.
+                      example: partner-ref-12345
+            examples:
+              eventExample:
+                summary: Application Pended
+                description: This is an example of a webhook payload when the underwriter requests additional information during the underwriting process.
+                value:
+                  event_id: 38cf9efa-8aec-4a4e-98e2-6bb2411fdc60
+                  event_type: application.updated.data.requested
+                  event_body:
+                    app_id: app_341c7b5b432a3158
+                    dba: Network Merchant Inc
+                    pending_reason: Credit
+                    partner_identifier: partner-ref-12345
+    servers:
+    - url: https://sandbox.signup.nmi.com/api/v1
+      description: Sandbox
+    - url: https://secure.nmi.com/api/v5/signup
+      description: Production
+  application.approved:
+    post:
+      tags:
+      - Webhook Events
+      summary: Application is approved
+      description: Sent when the merchant application is approved.
+      operationId: sendApplicationApprovedEvent
+      security: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                event_id:
+                  type: string
+                  maxLength: 36
+                  example: 38cf9efa-8aec-4a4e-98e2-6bb2411fdc60
+                event_type:
+                  allOf:
+                  - $ref: '#/components/schemas/event-types'
+                  - example: application.approved
+                event_body:
+                  type: object
+                  required:
+                  - app_id
+                  - dba
+                  properties:
+                    app_id:
+                      type: string
+                      minLength: 20
+                      maxLength: 20
+                      example: app_341c7b5b432a3158
+                    dba:
+                      type: string
+                      maxLength: 255
+                      example: Network Merchant Inc
+                    partner_identifier:
+                      type:
+                      - string
+                      - 'null'
+                      maxLength: 255
+                      description: Optional partner-supplied identifier captured on the originating public sign-up form, echoed back so partners can correlate this event with their submission. Null when no identifier was captured for the lead.
+                      example: partner-ref-12345
+            examples:
+              eventExample:
+                summary: Application Approved
+                description: This is an example of a webhook payload when the application is approved by the underwriter.
+                value:
+                  event_id: 38cf9efa-8aec-4a4e-98e2-6bb2411fdc60
+                  event_type: application.approved
+                  event_body:
+                    app_id: app_341c7b5b432a3158
+                    dba: Network Merchant Inc
+                    partner_identifier: partner-ref-12345
+    servers:
+    - url: https://sandbox.signup.nmi.com/api/v1
+      description: Sandbox
+    - url: https://secure.nmi.com/api/v5/signup
+      description: Production
+  application.declined:
+    post:
+      tags:
+      - Webhook Events
+      summary: Application is declined
+      description: This event is triggered when the merchant application is declined.
+      operationId: sendApplicationDeclinedEvent
+      security: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                event_id:
+                  type: string
+                  maxLength: 36
+                  example: 38cf9efa-8aec-4a4e-98e2-6bb2411fdc60
+                event_type:
+                  allOf:
+                  - $ref: '#/components/schemas/event-types'
+                  - example: application.declined
+                event_body:
+                  type: object
+                  required:
+                  - app_id
+                  - dba
+                  - reject_reason
+                  properties:
+                    app_id:
+                      type: string
+                      minLength: 20
+                      maxLength: 20
+                      example: app_341c7b5b432a3158
+                    dba:
+                      type: string
+                      maxLength: 255
+                      example: Network Merchant Inc
+                    reject_reason:
+                      type: string
+                      maxLength: 255
+                      example: Security Issue
+                    partner_identifier:
+                      type:
+                      - string
+                      - 'null'
+                      maxLength: 255
+                      description: Optional partner-supplied identifier captured on the originating public sign-up form, echoed back so partners can correlate this event with their submission. Null when no identifier was captured for the lead.
+                      example: partner-ref-12345
+            examples:
+              eventExample:
+                summary: Application Declined
+                description: This is an example of a webhook payload when the application is declined due to reasons such as credit score.
+                value:
+                  event_id: 38cf9efa-8aec-4a4e-98e2-6bb2411fdc60
+                  event_type: application.declined
+                  event_body:
+                    app_id: app_341c7b5b432a3158
+                    dba: Network Merchant Inc
+                    reject_reason: Security Issue
+                    partner_identifier: partner-ref-12345
+    servers:
+    - url: https://sandbox.signup.nmi.com/api/v1
+      description: Sandbox
+    - url: https://secure.nmi.com/api/v5/signup
+      description: Production
+  application.cancelled:
+    post:
+      tags:
+      - Webhook Events
+      summary: Application is cancelled
+      description: This event is triggered when the merchant application is cancelled.
+      operationId: sendApplicationCancelledEvent
+      security: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                event_id:
+                  type: string
+                  maxLength: 36
+                  example: 38cf9efa-8aec-4a4e-98e2-6bb2411fdc60
+                event_type:
+                  allOf:
+                  - $ref: '#/components/schemas/event-types'
+                  - example: application.cancelled
+                event_body:
+                  type: object
+                  required:
+                  - app_id
+                  - dba
+                  - reject_reason
+                  properties:
+                    app_id:
+                      type: string
+                      minLength: 20
+                      maxLength: 20
+                      example: app_341c7b5b432a3158
+                    dba:
+                      type: string
+                      maxLength: 255
+                      example: Network Merchant Inc
+                    reject_reason:
+                      type: string
+                      maxLength: 255
+                    partner_identifier:
+                      type:
+                      - string
+                      - 'null'
+                      maxLength: 255
+                      description: Optional partner-supplied identifier captured on the originating public sign-up form, echoed back so partners can correlate this event with their submission. Null when no identifier was captured for the lead.
+                      example: partner-ref-12345
+            examples:
+              eventExample:
+                summary: Application Cancelled
+                description: The application has been cancelled or withdrawn.
+                value:
+                  event_id: 38cf9efa-8aec-4a4e-98e2-6bb2411fdc60
+                  event_type: application.cancelled
+                  event_body:
+                    app_id: app_341c7b5b432a3158
+                    dba: Network Merchant Inc
+                    reject_reason: ''
+                    partner_identifier: partner-ref-12345
+    servers:
+    - url: https://sandbox.signup.nmi.com/api/v1
+      description: Sandbox
+    - url: https://secure.nmi.com/api/v5/signup
+      description: Production
+  application.merchant.closed:
+    post:
+      tags:
+      - Webhook Events
+      summary: Merchant account is closed
+      description: This event is triggered when the merchant account is closed.
+      operationId: sendApplicationMerchantClosedEvent
+      security: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                event_id:
+                  type: string
+                  maxLength: 36
+                  example: 38cf9efa-8aec-4a4e-98e2-6bb2411fdc60
+                event_type:
+                  allOf:
+                  - $ref: '#/components/schemas/event-types'
+                  - example: application.merchant.closed
+                event_body:
+                  type: object
+                  required:
+                  - app_id
+                  - dba
+                  - mid
+                  - reject_reason
+                  properties:
+                    app_id:
+                      type: string
+                      minLength: 20
+                      maxLength: 20
+                      example: app_341c7b5b432a3158
+                    dba:
+                      type: string
+                      maxLength: 255
+                      example: Network Merchant Inc
+                    mid:
+                      type: string
+                      maxLength: 30
+                      example: '1234000000000011'
+                    reject_reason:
+                      type: string
+                      maxLength: 255
+                      example: Compliance Issue
+                    partner_identifier:
+                      type:
+                      - string
+                      - 'null'
+                      maxLength: 255
+                      description: Optional partner-supplied identifier captured on the originating public sign-up form, echoed back so partners can correlate this event with their submission. Null when no identifier was captured for the lead.
+                      example: partner-ref-12345
+            examples:
+              eventExample:
+                summary: Merchant Account Closed
+                description: This is an example of a webhook payload when the merchant account is closed.
+                value:
+                  event_id: 38cf9efa-8aec-4a4e-98e2-6bb2411fdc60
+                  event_type: application.merchant.closed
+                  event_body:
+                    app_id: app_341c7b5b432a3158
+                    dba: Network Merchant Inc
+                    mid: '1234000000000011'
+                    reject_reason: Compliance Issue
+                    partner_identifier: partner-ref-12345
+    servers:
+    - url: https://sandbox.signup.nmi.com/api/v1
+      description: Sandbox
+    - url: https://secure.nmi.com/api/v5/signup
+      description: Production
+  application.merchant.boarded:
+    post:
+      tags:
+      - Webhook Events
+      summary: Merchant is ready to process
+      description: This event is triggered when the merchant is boarded and ready to process.
+      operationId: sendApplicationMerchantBoardedEvent
+      security: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                event_id:
+                  type: string
+                  maxLength: 36
+                  example: 38cf9efa-8aec-4a4e-98e2-6bb2411fdc60
+                event_type:
+                  allOf:
+                  - $ref: '#/components/schemas/event-types'
+                  - example: application.merchant.boarded
+                event_body:
+                  type: object
+                  required:
+                  - app_id
+                  - dba
+                  - mid
+                  - gateway_id
+                  properties:
+                    app_id:
+                      type: string
+                      minLength: 20
+                      maxLength: 20
+                      example: app_341c7b5b432a3158
+                    dba:
+                      type: string
+                      maxLength: 255
+                      example: Network Merchant Inc
+                    mid:
+                      type: string
+                      maxLength: 30
+                      example: '1234000000000011'
+                    gateway_id:
+                      type: string
+                      maxLength: 30
+                      example: '4532454'
+                    partner_identifier:
+                      type:
+                      - string
+                      - 'null'
+                      maxLength: 255
+                      description: Optional partner-supplied identifier captured on the originating public sign-up form, echoed back so partners can correlate this event with their submission. Null when no identifier was captured for the lead.
+                      example: partner-ref-12345
+            examples:
+              eventExample:
+                summary: Merchant Boarded
+                description: The merchant is boarded and ready to process.
+                value:
+                  event_id: 38cf9efa-8aec-4a4e-98e2-6bb2411fdc60
+                  event_type: application.merchant.boarded
+                  event_body:
+                    app_id: app_341c7b5b432a3158
+                    dba: Network Merchant Inc
+                    mid: '1234000000000011'
+                    gateway_id: '545632'
+                    partner_identifier: partner-ref-12345
+    servers:
+    - url: https://sandbox.signup.nmi.com/api/v1
+      description: Sandbox
+    - url: https://secure.nmi.com/api/v5/signup
+      description: Production
+  merchant.chargeback.added:
+    post:
+      tags:
+      - Webhook Events
+      summary: 'Merchant: New Chargeback'
+      description: This event is triggered when a chargeback is added for a merchant.
+      operationId: sendMerchantChargebackAddedEvent
+      security: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                event_id:
+                  type: string
+                  maxLength: 36
+                  example: 38cf9efa-8aec-4a4e-98e2-6bb2411fdc60
+                event_type:
+                  allOf:
+                  - $ref: '#/components/schemas/event-types'
+                  - example: merchant.chargeback.added
+                event_body:
+                  type: object
+                  required:
+                  - mid
+                  - dba
+                  - date
+                  - amount
+                  properties:
+                    mid:
+                      type: string
+                      maxLength: 30
+                      example: '1234000000000011'
+                    dba:
+                      type: string
+                      maxLength: 255
+                      example: Network Merchant Inc
+                    date:
+                      type: string
+                      maxLength: 10
+                      example: '2024-01-15'
+                    amount:
+                      type: string
+                      maxLength: 20
+                      example: '150.00'
+            examples:
+              eventExample:
+                summary: Merchant Chargeback Added
+                description: This is an example of a webhook payload when a chargeback is added for a merchant.
+                value:
+                  event_id: 38cf9efa-8aec-4a4e-98e2-6bb2411fdc60
+                  event_type: merchant.chargeback.added
+                  event_body:
+                    mid: '1234000000000011'
+                    dba: Network Merchant Inc
+                    date: '2024-01-15'
+                    amount: '150.00'
+    servers:
+    - url: https://sandbox.signup.nmi.com/api/v1
+      description: Sandbox
+    - url: https://secure.nmi.com/api/v5/signup
+      description: Production
+  merchant.deposit.new:
+    post:
+      tags:
+      - Webhook Events
+      summary: 'Merchant: New Deposit'
+      description: This event is triggered when a new deposit is made for a merchant.
+      operationId: sendMerchantDepositNewEvent
+      security: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                event_id:
+                  type: string
+                  maxLength: 36
+                  example: 38cf9efa-8aec-4a4e-98e2-6bb2411fdc60
+                event_type:
+                  allOf:
+                  - $ref: '#/components/schemas/event-types'
+                  - example: merchant.deposit.new
+                event_body:
+                  type: object
+                  required:
+                  - mid
+                  - dba
+                  - amount
+                  properties:
+                    mid:
+                      type: string
+                      maxLength: 30
+                      example: '1234000000000011'
+                    dba:
+                      type: string
+                      maxLength: 255
+                      example: Network Merchant Inc
+                    amount:
+                      type: string
+                      maxLength: 20
+                      example: '1250.75'
+            examples:
+              eventExample:
+                summary: Merchant Deposit New
+                description: This is an example of a webhook payload when a new deposit is made for a merchant.
+                value:
+                  event_id: 38cf9efa-8aec-4a4e-98e2-6bb2411fdc60
+                  event_type: merchant.deposit.new
+                  event_body:
+                    mid: '1234000000000011'
+                    dba: Network Merchant Inc
+                    amount: '1250.75'
+    servers:
+    - url: https://sandbox.signup.nmi.com/api/v1
+      description: Sandbox
+    - url: https://secure.nmi.com/api/v5/signup
+      description: Production
+  merchant.first-batch:
+    post:
+      tags:
+      - Webhook Events
+      summary: 'Merchant: First Batch'
+      description: This event is triggered when a merchant processes their first batch of transactions.
+      operationId: sendMerchantFirstBatchEvent
+      security: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                event_id:
+                  type: string
+                  maxLength: 36
+                  example: 38cf9efa-8aec-4a4e-98e2-6bb2411fdc60
+                event_type:
+                  allOf:
+                  - $ref: '#/components/schemas/event-types'
+                  - example: merchant.first-batch
+                event_body:
+                  type: object
+                  required:
+                  - mid
+                  - dba
+                  - date
+                  - amount
+                  properties:
+                    mid:
+                      type: string
+                      maxLength: 30
+                      example: '1234000000000011'
+                    dba:
+                      type: string
+                      maxLength: 255
+                      example: Network Merchant Inc
+                    date:
+                      type: string
+                      maxLength: 10
+                      example: '2024-01-20'
+                    amount:
+                      type: string
+                      maxLength: 20
+                      example: '2450.00'
+            examples:
+              eventExample:
+                summary: Merchant First Batch
+                description: This is an example of a webhook payload when a merchant processes their first batch of transactions.
+                value:
+                  event_id: 38cf9efa-8aec-4a4e-98e2-6bb2411fdc60
+                  event_type: merchant.first-batch
+                  event_body:
+                    mid: '1234000000000011'
+                    dba: Network Merchant Inc
+                    date: '2024-01-20'
+                    amount: '2450.00'
+    servers:
+    - url: https://sandbox.signup.nmi.com/api/v1
+      description: Sandbox
+    - url: https://secure.nmi.com/api/v5/signup
+      description: Production
+  merchant.processing.start:
+    post:
+      tags:
+      - Webhook Events
+      summary: 'Merchant: Started Processing'
+      description: This event is triggered when a merchant starts processing transactions.
+      operationId: sendMerchantProcessingStartEvent
+      security: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                event_id:
+                  type: string
+                  maxLength: 36
+                  example: 38cf9efa-8aec-4a4e-98e2-6bb2411fdc60
+                event_type:
+                  allOf:
+                  - $ref: '#/components/schemas/event-types'
+                  - example: merchant.processing.start
+                event_body:
+                  type: object
+                  required:
+                  - mid
+                  - dba
+                  properties:
+                    mid:
+                      type: string
+                      maxLength: 30
+                      example: '1234000000000011'
+                    dba:
+                      type: string
+                      maxLength: 255
+                      example: Network Merchant Inc
+            examples:
+              eventExample:
+                summary: Merchant Processing Start
+                description: This is an example of a webhook payload when a merchant starts processing transactions.
+                value:
+                  event_id: 38cf9efa-8aec-4a4e-98e2-6bb2411fdc60
+                  event_type: merchant.processing.start
+                  event_body:
+                    mid: '1234000000000011'
+                    dba: Network Merchant Inc
+    servers:
+    - url: https://sandbox.signup.nmi.com/api/v1
+      description: Sandbox
+    - url: https://secure.nmi.com/api/v5/signup
+      description: Production
+  merchant.processing.stop:
+    post:
+      tags:
+      - Webhook Events
+      summary: 'Merchant: Stopped Processing'
+      description: This event is triggered when a merchant stops processing transactions.
+      operationId: sendMerchantProcessingStopEvent
+      security: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                event_id:
+                  type: string
+                  maxLength: 36
+                  example: 38cf9efa-8aec-4a4e-98e2-6bb2411fdc60
+                event_type:
+                  allOf:
+                  - $ref: '#/components/schemas/event-types'
+                  - example: merchant.processing.stop
+                event_body:
+                  type: object
+                  required:
+                  - mid
+                  - dba
+                  properties:
+                    mid:
+                      type: string
+                      maxLength: 30
+                      example: '1234000000000011'
+                    dba:
+                      type: string
+                      maxLength: 255
+                      example: Network Merchant Inc
+            examples:
+              eventExample:
+                summary: Merchant Processing Stop
+                description: This is an example of a webhook payload when a merchant stops processing transactions.
+                value:
+                  event_id: 38cf9efa-8aec-4a4e-98e2-6bb2411fdc60
+                  event_type: merchant.processing.stop
+                  event_body:
+                    mid: '1234000000000011'
+                    dba: Network Merchant Inc
+    servers:
+    - url: https://sandbox.signup.nmi.com/api/v1
+      description: Sandbox
+    - url: https://secure.nmi.com/api/v5/signup
+      description: Production
+  merchant.residuals.published:
+    post:
+      tags:
+      - Webhook Events
+      summary: 'Merchant: Residual Report Published'
+      description: This event is triggered when merchant residuals reports are published.
+      operationId: sendMerchantResidualsPublishedEvent
+      security: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                event_id:
+                  type: string
+                  maxLength: 36
+                  example: 38cf9efa-8aec-4a4e-98e2-6bb2411fdc60
+                event_type:
+                  allOf:
+                  - $ref: '#/components/schemas/event-types'
+                  - example: merchant.residuals.published
+                event_body:
+                  type: object
+                  required:
+                  - month
+                  - year
+                  - processor_id
+                  - processor_name
+                  properties:
+                    month:
+                      type: integer
+                      example: 3
+                    year:
+                      type: integer
+                      example: 2024
+                    processor_id:
+                      type: integer
+                      example: 123
+                    processor_name:
+                      type: string
+                      maxLength: 255
+                      example: TSYS
+            examples:
+              eventExample:
+                summary: Merchant Residuals Published
+                description: This is an example of a webhook payload when merchant residuals reports are published.
+                value:
+                  event_id: 38cf9efa-8aec-4a4e-98e2-6bb2411fdc60
+                  event_type: merchant.residuals.published
+                  event_body:
+                    month: 3
+                    year: 2024
+                    processor_id: 123
+                    processor_name: TSYS
+    servers:
+    - url: https://sandbox.signup.nmi.com/api/v1
+      description: Sandbox
+    - url: https://secure.nmi.com/api/v5/signup
+      description: Production
+  merchant.retrieval.added:
+    post:
+      tags:
+      - Webhook Events
+      summary: 'Merchant: New Retrieval'
+      description: This event is triggered when a retrieval is added for a merchant.
+      operationId: sendMerchantRetrievalAddedEvent
+      security: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                event_id:
+                  type: string
+                  maxLength: 36
+                  example: 38cf9efa-8aec-4a4e-98e2-6bb2411fdc60
+                event_type:
+                  allOf:
+                  - $ref: '#/components/schemas/event-types'
+                  - example: merchant.retrieval.added
+                event_body:
+                  type: object
+                  required:
+                  - mid
+                  - dba
+                  properties:
+                    mid:
+                      type: string
+                      maxLength: 30
+                      example: '1234000000000011'
+                    dba:
+                      type: string
+                      maxLength: 255
+                      example: Network Merchant Inc
+            examples:
+              eventExample:
+                summary: Merchant Retrieval Added
+                description: This is an example of a webhook payload when a retrieval is added for a merchant.
+                value:
+                  event_id: 38cf9efa-8aec-4a4e-98e2-6bb2411fdc60
+                  event_type: merchant.retrieval.added
+                  event_body:
+                    mid: '1234000000000011'
+                    dba: Network Merchant Inc
+    servers:
+    - url: https://sandbox.signup.nmi.com/api/v1
+      description: Sandbox
+    - url: https://secure.nmi.com/api/v5/signup
+      description: Production
+  merchant.statement.new:
+    post:
+      tags:
+      - Webhook Events
+      summary: 'Merchant: New Statement'
+      description: This event is triggered when a new statement is available for a merchant.
+      operationId: sendMerchantStatementNewEvent
+      security: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                event_id:
+                  type: string
+                  maxLength: 36
+                  example: 38cf9efa-8aec-4a4e-98e2-6bb2411fdc60
+                event_type:
+                  allOf:
+                  - $ref: '#/components/schemas/event-types'
+                  - example: merchant.statement.new
+                event_body:
+                  type: object
+                  required:
+                  - mid
+                  - dba
+                  - date
+                  properties:
+                    mid:
+                      type: string
+                      maxLength: 30
+                      example: '1234000000000011'
+                    dba:
+                      type: string
+                      maxLength: 255
+                      example: Network Merchant Inc
+                    date:
+                      type: string
+                      maxLength: 10
+                      example: '2024-03-31'
+            examples:
+              eventExample:
+                summary: Merchant Statement New
+                description: This is an example of a webhook payload when a new statement is available for a merchant.
+                value:
+                  event_id: 38cf9efa-8aec-4a4e-98e2-6bb2411fdc60
+                  event_type: merchant.statement.new
+                  event_body:
+                    mid: '1234000000000011'
+                    dba: Network Merchant Inc
+                    date: '2024-03-31'
+    servers:
+    - url: https://sandbox.signup.nmi.com/api/v1
+      description: Sandbox
+    - url: https://secure.nmi.com/api/v5/signup
+      description: Production
+components:
+  examples:
+    acu.summary.contactcustomer:
+      summary: Contact Support
+      description: Contact Support
+      value:
+        event_id: 7bbd4af6-4075-4902-af56-9fc59ab71362
+        event_type: acu.summary.contactcustomer
+        event_body:
+          updated_date: '2022-08-23'
+          merchant:
+            id: 123456
+            name: Test Account
+          cards_checked:
+            customer_vault:
+              checked: 123
+              updated: 2
+            subscriptions:
+              checked: 232
+              updated: 1
+          vault_count_updated_contact_customer: 2
+          vault_updates:
+          - customer_vault_id: '40403043545'
+            billing_id: '34544356'
+            cc_number: 445343******7432
+            cc_exp: 06/29
+            first_name: Happy
+            last_name: Customer
+            email: frequent@shopper.com
+            phone: '5555559999'
+          - customer_vault_id: '281474976710722'
+            billing_id: '230304034'
+            cc_number: 434343******0123
+            cc_exp: 11/25
+            first_name: Bill
+            last_name: Thompson
+            email: bill@anothercustomer.com
+            phone: '6025551213'
+          recurring_count_updated_contact_customer: 1
+          recurring_updates:
+          - subscription_id: '323232232445'
+            cc_number: 465333******4232
+            cc_exp: 04/30
+            first_name: Recurring
+            last_name: Customer
+            email: buy@repeatedly.com
+            phone: '8185552323'
+    plan-updated:
+      summary: Recurring Plan Updated
+      description: Recurring Plan has been updated
+      value:
+        event_id: 35f56738-4755-4cd9-9068-ea9e83d60d2e
+        event_type: recurring.plan.update
+        event_body:
+          merchant:
+            id: '944025'
+            name: Test merchant account
+          features:
+            is_test_mode: true
+          plan:
+            id: ''
+            name: Test Plan Updated
+            amount: '20.00'
+            day_frequency: ''
+            payments: Until canceled
+            month_frequency: ''
+            day_of_month: ''
+    acu.summary.closedaccount:
+      summary: Closed Account
+      description: Closed Account
+      value:
+        event_id: 7bbd4af6-4075-4902-af56-9fc59ab71362
+        event_type: acu.summary.closedaccount
+        event_body:
+          updated_date: '2022-08-23'
+          merchant:
+            id: 123456
+            name: Test Account
+          cards_checked:
+            customer_vault:
+              checked: 123
+              updated: 1
+            subscriptions:
+              checked: 232
+              updated: 1
+          vault_count_updated_closed_account: 1
+          vault_updates:
+          - customer_vault_id: '281474976710722'
+            billing_id: '230304034'
+            cc_number: 434343******0123
+            cc_exp: 11/25
+            first_name: Longterm
+            last_name: Client
+            email: sample@customer.com
+            phone: '6025551213'
+          recurring_count_updated_closed_account: 1
+          recurring_updates:
+          - subscription_id: '281474976710727'
+            cc_number: 601101******0002
+            cc_exp: 11/32
+            first_name: Bob
+            last_name: Smith
+            email: bsmith@example.co.uk
+            phone: '+440111122222'
+    settlement-failed:
+      summary: Settlement Batch Failed
+      description: Settlement batch failed
+      value:
+        event_id: dfe8156d-5dd9-43ac-8928-3cf70ef74108
+        event_type: settlement.batch.failure
+        event_body:
+          batch_id: '123456'
+          merchant:
+            id: '123456'
+            name: Test Merchant
+          processor:
+            id: ccprocessor
+            name: CC Processor
+            type: cc
+    acu.summary.automaticallyupdated:
+      summary: Automatically Updated
+      description: Automatically updated
+      value:
+        event_id: 7958c536-88f0-47f4-bb55-54575259a3be
+        event_type: acu.summary.automaticallyupdated
+        event_body:
+          updated_date: '2022-08-22'
+          merchant:
+            id: 123456
+            name: Test Account
+          cards_checked:
+            customer_vault:
+              checked: 376
+              updated: 4
+            subscriptions:
+              checked: 434
+              updated: 3
+          vault_count_updated_cards: 1
+          vault_updated_cards:
+          - customer_vault_id: '308229500'
+            billing_id: '1781228768'
+            cc_number: 445701******0009
+            cc_exp: 01/50
+            first_name: Bob
+            last_name: Smith
+            email: bsmith@example.com
+            phone: '+14801112222'
+          vault_count_updated_expiration_dates: 3
+          vault_updated_expiration_dates:
+          - customer_vault_id: '2061222895'
+            billing_id: '350282046'
+            cc_number: 400000******0002
+            cc_exp: 11/70
+            first_name: Bob
+            last_name: Smith
+            email: bobsmith@company.com
+            phone: '4801112222'
+          - customer_vault_id: '1039486483'
+            billing_id: '1408598861'
+            cc_number: 400000******0034
+            cc_exp: 11/70
+            first_name: Jane
+            last_name: Smith
+            email: jane@organization.org
+            phone: '+12125551222'
+          - customer_vault_id: '1033346428'
+            billing_id: '1460247050'
+            cc_number: 520000******0007
+            cc_exp: 12/33
+            first_name: Steve
+            last_name: Customer
+            email: steve@customer.com
+            phone: '+13104053434'
+          recurring_count_updated_cards: 2
+          recurring_updated_cards:
+          - subscription_id: '281474976710720'
+            cc_number: 445701******0459
+            cc_exp: 01/50
+            first_name: ''
+            last_name: ''
+            email: ''
+            phone: ''
+          - subscription_id: '281474976710726'
+            cc_number: 445701******1123
+            cc_exp: 01/50
+            first_name: Frank
+            last_name: Jones
+            email: fjones@example.com
+            phone: '6021234567'
+          recurring_count_updated_expiration_dates: 1
+          recurring_updated_expiration_dates:
+          - subscription_id: '281474976710725'
+            cc_number: 400000******3223
+            cc_exp: 11/70
+            first_name: Susan
+            last_name: Harris
+            email: harris@company.com
+            phone: '3125551212'
+    plan-deleted:
+      summary: Recurring Plan Deleted
+      description: Recurring Plan has been deleted
+      value:
+        event_id: 35f56738-4755-4cd9-9068-ea9e83d60d2e
+        event_type: recurring.plan.delete
+        event_body:
+          merchant:
+            id: '944025'
+            name: Test merchant account
+          features:
+            is_test_mode: true
+          plan:
+            id: TestPlanId1
+            name: Test Plan Updated
+            amount: '20.00'
+            day_frequency: '15'
+            payments: Until canceled
+            month_frequency: '1'
+            day_of_month: '0'
+    capture-success:
+      summary: Transaction captured successfully
+      description: Transaction captured successfully
+      value:
+        event_id: e5267749-c235-45c9-b93e-21f4379b94d1
+        event_type: transaction.capture.success
+        event_body:
+          merchant:
+            id: '944025'
+            name: Test merchant account
+          features:
+            is_test_mode: true
+          transaction_id: '8584341675'
+          transaction_type: cc
+          condition: pendingsettlement
+          processor_id: ccprocessora
+          ponumber: ''
+          order_description: ''
+          order_id: ''
+          customerid: ''
+          customertaxid: ''
+          website: ''
+          shipping: '0.00'
+          currency: USD
+          tax: '0.00'
+          surcharge: ''
+          convenience_fee: ''
+          misc_fee: ''
+          misc_fee_name: ''
+          cash_discount: ''
+          tip: ''
+          requested_amount: '10.00'
+          shipping_carrier: ''
+          tracking_number: ''
+          shipping_date: ''
+          partial_payment_id: ''
+          partial_payment_balance: ''
+          platform_id: ''
+          authorization_code: '123456'
+          social_security_number: ''
+          drivers_license_number: ''
+          drivers_license_state: ''
+          drivers_license_dob: ''
+          duty_amount: '0.00'
+          discount_amount: '0.00'
+          national_tax_amount: '0.00'
+          summary_commodity_code: ''
+          alternate_tax_amount: '0.00'
+          vat_tax_amount: '0.00'
+          vat_tax_rate: '0.00'
+          billing_address:
+            first_name: ''
+            last_name: ''
+            address_1: ''
+            address_2: ''
+            company: ''
+            city: ''
+            state: ''
+            postal_code: ''
+            country: ''
+            email: ''
+            phone: ''
+            cell_phone: ''
+            fax: ''
+          shipping_address:
+            first_name: ''
+            last_name: ''
+            address_1: ''
+            address_2: ''
+            company: ''
+            city: ''
+            state: ''
+            postal_code: ''
+            country: ''
+            email: ''
+            phone: ''
+            fax: ''
+          card:
+            cc_number: 411111******1111
+            cc_exp: '1025'
+            cavv: ''
+            cavv_result: ''
+            xid: ''
+            eci: ''
+            avs_response: ''
+            csc_response: M
+            cardholder_auth: ''
+            cc_start_date: ''
+            cc_issue_number: ''
+            card_balance: ''
+            card_available_balance: ''
+            entry_mode: '4'
+            cc_bin: ''
+            cc_type: Visa
+            feature_token: ''
+          merchant_defined_fields: {}
+          action:
+            amount: '10.00'
+            action_type: capture
+            date: '20230801113955'
+            success: '1'
+            ip_address: 123.123.123.123
+            source: api
+            api_method: direct_post
+            username: test
+            response_text: SUCCESS
+            response_code: '100'
+            processor_response_text: ''
+            tap_to_mobile: false
+            processor_response_code: ''
+            device_license_number: ''
+            device_nickname: ''
+    plan-added:
+      summary: Recurring Plan Added
+      description: Recurring Plan has been added
+      value:
+        event_id: 35f56738-4755-4cd9-9068-ea9e83d60d2e
+        event_type: recurring.plan.add
+        event_body:
+          merchant:
+            id: '944025'
+            name: Test merchant account
+          features:
+            is_test_mode: true
+          plan:
+            id: TestPlanId1
+            name: Test Plan
+            amount: '10.00'
+            day_frequency: ''
+            payments: Until canceled
+            month_frequency: '1'
+            day_of_month: '15'
+    subscription-updated:
+      summary: Subscription Updated
+      description: A new subscription has been updated.
+      value:
+        event_id: 9f4c6478-e875-44d5-a83c-e2afebdaab86
+        event_type: recurring.subscription.update
+        event_body:
+          merchant:
+            id: '944025'
+            name: Test merchant account
+          features:
+            is_test_mode: true
+          subscription_id: '8608342724'
+          subscription_type: cc
+          processor_id: ''
+          next_charge_date: '2023-09-15'
+          completed_payments: '0'
+          attempted_payments: '0'
+          remaining_payments: Until canceled
+          ponumber: ''
+          order_id: ''
+          order_description: ''
+          shipping: '0.00'
+          tax: '0.00'
+          website: ''
+          plan:
+            id: ''
+            name: ''
+            amount: '10.00'
+            day_frequency: ''
+            payments: Until canceled
+            month_frequency: '1'
+            day_of_month: '15'
+          billing_address:
+            first_name: John
+            last_name: Smith
+            address_1: 123 Lovely Lane
+            address_2: ''
+            company: ''
+            city: New York City
+            state: NY
+            postal_code: '11111'
+            country: US
+            email: ''
+            phone: ''
+            cell_phone: ''
+            fax: ''
+          card:
+            cc_number: 411111******1111
+            cc_exp: '1025'
+            cavv: ''
+            cavv_result: ''
+            xid: ''
+            eci: ''
+            avs_response: ''
+            csc_response: ''
+            cardholder_auth: ''
+            cc_start_date: ''
+            cc_issue_number: ''
+            card_balance: ''
+            card_available_balance: ''
+            entry_mode: ''
+            cc_bin: ''
+            cc_type: Visa
+    void-success:
+      summary: Void transaction was successful
+      description: Void transaction was successful
+      value:
+        event_id: 56fce295-ee70-46a1-83c2-1f423c43c34c
+        event_type: transaction.void.success
+        event_body:
+          merchant:
+            id: '944025'
+            name: Test merchant account
+          features:
+            is_test_mode: true
+          transaction_id: '8584341675'
+          transaction_type: cc
+          condition: canceled
+          processor_id: ccprocessora
+          ponumber: ''
+          order_description: ''
+          order_id: ''
+          customerid: ''
+          customertaxid: ''
+          website: ''
+          shipping: '0.00'
+          currency: USD
+          tax: '0.00'
+          surcharge: ''
+          convenience_fee: ''
+          misc_fee: ''
+          misc_fee_name: ''
+          cash_discount: ''
+          tip: ''
+          requested_amount: '10.00'
+          shipping_carrier: ''
+          tracking_number: ''
+          shipping_date: ''
+          partial_payment_id: ''
+          partial_payment_balance: ''
+          platform_id: ''
+          authorization_code: '123456'
+          social_security_number: ''
+          drivers_license_number: ''
+          drivers_license_state: ''
+          drivers_license_dob: ''
+          duty_amount: '0.00'
+          discount_amount: '0.00'
+          national_tax_amount: '0.00'
+          summary_commodity_code: ''
+          alternate_tax_amount: '0.00'
+          vat_tax_amount: '0.00'
+          vat_tax_rate: '0.00'
+          billing_address:
+            first_name: ''
+            last_name: ''
+            address_1: ''
+            address_2: ''
+            company: ''
+            city: ''
+            state: ''
+            postal_code: ''
+            country: ''
+            email: ''
+            phone: ''
+            cell_phone: ''
+            fax: ''
+          shipping_address:
+            first_name: ''
+            last_name: ''
+            address_1: ''
+            address_2: ''
+            company: ''
+            city: ''
+            state: ''
+            postal_code: ''
+            country: ''
+            email: ''
+            phone: ''
+            fax: ''
+          card:
+            cc_number: 411111******1111
+            cc_exp: '1025'
+            cavv: ''
+            cavv_result: ''
+            xid: ''
+            eci: ''
+            avs_response: ''
+            csc_response: M
+            cardholder_auth: ''
+            cc_start_date: ''
+            cc_issue_number: ''
+            card_balance: ''
+            card_available_balance: ''
+            entry_mode: '4'
+            cc_bin: ''
+            cc_type: Visa
+            feature_token: ''
+          merchant_defined_fields: {}
+          action:
+            amount: '10.00'
+            action_type: void
+            date: '20230801115329'
+            success: '1'
+            ip_address: 123.123.123.123
+            source: api
+            api_method: direct_post
+            username: test
+            response_text: SUCCESS
+            response_code: '100'
+            processor_response_text: ''
+            tap_to_mobile: false
+            processor_response_code: ''
+            device_license_number: ''
+            device_nickname: ''
+    sale-success:
+      summary: Sale transaction was successful
+      description: Sale transaction was successful
+      value:
+        event_id: 2aa1bb86-c790-4231-a46e-7cc544a8dc5c
+        event_type: transaction.sale.success
+        event_body:
+          merchant:
+            id: '944025'
+            name: Test merchant account
+          features:
+            is_test_mode: true
+          transaction_id: '8584364761'
+          transaction_type: cc
+          condition: pendingsettlement
+          processor_id: ccprocessora
+          ponumber: ''
+          order_description: ''
+          order_id: ''
+          customerid: ''
+          customertaxid: ''
+          website: ''
+          shipping: ''
+          currency: USD
+          tax: ''
+          surcharge: ''
+          convenience_fee: ''
+          misc_fee: ''
+          misc_fee_name: ''
+          cash_discount: ''
+          tip: ''
+          requested_amount: '10.00'
+          shipping_carrier: ''
+          tracking_number: ''
+          shipping_date: ''
+          partial_payment_id: ''
+          partial_payment_balance: ''
+          platform_id: ''
+          authorization_code: '123456'
+          social_security_number: ''
+          drivers_license_number: ''
+          drivers_license_state: ''
+          drivers_license_dob: ''
+          duty_amount: '0.00'
+          discount_amount: '0.00'
+          national_tax_amount: '0.00'
+          summary_commodity_code: ''
+          alternate_tax_amount: '0.00'
+          vat_tax_amount: '0.00'
+          vat_tax_rate: '0.00'
+          billing_address:
+            first_name: ''
+            last_name: ''
+            address_1: ''
+            address_2: ''
+            company: ''
+            city: ''
+            state: ''
+            postal_code: ''
+            country: ''
+            email: ''
+            phone: ''
+            cell_phone: ''
+            fax: ''
+          shipping_address:
+            first_name: ''
+            last_name: ''
+            address_1: ''
+            address_2: ''
+            company: ''
+            city: ''
+            state: ''
+            postal_code: ''
+            country: ''
+            email: ''
+            phone: ''
+            fax: ''
+          card:
+            cc_number: 411111******1111
+            cc_exp: '1025'
+            cavv: ''
+            cavv_result: ''
+            xid: ''
+            eci: ''
+            avs_response: ''
+            csc_response: M
+            cardholder_auth: ''
+            cc_start_date: ''
+            cc_issue_number: ''
+            card_balance: ''
+            card_available_balance: ''
+            entry_mode: '4'
+            cc_bin: ''
+            cc_type: Visa
+            feature_token: ''
+          merchant_defined_fields: {}
+          action:
+            amount: '10.00'
+            action_type: sale
+            date: '20230801114200'
+            success: '1'
+            ip_address: 123.123.123.123
+            source: api
+            api_method: direct_post
+            username: test
+            response_text: SUCCESS
+            response_code: '100'
+            processor_response_text: ''
+            tap_to_mobile: false
+            processor_response_code: ''
+            device_license_number: ''
+            device_nickname: ''
+    auth-success:
+      summary: Successful Authorization
+      description: This transaction was successfully authorized.
+      value:
+        event_id: 322ac05a-cf6c-4c16-948a-3048d007f742
+        event_type: transaction.auth.success
+        event_body:
+          merchant:
+            id: '944025'
+            name: Test merchant account
+          features:
+            is_test_mode: true
+          transaction_id: '8584341675'
+          transaction_type: cc
+          condition: pending
+          processor_id: ccprocessora
+          ponumber: ''
+          order_description: ''
+          order_id: ''
+          customerid: ''
+          customertaxid: ''
+          website: ''
+          shipping: ''
+          currency: USD
+          tax: ''
+          surcharge: ''
+          convenience_fee: ''
+          misc_fee: ''
+          misc_fee_name: ''
+          cash_discount: ''
+          tip: ''
+          requested_amount: '10.00'
+          shipping_carrier: ''
+          tracking_number: ''
+          shipping_date: ''
+          partial_payment_id: ''
+          partial_payment_balance: ''
+          platform_id: ''
+          authorization_code: '123456'
+          social_security_number: ''
+          drivers_license_number: ''
+          drivers_license_state: ''
+          drivers_license_dob: ''
+          duty_amount: '0.00'
+          discount_amount: '0.00'
+          national_tax_amount: '0.00'
+          summary_commodity_code: ''
+          alternate_tax_amount: '0.00'
+          vat_tax_amount: '0.00'
+          vat_tax_rate: '0.00'
+          billing_address:
+            first_name: ''
+            last_name: ''
+            address_1: ''
+            address_2: ''
+            company: ''
+            city: ''
+            state: ''
+            postal_code: ''
+            country: ''
+            email: ''
+            phone: ''
+            cell_phone: ''
+            fax: ''
+          shipping_address:
+            first_name: ''
+            last_name: ''
+            address_1: ''
+            address_2: ''
+            company: ''
+            city: ''
+            state: ''
+            postal_code: ''
+            country: ''
+            email: ''
+            phone: ''
+            fax: ''
+          card:
+            cc_number: 411111******1111
+            cc_exp: '1025'
+            cavv: ''
+            cavv_result: ''
+            xid: ''
+            eci: ''
+            avs_response: ''
+            csc_response: M
+            cardholder_auth: ''
+            cc_start_date: ''
+            cc_issue_number: ''
+            card_balance: ''
+            card_available_balance: ''
+            entry_mode: '4'
+            cc_bin: ''
+            cc_type: Visa
+            feature_token: ''
+          merchant_defined_fields: {}
+          action:
+            amount: '10.00'
+            action_type: auth
+            date: '20230801113700'
+            success: '1'
+            ip_address: 123.123.123.123
+            source: api
+            api_method: direct_post
+            username: test
+            response_text: SUCCESS
+            response_code: '100'
+            processor_response_text: ''
+            tap_to_mobile: false
+            processor_response_code: ''
+            device_license_number: ''
+            device_nickname: ''
+    chargeback.batch.complete:
+      summary: Chargeback Batch Completed
+      description: Chargeback Batch Completed
+      value:
+        event_id: 7bbd4af6-4075-4902-af56-9fc59ab71362
+        event_type: chargeback.batch.complete
+        event_body:
+          merchant:
+            id: '123456'
+            name: Test Account
+          processor:
+            id: ccprocessor
+            name: CC Processor
+            type: cc
+          count: 1
+          chargeback_amount: '12.34'
+          chargebacks:
+          - id: '12345678'
+            date: '2023-08-11'
+            customer_name: John Doe
+            cc_number: 411111******1111
+            amount: '12.34'
+            reason: Cardholder Does Not Recognize
+    settlement-completed:
+      summary: Settlement Batch Completed
+      description: Settlement batch completed
+      value:
+        event_id: 11750910-bd03-4f9a-871a-786203df177f
+        event_type: settlement.batch.complete
+        event_body:
+          batch_id: '12345678'
+          count: 4
+          amount: '402.81'
+          merchant:
+            id: '123456'
+            name: Test Account
+          processor:
+            id: ccprocessor
+            name: CC Processor
+            type: cc
+          by_card_type:
+            visa:
+              count: 4
+              amount: '402.81'
+          transaction_ids:
+          - '1234000000'
+          - '1234000001'
+          - '1234000002'
+          - '1234000003'
+    auth-failed:
+      summary: Failed Authorization
+      description: The authorization request was declined by the processor.
+      value:
+        event_id: 322ac05a-cf6c-4c16-948a-3048d007f742
+        event_type: transaction.auth.failure
+        event_body:
+          merchant:
+            id: '944025'
+            name: Test merchant account
+          features:
+            is_test_mode: true
+          transaction_id: '8597004002'
+          transaction_type: cc
+          condition: failed
+          processor_id: ccprocessora
+          ponumber: ''
+          order_description: ''
+          order_id: ''
+          customerid: ''
+          customertaxid: ''
+          website: ''
+          shipping: ''
+          currency: USD
+          tax: ''
+          surcharge: ''
+          convenience_fee: ''
+          misc_fee: ''
+          misc_fee_name: ''
+          cash_discount: ''
+          tip: ''
+          requested_amount: '0.50'
+          shipping_carrier: ''
+          tracking_number: ''
+          shipping_date: ''
+          partial_payment_id: ''
+          partial_payment_balance: ''
+          platform_id: ''
+          authorization_code: '123456'
+          social_security_number: ''
+          drivers_license_number: ''
+          drivers_license_state: ''
+          drivers_license_dob: ''
+          duty_amount: '0.00'
+          discount_amount: '0.00'
+          national_tax_amount: '0.00'
+          summary_commodity_code: ''
+          alternate_tax_amount: '0.00'
+          vat_tax_amount: '0.00'
+          vat_tax_rate: '0.00'
+          billing_address:
+            first_name: ''
+            last_name: ''
+            address_1: ''
+            address_2: ''
+            company: ''
+            city: ''
+            state: ''
+            postal_code: ''
+            country: ''
+            email: ''
+            phone: ''
+            cell_phone: ''
+            fax: ''
+          shipping_address:
+            first_name: ''
+            last_name: ''
+            address_1: ''
+            address_2: ''
+            company: ''
+            city: ''
+            state: ''
+            postal_code: ''
+            country: ''
+            email: ''
+            phone: ''
+            fax: ''
+          card:
+            cc_number: 411111******1111
+            cc_exp: '1025'
+            cavv: ''
+            cavv_result: ''
+            xid: ''
+            eci: ''
+            avs_response: ''
+            csc_response: M
+            cardholder_auth: ''
+            cc_start_date: ''
+            cc_issue_number: ''
+            card_balance: ''
+            card_available_balance: ''
+            entry_mode: '4'
+            cc_bin: ''
+            cc_type: Visa
+            feature_token: ''
+          merchant_defined_fields: {}
+          action:
+            amount: '10.00'
+            action_type: auth
+            date: '20230801113700'
+            success: '0'
+            ip_address: 123.123.123.123
+            source: api
+            api_method: direct_post
+            username: test
+            response_text: DECLINE
+            response_code: '200'
+            processor_response_text: ''
+            tap_to_mobile: false
+            processor_response_code: ''
+            device_license_number: ''
+            device_nickname: ''
+    sale-failure:
+      summary: Sale transaction failed
+      description: Sale transaction failed
+      value:
+        event_id: a4807d52-4e40-4e93-92e2-b6d2dad3ddd9
+        event_type: transaction.sale.failure
+        event_body:
+          merchant:
+            id: '944025'
+            name: Test merchant account
+          features:
+            is_test_mode: true
+          transaction_id: '8584372177'
+          transaction_type: cc
+          condition: failed
+          processor_id: ccprocessora
+          ponumber: ''
+          order_description: ''
+          order_id: ''
+          customerid: ''
+          customertaxid: ''
+          website: ''
+          shipping: ''
+          currency: USD
+          tax: ''
+          surcharge: ''
+          convenience_fee: ''
+          misc_fee: ''
+          misc_fee_name: ''
+          cash_discount: ''
+          tip: ''
+          requested_amount: '0.50'
+          shipping_carrier: ''
+          tracking_number: ''
+          shipping_date: ''
+          partial_payment_id: ''
+          partial_payment_balance: ''
+          platform_id: ''
+          authorization_code: ''
+          social_security_number: ''
+          drivers_license_number: ''
+          drivers_license_state: ''
+          drivers_license_dob: ''
+          duty_amount: '0.00'
+          discount_amount: '0.00'
+          national_tax_amount: '0.00'
+          summary_commodity_code: ''
+          alternate_tax_amount: '0.00'
+          vat_tax_amount: '0.00'
+          vat_tax_rate: '0.00'
+          billing_address:
+            first_name: ''
+            last_name: ''
+            address_1: ''
+            address_2: ''
+            company: ''
+            city: ''
+            state: ''
+            postal_code: ''
+            country: ''
+            email: ''
+            phone: ''
+            cell_phone: ''
+            fax: ''
+          shipping_address:
+            first_name: ''
+            last_name: ''
+            address_1: ''
+            address_2: ''
+            company: ''
+            city: ''
+            state: ''
+            postal_code: ''
+            country: ''
+            email: ''
+            phone: ''
+            fax: ''
+          card:
+            cc_number: 411111******1111
+            cc_exp: '1025'
+            cavv: ''
+            cavv_result: ''
+            xid: ''
+            eci: ''
+            avs_response: ''
+            csc_response: M
+            cardholder_auth: ''
+            cc_start_date: ''
+            cc_issue_number: ''
+            card_balance: ''
+            card_available_balance: ''
+            entry_mode: '4'
+            cc_bin: ''
+            cc_type: Visa
+            feature_token: ''
+          merchant_defined_fields: {}
+          action:
+            amount: '0.50'
+            action_type: sale
+            date: '20230801114355'
+            success: '0'
+            ip_address: 123.123.123.123
+            source: api
+            api_method: direct_post
+            username: test
+            response_text: DECLINE
+            response_code: '200'
+            processor_response_text: ''
+            tap_to_mobile: false
+            processor_response_code: ''
+            device_license_number: ''
+            device_nickname: ''
+    validate-success:
+      summary: Validate transaction was successful
+      description: Validate transaction was successful
+      value:
+        event_id: 7c19bb37-8679-4ffb-b431-41ae49d8ff75
+        event_type: transaction.validate.success
+        event_body:
+          merchant:
+            id: '944025'
+            name: Test merchant account
+          features:
+            is_test_mode: true
+          transaction_id: '8584364761'
+          transaction_type: cc
+          condition: complete
+          processor_id: ccprocessora
+          ponumber: ''
+          order_description: ''
+          order_id: ''
+          customerid: ''
+          customertaxid: ''
+          website: ''
+          shipping: ''
+          currency: USD
+          tax: ''
+          surcharge: ''
+          convenience_fee: ''
+          misc_fee: ''
+          misc_fee_name: ''
+          cash_discount: ''
+          tip: ''
+          requested_amount: ''
+          shipping_carrier: ''
+          tracking_number: ''
+          shipping_date: ''
+          partial_payment_id: ''
+          partial_payment_balance: ''
+          platform_id: ''
+          authorization_code: ''
+          social_security_number: ''
+          drivers_license_number: ''
+          drivers_license_state: ''
+          drivers_license_dob: ''
+          duty_amount: '0.00'
+          discount_amount: '0.00'
+          national_tax_amount: '0.00'
+          summary_commodity_code: ''
+          alternate_tax_amount: '0.00'
+          vat_tax_amount: '0.00'
+          vat_tax_rate: '0.00'
+          billing_address:
+            first_name: ''
+            last_name: ''
+            address_1: ''
+            address_2: ''
+            company: ''
+            city: ''
+            state: ''
+            postal_code: ''
+            country: ''
+            email: ''
+            phone: ''
+            cell_phone: ''
+            fax: ''
+          shipping_address:
+            first_name: ''
+            last_name: ''
+            address_1: ''
+            address_2: ''
+            company: ''
+            city: ''
+            state: ''
+            postal_code: ''
+            country: ''
+            email: ''
+            phone: ''
+            fax: ''
+          card:
+            cc_number: 411111******1111
+            cc_exp: '1025'
+            cavv: ''
+            cavv_result: ''
+            xid: ''
+            eci: ''
+            avs_response: ''
+            csc_response: M
+            cardholder_auth: ''
+            cc_start_date: ''
+            cc_issue_number: ''
+            card_balance: ''
+            card_available_balance: ''
+            entry_mode: '4'
+            cc_bin: ''
+            cc_type: Visa
+            feature_token: ''
+          merchant_defined_fields: {}
+          action:
+            amount: '0'
+            action_type: validate
+            date: '20230804160357'
+            success: '1'
+            ip_address: 123.123.123.123
+            source: api
+            api_method: direct_post
+            username: test
+            response_text: SUCCESS
+            response_code: '100'
+            processor_response_text: ''
+            tap_to_mobile: false
+            processor_response_code: ''
+            device_license_number: ''
+            device_nickname: ''
+    subscription-added:
+      summary: Subscription Added
+      description: A new subscription has been added.
+      value:
+        event_id: 5f5706a2-aec2-4d69-b699-32e5745cf1fd
+        event_type: recurring.subscription.add
+        event_body:
+          merchant:
+            id: '944025'
+            name: Test merchant account
+          features:
+            is_test_mode: true
+          subscription_id: '8608342724'
+          subscription_type: cc
+          processor_id: ''
+          next_charge_date: '1970-01-01'
+          completed_payments: '0'
+          attempted_payments: '0'
+          remaining_payments: Until canceled
+          ponumber: ''
+          order_id: ''
+          order_description: ''
+          shipping: ''
+          tax: ''
+          website: ''
+          plan:
+            id: TestPlanId1
+            name: Test Plan
+            amount: '10.00'
+            day_frequency: ''
+            payments: Until canceled
+            month_frequency: '1'
+            day_of_month: '15'
+          billing_address:
+            first_name: John
+            last_name: Smith
+            address_1: 123 Lovely Lane
+            address_2: ''
+            company: ''
+            city: New York City
+            state: NY
+            postal_code: '11111'
+            country: US
+            email: ''
+            phone: ''
+            cell_phone: ''
+            fax: ''
+          card:
+            cc_number: 411111******1111
+            cc_exp: '1025'
+            cavv: ''
+            cavv_result: ''
+            xid: ''
+            eci: ''
+            avs_response: ''
+            csc_response: ''
+            cardholder_auth: ''
+            cc_start_date: ''
+            cc_issue_number: ''
+            card_balance: ''
+            card_available_balance: ''
+            entry_mode: ''
+            cc_bin: ''
+            cc_type: Visa
+    refund-success:
+      summary: Transaction refunded successfully
+      description: Transaction refunded successfully
+      value:
+        event_id: e5267749-c235-45c9-b93e-21f4379b94d1
+        event_type: transaction.refund.success
+        event_body:
+          merchant:
+            id: '944025'
+            name: Test merchant account
+          features:
+            is_test_mode: true
+          transaction_id: '8597047042'
+          transaction_type: cc
+          condition: pendingsettlement
+          processor_id: ccprocessora
+          ponumber: ''
+          order_description: ''
+          order_id: ''
+          customerid: ''
+          customertaxid: ''
+          website: ''
+          shipping: '0.00'
+          currency: USD
+          tax: '0.00'
+          surcharge: ''
+          convenience_fee: ''
+          misc_fee: ''
+          misc_fee_name: ''
+          cash_discount: ''
+          tip: ''
+          requested_amount: '-1.50'
+          shipping_carrier: ''
+          tracking_number: ''
+          shipping_date: ''
+          partial_payment_id: ''
+          partial_payment_balance: ''
+          platform_id: ''
+          authorization_code: '123456'
+          social_security_number: ''
+          drivers_license_number: ''
+          drivers_license_state: ''
+          drivers_license_dob: ''
+          duty_amount: '0.00'
+          discount_amount: '0.00'
+          national_tax_amount: '0.00'
+          summary_commodity_code: ''
+          alternate_tax_amount: '0.00'
+          vat_tax_amount: '0.00'
+          vat_tax_rate: '0.00'
+          billing_address:
+            first_name: ''
+            last_name: ''
+            address_1: ''
+            address_2: ''
+            company: ''
+            city: ''
+            state: ''
+            postal_code: ''
+            country: ''
+            email: ''
+            phone: ''
+            cell_phone: ''
+            fax: ''
+          shipping_address:
+            first_name: ''
+            last_name: ''
+            address_1: ''
+            address_2: ''
+            company: ''
+            city: ''
+            state: ''
+            postal_code: ''
+            country: ''
+            email: ''
+            phone: ''
+            fax: ''
+          card:
+            cc_number: 411111******1111
+            cc_exp: '1025'
+            cavv: ''
+            cavv_result: ''
+            xid: ''
+            eci: ''
+            avs_response: ''
+            csc_response: ''
+            cardholder_auth: ''
+            cc_start_date: ''
+            cc_issue_number: ''
+            card_balance: ''
+            card_available_balance: ''
+            entry_mode: '4'
+            cc_bin: ''
+            cc_type: Visa
+            feature_token: ''
+          merchant_defined_fields: {}
+          action:
+            amount: '-1.50'
+            action_type: refund
+            date: '20230804155935'
+            success: '1'
+            ip_address: 123.123.123.123
+            source: api
+            api_method: direct_post
+            username: test
+            response_text: SUCCESS
+            response_code: '100'
+            processor_response_text: ''
+            tap_to_mobile: false
+            processor_response_code: ''
+            device_license_number: ''
+            device_nickname: ''
+    subscription-deleted:
+      summary: Subscription Deleted
+      description: A new subscription has been deleted.
+      value:
+        event_id: a1c0839a-4156-4f7c-a875-dc9411e2d3a6
+        event_type: recurring.subscription.delete
+        event_body:
+          merchant:
+            id: '944025'
+            name: Test merchant account
+          features:
+            is_test_mode: true
+          subscription_id: '8608342724'
+          subscription_type: cc
+          processor_id: ''
+          next_charge_date: '2023-09-15'
+          completed_payments: '0'
+          attempted_payments: '0'
+          remaining_payments: Until canceled
+          ponumber: ''
+          order_id: ''
+          order_description: ''
+          shipping: '0.00'
+          tax: '0.00'
+          website: ''
+          plan:
+            id: ''
+            name: ''
+            amount: '10.00'
+            day_frequency: ''
+            payments: Until canceled
+            month_frequency: '1'
+            day_of_month: '15'
+          billing_address:
+            first_name: John
+            last_name: Smith
+            address_1: 123 Lovely Lane
+            address_2: ''
+            company: ''
+            city: New York City
+            state: NY
+            postal_code: '11111'
+            country: US
+            email: ''
+            phone: ''
+            cell_phone: ''
+            fax: ''
+          card:
+            cc_number: 411111******1111
+            cc_exp: '1025'
+            cavv: ''
+            cavv_result: ''
+            xid: ''
+            eci: ''
+            avs_response: ''
+            csc_response: ''
+            cardholder_auth: ''
+            cc_start_date: ''
+            cc_issue_number: ''
+            card_balance: ''
+            card_available_balance: ''
+            entry_mode: ''
+            cc_bin: ''
+            cc_type: Visa
+  schemas:
+    AcuAutoUpdatedEventBody:
+      type: object
+      title: ACU Automatically Updated Event Body
+      description: Details about ACU Automatically Updated Event.
+      required:
+      - updated_date
+      - merchant
+      - cards_checked
+      properties:
+        updated_date:
+          type: string
+          format: date
+          description: The update date.
+        merchant:
+          type: object
+          title: Merchant
+          description: Merchant Details
+          properties:
+            id:
+              type: integer
+              description: Merchant identifier
+            name:
+              type: string
+              description: Merchant name
+        cards_checked:
+          type: object
+          description: Details about the cards that were checked.
+          properties:
+            customer_vault:
+              type: object
+              description: Details about the customer vault cards that were checked.
+              properties:
+                checked:
+                  type: integer
+                  description: The number of customer vault cards that were checked.
+                updated:
+                  type: integer
+                  description: The number of customer vault cards that were updated.
+            subscriptions:
+              type: object
+              description: Details about the subscription cards that were checked.
+              properties:
+                checked:
+                  type: integer
+                  description: The number of subscription cards that were checked.
+                updated:
+                  type: integer
+                  description: The number of subscription cards that were updated.
+        vault_count_updated_cards:
+          type: integer
+          description: The number of customer vault cards that were updated.
+        vault_updated_cards:
+          type: array
+          description: Details about the customer vault cards that were updated.
+          items:
+            $ref: '#/components/schemas/AcuCustomerVaultDetails'
+        vault_count_updated_expiration_dates:
+          type: integer
+          description: The number of customer vault cards with updated expiration dates.
+        vault_updated_expiration_dates:
+          type: array
+          description: Details about the customer vault cards with updated expiration dates.
+          items:
+            $ref: '#/components/schemas/AcuCustomerVaultDetails'
+        recurring_count_updated_cards:
+          type: integer
+          description: The number of recurring cards that were updated.
+        recurring_updated_cards:
+          type: array
+          description: Details about the recurring cards that were updated.
+          items:
+            $ref: '#/components/schemas/AcuSubscriptionDetails'
+        recurring_count_updated_expiration_dates:
+          type: integer
+          description: The number of recurring cards with updated expiration dates.
+        recurring_updated_expiration_dates:
+          type: array
+          description: Details about the recurring cards with updated expiration dates.
+          items:
+            $ref: '#/components/schemas/AcuSubscriptionDetails'
+    CardDetails:
+      type: object
+      title: Card Details
+      description: Details related to the credit card used in the transaction. Available for credit card transactions only.
+      properties:
+        cc_number:
+          type: string
+          description: Masked credit card number
+        cc_exp:
+          type: string
+          description: Credit card expiration date
+        cavv:
+          type: string
+          description: Cardholder Authentication Verification Value
+        cavv_result:
+          type: string
+          description: Cardholder Authentication Verification Value result
+        xid:
+          type: string
+          description: Cardholder authentication transaction id
+        eci:
+          type: string
+          enum:
+          - '01'
+          - '02'
+          - '05'
+          - '06'
+          - '07'
+          - 08
+          - 09
+          - ''
+          description: Electronic Commerce Indicator
+        avs_response:
+          type: string
+          description: Address Verification Service response
+        csc_response:
+          type: string
+          description: Card Security Code response
+        cardholder_auth:
+          type: string
+          enum:
+          - verified
+          - attempted
+          - ''
+          description: Cardholder Authentication response
+        cc_start_date:
+          type: string
+          description: Credit card start date
+        cc_issue_number:
+          type: string
+          description: Credit card issue number
+        card_balance:
+          type: string
+          description: Card balance
+        card_available_balance:
+          type: string
+          description: Card available balance
+        entry_mode:
+          type: string
+          enum:
+          - '0'
+          - '1'
+          - '2'
+          - '3'
+          - '4'
+          - '5'
+          - '6'
+          - '7'
+          - '8'
+          description: 'The type of transaction data to be processed.
+
+
+            <details>
+
+            <summary>Possible values:</summary>
+
+
+            | Code  | Description         |
+
+            |:------|:--------------------|
+
+            | 0     | Unknown             |
+
+            | 1     | Invalid             |
+
+            | 2     | NFC MSD             |
+
+            | 3     | Swiped              |
+
+            | 4     | Keyed               |
+
+            | 5     | EMV ICC             |
+
+            | 6     | NFC EMV             |
+
+            | 7     | Keyed - Fallback    |
+
+            | 8     | Swiped - Fallback   |
+
+            </details>'
+        cc_bin:
+          type: string
+          description: Credit card BIN (first 6 digits)
+        cc_type:
+          type: string
+          description: Credit card type (visa, ..)
+        feature_token:
+          type: string
+          description: Feature token
+    ACHAccountType:
+      type: string
+      enum:
+      - checking
+      - savings
+      description: The customer's ACH account type.
+    EmvMetaData:
+      type: object
+      title: EMV Meta Data
+      description: Details about the EMV transaction
+      properties:
+        application_id:
+          type: string
+          description: EMV Application ID
+        application_label:
+          type: string
+          description: EMV Application Label
+        application_preferred_name:
+          type: string
+          description: EMV Application Preferred Name
+        transaction_status_info:
+          type: string
+          description: Transaction Status Information
+        application_pan_sequence_number:
+          type: string
+          description: EMV Application PAN Sequence Number
+        customer_verification_method:
+          type: string
+          enum:
+          - signature
+          - offline_pin
+          - online_pin
+          - none
+          - offline_pin_signature
+          - consumer_device
+          - consumer_device_plus_signature
+          - ''
+          description: EMV Customer Verification Method
+    TransactionAction:
+      type: object
+      title: Transaction Action
+      description: Transaction Action details
+      properties:
+        amount:
+          type: string
+          description: Amount of the transaction
+          format: decimal
+        action_type:
+          type: string
+          enum:
+          - auth
+          - capture
+          - sale
+          - void
+          - refund
+          - credit
+          - return
+          - validate
+          description: Type of transaction
+        date:
+          type: string
+          format: date-time
+          description: Date of the transaction
+        success:
+          type: string
+          enum:
+          - '0'
+          - '1'
+          description: Transaction Success Flag (0 - Failed, 1 - Success)
+        ip_address:
+          type: string
+          description: IP Address of the transaction
+          format: ipv4
+        source:
+          type: string
+          enum:
+          - api
+          - batch_upload
+          - mobile
+          - quickclick
+          - quickbooks
+          - recurring
+          - swipe
+          - virtual_terminal
+          - internal
+          description: Source of the transaction
+        api_method:
+          type: string
+          description: API Method used for the transaction (direct_post, ..)
+        username:
+          type: string
+          description: Username
+        response_text:
+          type: string
+          enum:
+          - APPROVED
+          - SUCCESS
+          - DECLINE
+          description: Transaction Response Text
+        response_code:
+          type: string
+          description: Response Code (100 - OK, 200 - Declined)
+        processor_response_text:
+          type: string
+          description: Processor Response Text
+        processor_response_code:
+          type: string
+          description: Processor Response Code
+        tap_to_mobile:
+          type: boolean
+          description: Tap to Mobile Flag
+        device_license_number:
+          type: string
+          description: Mobile Device License Number
+        device_nickname:
+          type: string
+          description: Mobile Device Nickname
+    ACHAccountHolderType:
+      type: string
+      enum:
+      - business
+      - personal
+      description: The customer's ACH account entity.
+    AcuCustomerVaultDetails:
+      type: object
+      description: Details about a customer vault card with updated expiration date.
+      properties:
+        customer_vault_id:
+          type: string
+          description: The ID of the customer vault.
+        billing_id:
+          type: string
+          description: The billing ID of the customer.
+        cc_number:
+          type: string
+          description: The masked credit card number.
+        cc_exp:
+          type: string
+          description: The updated expiration date of the credit card.
+        first_name:
+          type: string
+          description: The first name of the customer.
+        last_name:
+          type: string
+          description: The last name of the customer.
+        email:
+          type: string
+          description: The email address of the customer.
+        phone:
+          type: string
+          description: The phone number of the customer.
+    RecurringCardDetails:
+      type: object
+      title: Card Details
+      description: Details related to the credit card used in the transaction. Available for credit card transactions only.
+      properties:
+        cc_number:
+          type: string
+          description: Masked credit card number
+        cc_exp:
+          type: string
+          description: Credit card expiration date
+        cavv:
+          type: string
+          description: Cardholder Authentication Verification Value
+        cavv_result:
+          type: string
+          description: Cardholder Authentication Verification Value result
+        xid:
+          type: string
+          description: Cardholder authentication transaction id
+        eci:
+          type: string
+          enum:
+          - '01'
+          - '02'
+          - '05'
+          - '06'
+          - '07'
+          - 08
+          - 09
+          - ''
+          description: Electronic Commerce Indicator
+        avs_response:
+          type: string
+          description: Address Verification Service response
+        csc_response:
+          type: string
+          description: Card Security Code response
+        cardholder_auth:
+          type: string
+          enum:
+          - verified
+          - attempted
+          - ''
+          description: Cardholder Authentication response
+        cc_start_date:
+          type: string
+          description: Credit card start date
+        cc_issue_number:
+          type: string
+          description: Credit card issue number
+        card_balance:
+          type: string
+          description: Card balance
+        card_available_balance:
+          type: string
+          description: Card available balance
+        entry_mode:
+          type: string
+          enum:
+          - '0'
+          - '1'
+          - '2'
+          - '3'
+          - '4'
+          - '5'
+          - '6'
+          - '7'
+          - '8'
+          - ''
+          description: 'The type of transaction data to be processed.
+
+
+            <details>
+
+            <summary>Possible values:</summary>
+
+
+            | Code  | Description         |
+
+            |:------|:--------------------|
+
+            | 0     | Unknown             |
+
+            | 1     | Invalid             |
+
+            | 2     | NFC MSD             |
+
+            | 3     | Swiped              |
+
+            | 4     | Keyed               |
+
+            | 5     | EMV ICC             |
+
+            | 6     | NFC EMV             |
+
+            | 7     | Keyed - Fallback    |
+
+            | 8     | Swiped - Fallback   |
+
+            </details>'
+        cc_bin:
+          type: string
+          description: Credit card BIN (first 6 digits)
+        cc_type:
+          type: string
+          description: Credit card type (visa, ..)
+    Merchant:
+      type: object
+      title: Merchant
+      description: Merchant Details
+      properties:
+        id:
+          type: string
+          description: Merchant identifier
+        name:
+          type: string
+          description: Merchant name
+    SettlementEventBody:
+      type: object
+      title: Settlement Event Body
+      description: Details about Settlement.
+      required:
+      - batch_id
+      - merchant
+      - processor
+      properties:
+        batch_id:
+          type: string
+          format: int64
+          description: Batch ID
+        merchant:
+          $ref: '#/components/schemas/Merchant'
+        processor:
+          type: object
+          title: Processor
+          description: Processor Details
+          properties:
+            id:
+              type: string
+              description: Processor ID
+            name:
+              type: string
+              description: Processor Name
+            type:
+              type: string
+              enum:
+              - cc
+              - ck
+              description: Processor Type (cc - Credit Card, ck - Check)
+        count:
+          type: integer
+          format: int64
+          description: Transactions Count
+        amount:
+          type: string
+          format: number
+          description: Transactions Amount
+        transaction_ids:
+          type: array
+          description: Transaction IDs
+          items:
+            type: string
+            description: Transaction ID
+        by_card_type:
+          type: object
+          title: By Card Type
+          description: Transactions by Card Type
+          properties:
+            visa:
+              $ref: '#/components/schemas/TransactionSummary'
+            mastercard:
+              $ref: '#/components/schemas/TransactionSummary'
+            amex:
+              $ref: '#/components/schemas/TransactionSummary'
+            discover:
+              $ref: '#/components/schemas/TransactionSummary'
+            diners:
+              $ref: '#/components/schemas/TransactionSummary'
+            jcb:
+              $ref: '#/components/schemas/TransactionSummary'
+            maestro:
+              $ref: '#/components/schemas/TransactionSummary'
+            ebt:
+              $ref: '#/components/schemas/TransactionSummary'
+          additionalProperties:
+            type: object
+            description: Other card types
+    ACHSecCode:
+      type: string
+      enum:
+      - PPD
+      - WEB
+      - TEL
+      - CCD
+      description: ACH standard entry class codes.
+    AcuSubscriptionDetails:
+      type: object
+      description: Details about a recurring card that was updated.
+      properties:
+        subscription_id:
+          type: string
+          description: The ID of the subscription.
+        cc_number:
+          type: string
+          description: The masked credit card number.
+        cc_exp:
+          type: string
+          description: The expiration date of the credit card.
+        first_name:
+          type: string
+          description: The first name of the customer.
+        last_name:
+          type: string
+          description: The last name of the customer.
+        email:
+          type: string
+          description: The email address of the customer.
+        phone:
+          type: string
+          description: The phone number of the customer.
+    RecurringEventBody:
+      type: object
+      title: Subscription Event Body
+      description: Details about Subscription.
+      required:
+      - merchant
+      - features
+      - plan
+      properties:
+        merchant:
+          $ref: '#/components/schemas/Merchant'
+        features:
+          $ref: '#/components/schemas/Features'
+        subscription_id:
+          type: string
+          description: Subscription ID
+        subscription_type:
+          type: string
+          enum:
+          - cc
+          - ck
+          description: Subscription Type (cc - Credit Card, ck - Check)
+        processor_id:
+          type: string
+          description: Processor ID
+        next_charge_date:
+          type: string
+          format: date
+          description: Next Charge Date
+        completed_payments:
+          type: string
+          format: number
+          description: Completed Payments
+        attempted_payments:
+          type: string
+          format: number
+          description: Attempted Payments
+        remaining_payments:
+          type: string
+          description: Remaining Payments (`Until canceled` or number of remaining payments)
+        ponumber:
+          type: string
+          description: PO Number
+        order_id:
+          type: string
+          description: Order ID
+        order_description:
+          type: string
+          description: Order Description
+        shipping:
+          type: string
+          description: Shipping Details
+        tax:
+          type: string
+          description: Tax Details
+        website:
+          type: string
+          description: Website Details
+        plan:
+          type: object
+          title: Plan
+          description: Plan Details
+          properties:
+            id:
+              type: string
+              description: Plan ID
+            name:
+              type: string
+              description: Plan Name
+            amount:
+              type: string
+              description: Plan Amount
+            day_frequency:
+              type: string
+              description: Day Frequency
+            payments:
+              type: string
+              description: Payments Details
+            month_frequency:
+              type: string
+              format: number
+              description: Month Frequency
+            day_of_month:
+              type: string
+              format: number
+              description: Day of Month
+        billing_address:
+          $ref: '#/components/schemas/BillingAddress'
+        card:
+          $ref: '#/components/schemas/RecurringCardDetails'
+        check:
+          $ref: '#/components/schemas/CheckDetails'
+    CheckDetails:
+      type: object
+      title: Check Details
+      description: Details about a check payment. Available for ACH transactions only.
+      properties:
+        check_account:
+          type: string
+          description: The customer's bank account number.
+        check_aba:
+          type: string
+          description: The customer's bank routing number.
+        check_name:
+          type: string
+          description: The customer's name.
+        account_holder_type:
+          $ref: '#/components/schemas/ACHAccountHolderType'
+        account_type:
+          $ref: '#/components/schemas/ACHAccountType'
+        sec_code:
+          $ref: '#/components/schemas/ACHSecCode'
+    AcuClosedAccountEventBody:
+      type: object
+      title: ACU Closed Account Event Body
+      description: Details about ACU Closed Account Event.
+      required:
+      - updated_date
+      - merchant
+      - cards_checked
+      properties:
+        updated_date:
+          type: string
+          format: date
+          description: The update date.
+        merchant:
+          type: object
+          description: Details about the merchant.
+          properties:
+            id:
+              type: integer
+              description: The ID of the merchant.
+            name:
+              type: string
+              description: The name of the merchant.
+        cards_checked:
+          type: object
+          description: Details about the cards checked.
+          properties:
+            customer_vault:
+              type: object
+              description: Details about the customer vault.
+              properties:
+                checked:
+                  type: integer
+                  description: The number of customer vaults checked.
+                updated:
+                  type: integer
+                  description: The number of customer vaults updated.
+            subscriptions:
+              type: object
+              description: Details about the subscriptions.
+              properties:
+                checked:
+                  type: integer
+                  description: The number of subscriptions checked.
+                updated:
+                  type: integer
+                  description: The number of subscriptions updated.
+        vault_count_updated_closed_account:
+          type: integer
+          description: The number of vaults updated for the closed account.
+        vault_updates:
+          type: array
+          description: Details about the vault updates.
+          items:
+            $ref: '#/components/schemas/AcuCustomerVaultDetails'
+        recurring_count_updated_closed_account:
+          type: integer
+          description: The number of recurring payments updated for the closed account.
+        recurring_updates:
+          type: array
+          description: Details about the recurring payment updates.
+          items:
+            $ref: '#/components/schemas/AcuSubscriptionDetails'
+    BillingAddress:
+      type: object
+      title: Billing Address
+      description: Billing Address details
+      properties:
+        first_name:
+          type: string
+          description: The first name of the person associated with the billing address.
+        last_name:
+          type: string
+          description: The last name of the person associated with the billing address.
+        address_1:
+          type: string
+          description: The first line of the street address.
+        address_2:
+          type: string
+          description: The second line of the street address.
+        company:
+          type: string
+          description: The name of the company associated with the billing address.
+        city:
+          type: string
+          description: The name of the city associated with the billing address.
+        state:
+          type: string
+          description: "The name of the state or province associated with the billing address.\n  \nFormat: `CC`"
+        postal_code:
+          type: string
+          description: The postal code or zip code associated with the billing address.
+        country:
+          type: string
+          description: "The name of the country associated with the billing address. *Country codes are as shown in ISO 3166-1 alpha-2*.\n  \nFormat: `CC`"
+        email:
+          type: string
+          format: email
+          description: The email address associated with the billing address.
+        phone:
+          type: string
+          format: phone
+          description: The phone number associated with the billing address.
+        cell_phone:
+          type: string
+          format: phone
+          description: The cell phone number associated with the billing address.
+        fax:
+          type: string
+          format: phone
+          description: The fax number associated with the billing address.
+    AcuContactCustomerEventBody:
+      type: object
+      title: ACU Contact Customer Event Body
+      description: Details about ACU Contact Customer Event.
+      required:
+      - updated_date
+      - merchant
+      - cards_checked
+      properties:
+        updated_date:
+          type: string
+          format: date
+          description: The date when the event was updated.
+        merchant:
+          type: object
+          description: Details about the merchant.
+          required:
+          - id
+          - name
+          properties:
+            id:
+              type: integer
+              description: The ID of the merchant.
+            name:
+              type: string
+              description: The name of the merchant.
+        cards_checked:
+          type: object
+          description: Details about the cards checked.
+          required:
+          - customer_vault
+          - subscriptions
+          properties:
+            customer_vault:
+              type: object
+              description: Details about the customer vault.
+              required:
+              - checked
+              - updated
+              properties:
+                checked:
+                  type: integer
+                  description: The number of customer vaults checked.
+                updated:
+                  type: integer
+                  description: The number of customer vaults updated.
+            subscriptions:
+              type: object
+              description: Details about the subscriptions.
+              required:
+              - checked
+              - updated
+              properties:
+                checked:
+                  type: integer
+                  description: The number of subscriptions checked.
+                updated:
+                  type: integer
+                  description: The number of subscriptions updated.
+        vault_count_updated_contact_customer:
+          type: integer
+          description: The number of vaults updated.
+        vault_updates:
+          type: array
+          description: Details about the vault updates.
+          items:
+            $ref: '#/components/schemas/AcuCustomerVaultDetails'
+        recurring_count_updated_contact_customer:
+          type: integer
+          description: The number of recurring subscriptions updated.
+        recurring_updates:
+          type: array
+          description: Details about the recurring subscriptions updates.
+          items:
+            $ref: '#/components/schemas/AcuSubscriptionDetails'
+    ShippingAddress:
+      type: object
+      title: Shipping Address
+      description: Shipping Address details.
+      properties:
+        first_name:
+          type: string
+          description: The first name of the person associated with the shipping address.
+        last_name:
+          type: string
+          description: The last name of the person associated with the shipping address.
+        address_1:
+          type: string
+          description: The first line of the street address.
+        address_2:
+          type: string
+          description: The second line of the street address.
+        company:
+          type: string
+          description: The name of the company associated with the shipping address.
+        city:
+          type: string
+          description: The city of the shipping address.
+        state:
+          type: string
+          description: "The state or province of the shipping address.\n  \nFormat: `CC`"
+        postal_code:
+          type: string
+          description: The postal or zip code of the shipping address.
+        country:
+          type: string
+          description: "The country of the shipping address. *Country codes are as shown in ISO 3166-1 alpha-2*.\n  \nFormat: `CC`"
+        email:
+          type: string
+          description: The email address associated with the shipping address.
+        phone:
+          type: string
+          description: The phone number associated with the shipping address.
+        fax:
+          type: string
+          description: The fax number associated with the shipping address.
+    TransactionSummary:
+      type: object
+      title: Transactions summary
+      description: Summary (number of transactions and total amount)
+      properties:
+        count:
+          type: integer
+          format: int64
+          description: Transactions Count
+        amount:
+          type: string
+          format: number
+          description: Transactions Amount
+    Features:
+      type: object
+      title: Features
+      description: Features associated with the transaction
+      properties:
+        is_test_mode:
+          type: boolean
+          description: Test mode status
+    event-types:
+      type: string
+      enum:
+      - application.updated.data.requested
+      - application.approved
+      - application.declined
+      - application.cancelled
+      - application.merchant.closed
+      - application.merchant.boarded
+      - merchant.chargeback.added
+      - merchant.deposit.new
+      - merchant.first-batch
+      - merchant.processing.start
+      - merchant.processing.stop
+      - merchant.residuals.published
+      - merchant.retrieval.added
+      - merchant.statement.new
+      example: application.merchant.boarded
+  parameters:
+    WebhookSignature:
+      name: Webhook-Signature
+      in: header
+      required: true
+      schema:
+        type: string
+      description: Signature to validate the webhook event.
+  securitySchemes:
+    merchantApiKey:
+      type: apiKey
+      in: header
+      name: Authorization
+      description: Merchant API key for RESTful API authentication. This key is used for merchant-specific API access and can be generated from the merchant portal.
+    oauth:
+      type: oauth2
+      flows:
+        clientCredentials:
+          tokenUrl: /oauth/token
+          scopes:
+            '*': Full access
+            packages:read: Read packages information
+            applications:read: Read access to applications
+            applications:write: Write access to applications
+            subscriptions:read: Read access to subscriptions
+            subscriptions:write: Write access to subscriptions (subscribe/updated/delete)
+externalDocs:
+  url: https://www.postman.com/nmi-integration-support/workspace/nmi-public-documentation/request/5480015-f4b0ec7b-bd84-4094-98c2-67c0b6508a7f
+  description: Public Documentation (Postman)
+x-refined-from:
+- nmi-payments-api-openapi.yml
+- nmi-payments-sign-up-api-openapi.yml
+x-provenance:
+  method: searched
+  source: https://docs.nmi.com/reference
+  harvested: '2026-10-14'
+  tool: harvest-readme-openapi.py
+  note: Assembled verbatim from the OpenAPI definition ReadMe embeds in each operation page of the provider's developer portal; paths and components merged by API title, nothing authored.
+  assembled_from:
+  - https://docs.nmi.com/reference/delete-v4-authvia-conversations-conversation-id.md
+  - https://docs.nmi.com/reference/get-v4-authvia-conversations-conversation-id.md
+  - https://docs.nmi.com/reference/get_v4-authvia-conversations.md
+  - https://docs.nmi.com/reference/post_v4-authvia-conversations.md
+  merge:
+    pages: 4
+    deduped: 28
+    conflicts_kept_first: 0

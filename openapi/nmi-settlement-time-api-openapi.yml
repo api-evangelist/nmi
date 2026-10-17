@@ -1,0 +1,914 @@
+openapi: 3.2.0
+info:
+  version: 1.0.0
+  title: Payments Settlement Time API
+  description: Our payments platform exposes two generations of API.
+  x-logo:
+    url: https://www.nmi.com/app/themes/nmi/images/NMI_Logo_Primary.webp
+servers:
+- url: https://sandbox.nmi.com/api
+security: []
+tags:
+- name: Settlement Time
+paths:
+  /v4/processors/{id}:
+    get:
+      tags:
+      - Settlement Time
+      operationId: getSettlementTime
+      security: []
+      summary: Get Settlement Time
+      description: 'Usage
+
+        Use this request to get the settlementTime that is currently set on an existing account. You will see the result at the bottom of the response, in Universal Time Coordinated (UTC).
+
+
+        Note - settlement time null represents the default settlement time.'
+      parameters:
+      - $ref: '#/components/parameters/GetSettlementTimeRequest'
+      - $ref: '#/components/parameters/ContentType'
+      - $ref: '#/components/parameters/Authorization'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetSettlementTimeResponse'
+              examples:
+                Get Processor Config:
+                  $ref: '#/components/examples/GetSettlementTimeExampleResponse'
+    patch:
+      tags:
+      - Settlement Time
+      operationId: updatingSettlementTime
+      security: []
+      summary: Updating Settlement Time
+      description: 'Usage
+
+        This can be done when creating the merchant’s processor in the first place (Add Processors) but you can also update it whenever you’d like using the request below. Please note this is a PATCH request. Attempting a POST will result in an error. The date must be a valid ISO 8601 time string (Example: 13:14:15). Since this is an update to an existing merchant’s processor, we return the processor object, and you can confirm your change was successful by looking at the settlementTime value in this response.'
+      parameters:
+      - $ref: '#/components/parameters/ContentType'
+      - $ref: '#/components/parameters/Authorization'
+      - $ref: '#/components/parameters/Id'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdatingSettlementTimeRequest'
+            examples:
+              Updating Settlement Time:
+                $ref: '#/components/examples/UpdatingSettlementTimeExampleRequest'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UpdatingSettlementTimeResponse'
+              examples:
+                Updating Settlement Time:
+                  $ref: '#/components/examples/UpdatingSettlementTimeExampleResponse'
+components:
+  examples:
+    UpdatingSettlementTimeExampleResponse:
+      summary: Updating Settlement Time
+      description: Updates Settlement Time
+      value:
+        objectType: processor
+        id: '164'
+        processorType: card
+        processorId: fdrcnemvtest
+        processorName: fdrcnemvtest
+        serviceId: fdrcnemv
+        merchantId: '1'
+        mcc: '5999'
+        accountClassification: retail
+        maxTicketAmount: ''
+        maxMonthlyVolume: '0.00'
+        applyToAllCardType: false
+        enableDuplicateChecking: false
+        allowMerchantOverride: false
+        duplicateTime: '1200'
+        status: active
+        condition: mandatory
+        extraDetails: {}
+        freeTrialEndDate: null
+        freeTrialDaysLeft: ''
+        hasBeenActive: true
+        created: '2018-07-27T18:38:22+00:00'
+        updated: '2018-07-27T18:38:22+00:00'
+        supportsReroutedRefunds: true
+        shouldDisableFields: true
+        disabled: null
+        refundProcessor: null
+        billingType: standard
+        avsCvvPreCheck: separatePreAuth
+        skipAvsCvv: false
+        processorFields:
+          '1': 1***56
+          '2': '1234'
+          '3': '1234'
+          '4': CreditCallLTDGTWRC
+          '5': '30001'
+          '6': ''
+          '7': false
+        paymentTypes:
+        - visa
+        - mastercard
+        descriptor:
+          descriptor: null
+          phone: null
+          city: null
+          state: null
+          url: ''
+        currencies:
+        - USD
+        requiredFields:
+          name: false
+          company: false
+          address: false
+          city: false
+          state: false
+          zip: false
+          country: false
+          phone: false
+          email: false
+          driversLicense: false
+          driversLicenseState: false
+          driversLicenseDob: false
+          ssn: false
+          cvv: notRequired
+          fax: false
+          url: false
+          orderId: false
+          orderDescription: false
+          poNumber: false
+          shipping: false
+          tax: false
+          shippingName: false
+          shippingAddress: false
+          shippingCity: false
+          shippingState: false
+          shippingZip: false
+          shippingCountry: false
+          mdf1: false
+          mdf2: false
+          mdf3: false
+          mdf4: false
+          mdf5: false
+          mdf6: false
+          mdf7: false
+          mdf8: false
+          mdf9: false
+          mdf10: false
+          mdf11: false
+          mdf12: false
+          mdf13: false
+          mdf14: false
+          mdf15: false
+          mdf16: false
+          mdf17: false
+          mdf18: false
+          mdf19: false
+          mdf20: false
+        faceConfiguration: null
+        disabledFields:
+          processorFields:
+            '5': true
+        settlementTime: '21:00:00'
+    GetSettlementTimeExampleResponse:
+      summary: Get Settlement Time
+      description: Get Settlement Time
+      value:
+      - objectType: processor
+        id: '304'
+        processorType: feature
+        processorId: ''
+        processorName: ''
+        serviceId: mobile
+        merchantId: '15'
+        mcc: '0000'
+        accountClassification: ecommerce
+        maxTicketAmount: ''
+        maxMonthlyVolume: '0.00'
+        applyToAllCardType: false
+        enableDuplicateChecking: true
+        allowMerchantOverride: false
+        duplicateTime: '1200'
+        status: closed
+        condition: offered
+        extraDetails: {}
+        freeTrialEndDate: null
+        freeTrialDaysLeft: ''
+        hasBeenActive: false
+        created: '2012-04-26T14:34:50+00:00'
+        updated: '2012-04-26T15:36:55+00:00'
+        supportsReroutedRefunds: false
+        shouldDisableFields: false
+        disabled: null
+        refundProcessor: null
+        avsCvvPreCheck: null
+        skipAvsCvv: false
+        processorFields: {}
+        paymentTypes: []
+        descriptor:
+          descriptor: null
+          phone: null
+          city: null
+          state: null
+          url: null
+        currencies:
+        - ''
+        requiredFields:
+          name: false
+          company: false
+          address: false
+          city: false
+          state: false
+          zip: false
+          country: false
+          phone: false
+          email: false
+          driversLicense: false
+          driversLicenseState: false
+          driversLicenseDob: false
+          ssn: false
+        faceConfiguration: null
+        disabledFields: {}
+        settlementTime: null
+        settlementTimezone: null
+    UpdatingSettlementTimeExampleRequest:
+      summary: Updating Settlement Time
+      description: This can be done when creating the merchant’s processor in the first place (Add Processors) but you can also update it whenever you’d like using the request below.
+      value:
+        settlementTime: '10:00:00'
+  schemas:
+    GetSettlementTimeResponse:
+      type: object
+      title: Get Settlement Time Response
+      properties:
+        objectType:
+          type: string
+          enum:
+          - processor
+          description: The type of object that was returned as a result of the request.
+        id:
+          type: integer
+          description: The unique identifier of the processor or service instance added.
+        processorType:
+          type: string
+          description: The type of the processor added.
+        processorId:
+          type: string
+          description: The ID of the processor added.
+        processorName:
+          type: string
+          description: The name of the processor added.
+        serviceId:
+          type: string
+          description: The code name of the processor platform or service added.
+        merchantId:
+          type: string
+          description: The merchant's Gateway ID.
+        mcc:
+          type: string
+          description: The Merchant Category Code.
+        accountClassification:
+          type: string
+          description: The account classification of the processor added.
+        maxTicketAmount:
+          type: string
+          description: The maximum amount for a single transaction run through the added processor.
+        maxMonthlyVolume:
+          type: string
+          description: The maximum total amount that can be run through the processor in a single month.
+        applyToAllCardType:
+          type: boolean
+          description: Whether the maxMonthlyVolume and maxTicketAmount apply to all payment methods through the added processor or not.
+        enableDuplicateChecking:
+          type: boolean
+          description: Whether duplicate checking is enabled or not.
+        allowMerchantOverride:
+          type: boolean
+          description: Whether the merchant is allowed to ignore the duplicate check on a per-transaction basis or not.
+        duplicateTime:
+          type: string
+          description: The amount of time in seconds to look back to check if a transaction is a duplicate.
+        status:
+          type: string
+          description: The status of the added processor or service, depending on the processor/billing authorization status.
+          enum:
+          - active
+          - pending
+          - closed
+        condition:
+          type: string
+          description: The condition of the added processor or service.
+          enum:
+          - offered
+          - notOffered
+          - mandatory
+        extraDetails:
+          type: object
+          description: Any extra details about the added processor.
+        freeTrialEndDate:
+          type: string
+          description: End date of free trial.
+          nullable: true
+        freeTrialDaysLeft:
+          type: string
+          description: Days left of free trial.
+        hasBeenActive:
+          type: boolean
+          description: Indicates whether the processor has been active or not.
+        created:
+          type: string
+          description: The date and time of when the processor or service was added.
+        updated:
+          type: string
+          description: The date and time of when the processor or service was last updated.
+        supportsReroutedRefunds:
+          type: boolean
+          description: Whether the added processor supports rerouted refunds or not.
+        shouldDisableFields:
+          type: boolean
+          description: Whether the added processor should disable fields or not.
+        disabled:
+          type: boolean
+          description: Whether the processor is disabled or not.
+          nullable: true
+        refundProcessor:
+          type: string
+          description: The specified processor to reroute future refunds to, if this processor is disabled.
+          nullable: true
+        avsCvvPreCheck:
+          type: string
+          description: The AVS/CVV precheck method for the added processor.
+          nullable: true
+        skipAvsCvv:
+          type: boolean
+          description: Whether skipping AVS/CVV is enabled for the added processor or not.
+        processorFields:
+          type: object
+          description: The processor-dependent fields for the added processor.
+        paymentTypes:
+          type: array
+          description: The allowed payment types for the added processor.
+          items:
+            type: string
+            enum:
+            - visa
+            - mastercard
+            - amex
+            - discover
+            - diners
+            - jcb
+            - maestro
+        descriptor:
+          type: object
+          description: The descriptor fields for the added processor.
+          properties:
+            descriptor:
+              type: string
+              description: The descriptor for the added processor.
+            phone:
+              type: string
+              description: The descriptor phone number for the added processor.
+            city:
+              type: string
+              description: The descriptor city for the added processor.
+            state:
+              type: string
+              description: The descriptor state for the added processor.
+            url:
+              type: string
+              description: The descriptor URL for the added processor.
+        currencies:
+          type: array
+          description: The allowed currencies for the added processor.
+          items:
+            type: string
+        requiredFields:
+          type: object
+          description: The fields that are required to be populated for each transaction.
+          properties:
+            name:
+              type: boolean
+              description: Whether the name is a required field or not.
+            company:
+              type: boolean
+              description: Whether the company is a required field or not.
+            address:
+              type: boolean
+              description: Whether the address is a required field or not.
+            city:
+              type: boolean
+              description: Whether the city is a required field or not.
+            state:
+              type: boolean
+              description: Whether the state is a required field or not.
+            zip:
+              type: boolean
+              description: Whether the ZIP code is a required field or not.
+            country:
+              type: boolean
+              description: Whether the country is a required field or not.
+            phone:
+              type: boolean
+              description: Whether the phone is a required field or not.
+            email:
+              type: boolean
+              description: Whether the email is a required field or not.
+            driversLicense:
+              type: boolean
+              description: Whether the driver's license is a required field or not.
+            driversLicenseState:
+              type: boolean
+              description: Whether the driver's license state is a required field or not.
+            driversLicenseDob:
+              type: boolean
+              description: Whether the driver's license date of birth is a required field or not.
+            ssn:
+              type: boolean
+              description: Whether the SSN is a required field or not.
+        faceConfiguration:
+          type: object
+          description: The FACe configuration for the added processor.
+        disabledFields:
+          type: object
+          description: The disabled fields for the added processor.
+          properties:
+            processorFields:
+              type: object
+              description: The processor-dependent fields and whether they are disabled or not.
+        settlementTime:
+          type: string
+          description: The time settlement occurs.
+          nullable: true
+        settlementTimezone:
+          type: string
+          description: The timezone of the configured settlement time.
+          nullable: true
+    UpdatingSettlementTimeResponse:
+      type: object
+      title: Response
+      properties:
+        objectType:
+          type: string
+          description: The type of object that was returned as a result of the request.
+        id:
+          type: number
+          description: The ID of the request.
+        processorType:
+          type: string
+          description: The type of payment processor.
+        processorId:
+          type: string
+          description: The ID of the processor.
+        processorName:
+          type: string
+          description: The name of the processor.
+        serviceId:
+          type: string
+          description: The ID of the processor platform.
+        merchantId:
+          type: number
+          description: The ID of the merchant.
+        mcc:
+          type: string
+          description: The Merchant Category Code.
+        accountClassification:
+          type: string
+          description: The processor account classification.
+        maxTicketAmount:
+          type: string
+          description: The maximum amount for a single transaction run through the added processor.
+        maxMonthlyVolume:
+          type: string
+          description: The maximum total amount that can be run through the processor in a single month.
+        applyToAllCardType:
+          type: boolean
+          description: Whether the maxMonthlyVolume and maxTicketAmount apply to all payment methods through the added processor or not.
+        enableDuplicateChecking:
+          type: boolean
+          description: Whether duplicate checking is enabled or not.
+        allowMerchantOverride:
+          type: boolean
+          description: Whether the merchant is allowed to ignore the duplicate check on a per-transaction basis or not.
+        duplicateTime:
+          type: string
+          description: The amount of time in seconds to look back to check if a transaction is a duplicate.
+        status:
+          type: string
+          description: The status of the added processor or service, depending on the processor/billing authorization status.
+          enum:
+          - active
+          - pending
+        condition:
+          type: string
+          description: The condition of the added processor or service.
+          enum:
+          - offered
+          - notOffered
+          - mandatory
+        extraDetails:
+          type: object
+          description: Any extra details about the added processor.
+        freeTrialEndDate:
+          type: string
+          description: End date of free trial.
+        freeTrialDaysLeft:
+          type: string
+          description: Days left of free trial.
+        hasBeenActive:
+          type: boolean
+          description: Whether the processor has been active before or not.
+        created:
+          type: string
+          description: The date and time of when the processor or service was added.
+        updated:
+          type: string
+          description: The date and time of when the processor or service was last updated.
+        supportsReroutedRefunds:
+          type: boolean
+          description: Whether the added processor supports rerouted refunds or not.
+        shouldDisableFields:
+          type: boolean
+          description: Whether the added processor should disable fields or not.
+        disabled:
+          type: boolean
+          description: Whether the processor is disabled or not.
+        refundProcessor:
+          type: string
+          description: The specified processor to reroute future refunds to, if this processor is disabled.
+        billingType:
+          type: string
+          description: The billing type of the added processor or service.
+        avsCvvPreCheck:
+          type: string
+          description: The AVS/CVV precheck method for the added processor.
+        skipAvsCvv:
+          type: boolean
+          description: Whether skipping AVS/CVV is enabled for the added processor or not.
+        processorFields:
+          type: object
+          description: The processor-dependent fields for the added processor.
+        paymentTypes:
+          type: array
+          description: The allowed payment types for the added processor.
+          items:
+            type: string
+            enum:
+            - visa
+            - mastercard
+            - amex
+            - discover
+            - diners
+            - jcb
+            - maestro
+        descriptor:
+          type: object
+          description: The descriptor fields for the added processor.
+          properties:
+            descriptor:
+              type: string
+              description: The descriptor for the added processor.
+            phone:
+              type: string
+              description: The descriptor phone number for the added processor.
+            city:
+              type: string
+              description: The descriptor city for the added processor.
+            state:
+              type: string
+              description: The descriptor state for the added processor.
+            url:
+              type: string
+              description: The descriptor URL for the added processor.
+        currencies:
+          type: array
+          description: The allowed currencies for the added processor.
+          items:
+            type: string
+        requiredFields:
+          type: object
+          description: The fields that are required to be populated for each transaction.
+          properties:
+            name:
+              type: boolean
+              description: Whether the name is a required field or not.
+            company:
+              type: boolean
+              description: Whether the company is a required field or not.
+            address:
+              type: boolean
+              description: Whether the address is a required field or not.
+            city:
+              type: boolean
+              description: Whether the city is required field or not.
+            state:
+              type: boolean
+              description: Whether the state is a required field or not.
+            zip:
+              type: boolean
+              description: Whether the ZIP code is a required field or not.
+            country:
+              type: boolean
+              description: Whether the country is a required field or not.
+            phone:
+              type: boolean
+              description: Whether the phone is a required field or not.
+            email:
+              type: boolean
+              description: Whether the email is a required field or not.
+            driversLicense:
+              type: boolean
+              description: Whether the driver's license is a required field or not.
+            driversLicenseState:
+              type: boolean
+              description: Whether the driver's license state is a required field or not.
+            driversLicenseDob:
+              type: boolean
+              description: Whether the driver's license date of birth is a required field or not.
+            ssn:
+              type: boolean
+              description: Whether the SSN is a required field or not.
+            cvv:
+              type: string
+              description: The CVV requirement setting.
+            fax:
+              type: boolean
+              description: Whether the fax is a required field or not.
+            url:
+              type: boolean
+              description: Whether the URL is a required field or not.
+            orderId:
+              type: boolean
+              description: Whether the order ID is a required field or not.
+            orderDescription:
+              type: boolean
+              description: Whether the order description is a required field or not.
+            poNumber:
+              type: boolean
+              description: Whether the PO number is a required field or not.
+            shipping:
+              type: boolean
+              description: Whether shipping is a required field or not.
+            tax:
+              type: boolean
+              description: Whether tax is a required field or not.
+            shippingName:
+              type: boolean
+              description: Whether the shipping name is a required field or not.
+            shippingAddress:
+              type: boolean
+              description: Whether the shipping address is a required field or not.
+            shippingCity:
+              type: boolean
+              description: Whether the shipping city is a required field or not.
+            shippingState:
+              type: boolean
+              description: Whether the shipping state is a required field or not.
+            shippingZip:
+              type: boolean
+              description: Whether the shipping ZIP code is a required field or not.
+            shippingCountry:
+              type: boolean
+              description: Whether the shipping country is a required field or not.
+            mdf1:
+              type: boolean
+              description: Whether Merchant Defined Field 1 is a required field or not.
+            mdf2:
+              type: boolean
+              description: Whether Merchant Defined Field 2 is a required field or not.
+            mdf3:
+              type: boolean
+              description: Whether Merchant Defined Field 3 is a required field or not.
+            mdf4:
+              type: boolean
+              description: Whether Merchant Defined Field 4 is a required field or not.
+            mdf5:
+              type: boolean
+              description: Whether Merchant Defined Field 5 is a required field or not.
+            mdf6:
+              type: boolean
+              description: Whether Merchant Defined Field 6 is a required field or not.
+            mdf7:
+              type: boolean
+              description: Whether Merchant Defined Field 7 is a required field or not.
+            mdf8:
+              type: boolean
+              description: Whether Merchant Defined Field 8 is a required field or not.
+            mdf9:
+              type: boolean
+              description: Whether Merchant Defined Field 9 is a required field or not.
+            mdf10:
+              type: boolean
+              description: Whether Merchant Defined Field 10 is a required field or not.
+            mdf11:
+              type: boolean
+              description: Whether Merchant Defined Field 11 is a required field or not.
+            mdf12:
+              type: boolean
+              description: Whether Merchant Defined Field 12 is a required field or not.
+            mdf13:
+              type: boolean
+              description: Whether Merchant Defined Field 13 is a required field or not.
+            mdf14:
+              type: boolean
+              description: Whether Merchant Defined Field 14 is a required field or not.
+            mdf15:
+              type: boolean
+              description: Whether Merchant Defined Field 15 is a required field or not.
+            mdf16:
+              type: boolean
+              description: Whether Merchant Defined Field 16 is a required field or not.
+            mdf17:
+              type: boolean
+              description: Whether Merchant Defined Field 17 is a required field or not.
+            mdf18:
+              type: boolean
+              description: Whether Merchant Defined Field 18 is a required field or not.
+            mdf19:
+              type: boolean
+              description: Whether Merchant Defined Field 19 is a required field or not.
+            mdf20:
+              type: boolean
+              description: Whether Merchant Defined Field 20 is a required field or not.
+        faceConfiguration:
+          type: object
+          description: The FACe configuration for the added processor.
+        disabledFields:
+          type: object
+          description: The disabled fields for the added processor.
+          properties:
+            processorFields:
+              type: object
+              description: The processor-dependent fields and whether they are disabled or not.
+        settlementTime:
+          type: string
+          description: Specifies the time at which the settlement process will be executed following a successful update. This value determines when the settlement operations will occur.
+    UpdatingSettlementTimeRequest:
+      title: Updating Settlement Time
+      allOf:
+      - type: object
+        required:
+        - settlementTime
+        properties:
+          settlementTime:
+            type: string
+            description: Required. Specifies the time at which the settlement process will be executed following a successful update. This value determines when the settlement operations will occur.
+  parameters:
+    Id:
+      name: id
+      in: path
+      required: true
+      schema:
+        type: string
+      description: The ID that the request should operate on.
+    GetSettlementTimeRequest:
+      name: id
+      in: path
+      required: true
+      schema:
+        type: string
+      description: The id of the processor.
+      example: '304'
+    ContentType:
+      name: Content-Type
+      in: header
+      required: true
+      schema:
+        type: string
+      description: The Content-Type representation header is used to indicate the original media type of the resource (prior to any content encoding applied for sending).
+      example: application/json
+    Authorization:
+      name: Authorization
+      in: header
+      required: true
+      schema:
+        type: string
+      description: Your v4 API key that was generated in the Partner portal.
+  securitySchemes:
+    merchantApiKey:
+      type: apiKey
+      in: header
+      name: Authorization
+      description: Merchant API key for RESTful API authentication. This key is used for merchant-specific API access and can be generated from the merchant portal.
+externalDocs:
+  url: https://www.postman.com/nmi-integration-support/workspace/nmi-public-documentation/request/5480015-f4b0ec7b-bd84-4094-98c2-67c0b6508a7f
+  description: Public Documentation (Postman)
+x-tagGroups:
+- name: REST API (recommended)
+  tags:
+  - Payments
+  - Plans
+  - Subscriptions
+  - Products
+  - Invoicing
+  - Customers
+  - Devices
+- name: Classic API
+  tags:
+  - Payment Processing
+  - Data and Transaction Reporting
+  - Webhook Events
+  - Gateway Features
+  - Processors and Services
+  - Apple Pay
+x-provenance:
+  method: searched
+  source: https://docs.nmi.com/reference
+  harvested: '2026-10-14'
+  tool: harvest-readme-openapi.py
+  note: Assembled verbatim from the OpenAPI definition ReadMe embeds in each operation page of the provider's developer portal; paths and components merged by API title, nothing authored.
+  assembled_from:
+  - https://docs.nmi.com/reference/add-billing-address-v5.md
+  - https://docs.nmi.com/reference/add-processor-service.md
+  - https://docs.nmi.com/reference/add-shipping-address-v5.md
+  - https://docs.nmi.com/reference/adding-apple-pay.md
+  - https://docs.nmi.com/reference/cancel-device-display-v5.md
+  - https://docs.nmi.com/reference/cancel-device-payment-request-v5.md
+  - https://docs.nmi.com/reference/capture-payment-v5.md
+  - https://docs.nmi.com/reference/card-type.md
+  - https://docs.nmi.com/reference/check-services.md
+  - https://docs.nmi.com/reference/check-username-availability.md
+  - https://docs.nmi.com/reference/close-invoice-v5.md
+  - https://docs.nmi.com/reference/create-auth-v5.md
+  - https://docs.nmi.com/reference/create-credit-v5.md
+  - https://docs.nmi.com/reference/create-customer-v5.md
+  - https://docs.nmi.com/reference/create-device-payment-request-auth-v5.md
+  - https://docs.nmi.com/reference/create-device-payment-request-credit-v5.md
+  - https://docs.nmi.com/reference/create-device-payment-request-sale-v5.md
+  - https://docs.nmi.com/reference/create-device-payment-request-validate-v5.md
+  - https://docs.nmi.com/reference/create-invoice-v5.md
+  - https://docs.nmi.com/reference/create-merchant-key.md
+  - https://docs.nmi.com/reference/create-merchant.md
+  - https://docs.nmi.com/reference/create-plan-v5.md
+  - https://docs.nmi.com/reference/create-product-v5.md
+  - https://docs.nmi.com/reference/create-sale-v5.md
+  - https://docs.nmi.com/reference/create-subscription-v5.md
+  - https://docs.nmi.com/reference/delete-billing-address-v5.md
+  - https://docs.nmi.com/reference/delete-customer-v5.md
+  - https://docs.nmi.com/reference/delete-plan-v5.md
+  - https://docs.nmi.com/reference/delete-product-v5.md
+  - https://docs.nmi.com/reference/delete-shipping-address-v5.md
+  - https://docs.nmi.com/reference/delete-subscription-v5.md
+  - https://docs.nmi.com/reference/deregister-device-v5.md
+  - https://docs.nmi.com/reference/display-device-qr-code-v5.md
+  - https://docs.nmi.com/reference/get-billing-address-v5.md
+  - https://docs.nmi.com/reference/get-customer-v5.md
+  - https://docs.nmi.com/reference/get-device-payment-request-status-v5.md
+  - https://docs.nmi.com/reference/get-device-prompt-menu-status-v5.md
+  - https://docs.nmi.com/reference/get-device-prompt-sign-status-v5.md
+  - https://docs.nmi.com/reference/get-device-prompt-yes-no-status-v5.md
+  - https://docs.nmi.com/reference/get-device-v5.md
+  - https://docs.nmi.com/reference/get-fees-in-schedule.md
+  - https://docs.nmi.com/reference/get-invoice-v5.md
+  - https://docs.nmi.com/reference/get-merchant-list.md
+  - https://docs.nmi.com/reference/get-merchant-partner-user-info.md
+  - https://docs.nmi.com/reference/get-merchant-processors-value-added-services.md
+  - https://docs.nmi.com/reference/get-payment-v5.md
+  - https://docs.nmi.com/reference/get-plan-v5.md
+  - https://docs.nmi.com/reference/get-processor-config.md
+  - https://docs.nmi.com/reference/get-product-v5.md
+  - https://docs.nmi.com/reference/get-settlement-time.md
+  - https://docs.nmi.com/reference/get-shipping-address-v5.md
+  - https://docs.nmi.com/reference/get-specific-merchant-information.md
+  - https://docs.nmi.com/reference/get-sub-affiliate-list.md
+  - https://docs.nmi.com/reference/get-subscription-v5.md
+  - https://docs.nmi.com/reference/get-transaction-data.md
+  - https://docs.nmi.com/reference/list-customers-v5.md
+  - https://docs.nmi.com/reference/list-devices-v5.md
+  - https://docs.nmi.com/reference/list-invoices-v5.md
+  - https://docs.nmi.com/reference/list-plans-v5.md
+  - https://docs.nmi.com/reference/list-products-v5.md
+  - https://docs.nmi.com/reference/list-subscriptions-v5.md
+  - https://docs.nmi.com/reference/patch_v4-merchants-gateway-id-1.md
+  - https://docs.nmi.com/reference/prompt-device-menu-v5.md
+  - https://docs.nmi.com/reference/prompt-device-sign-v5.md
+  - https://docs.nmi.com/reference/prompt-device-yes-no-v5.md
+  - https://docs.nmi.com/reference/pull-all-fee-schedules.md
+  - https://docs.nmi.com/reference/query.md
+  - https://docs.nmi.com/reference/querying-merchants-apple-pay-status.md
+  - https://docs.nmi.com/reference/refund-payment-v5.md
+  - https://docs.nmi.com/reference/register-device-v5.md
+  - https://docs.nmi.com/reference/see-merchant-billing.md
+  - https://docs.nmi.com/reference/see-your-commission.md
+  - https://docs.nmi.com/reference/send-invoice-v5.md
+  - https://docs.nmi.com/reference/update-billing-address-v5.md
+  - https://docs.nmi.com/reference/update-customer-v5.md
+  - https://docs.nmi.com/reference/update-device-v5.md
+  - https://docs.nmi.com/reference/update-invoice-v5.md
+  - https://docs.nmi.com/reference/update-plan-v5.md
+  - https://docs.nmi.com/reference/update-product-v5.md
+  - https://docs.nmi.com/reference/update-shipping-address-v5.md
+  - https://docs.nmi.com/reference/update-subscription-v5.md
+  - https://docs.nmi.com/reference/updating-settlement-time.md
+  - https://docs.nmi.com/reference/validate-payment-v5.md
+  - https://docs.nmi.com/reference/void-payment-v5.md
+  merge:
+    pages: 84
+    deduped: 4356
+    conflicts_kept_first: 0

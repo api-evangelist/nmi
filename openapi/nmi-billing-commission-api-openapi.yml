@@ -1,0 +1,769 @@
+openapi: 3.2.0
+info:
+  version: 1.0.0
+  title: Payments Billing & Commission API
+  description: Our payments platform exposes two generations of API.
+  x-logo:
+    url: https://www.nmi.com/app/themes/nmi/images/NMI_Logo_Primary.webp
+servers:
+- url: https://sandbox.nmi.com/api
+security: []
+tags:
+- name: Billing & Commission
+paths:
+  /v4/billing/reports:
+    post:
+      tags:
+      - Billing & Commission
+      operationId: seeMerchantBilling
+      security: []
+      summary: See Merchants' Billing
+      description: 'Usage
+
+        This will let you see what billing has occurred on merchants under your partner account. Billing reports are for Bill to Affiliate partners only. For Bill to Merchant partners, you will likely want commission and bill to me reports.'
+      parameters:
+      - $ref: '#/components/parameters/ContentType'
+      - $ref: '#/components/parameters/Authorization'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SeeMerchantBillingRequest'
+            examples:
+              Get Merchants' Billing:
+                $ref: '#/components/examples/SeeMerchantBillingExampleRequest'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SeeMerchantBillingResponse'
+              examples:
+                Create Standard Merchant:
+                  $ref: '#/components/examples/SeeMerchantBillingExampleResponse'
+  /v4/commission_reports/reports:
+    post:
+      tags:
+      - Billing & Commission
+      operationId: seeYourCommission
+      security: []
+      summary: See Your Commission
+      description: 'Usage
+
+        This will let you see what billing has occurred on merchants under your partner account'
+      parameters:
+      - $ref: '#/components/parameters/ContentType'
+      - $ref: '#/components/parameters/Authorization'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SeeYourCommissionRequest'
+            examples:
+              See Your Commission:
+                $ref: '#/components/examples/SeeYourCommissionExampleRequest'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SeeYourCommissionResponse'
+              examples:
+                See Your Commission:
+                  $ref: '#/components/examples/SeeYourCommissionExampleResponse'
+components:
+  schemas:
+    SeeYourCommissionRequest:
+      title: See Merchants' Billing
+      allOf:
+      - type: object
+        required:
+        - month
+        - year
+        - offset
+        - maxResults
+        properties:
+          month:
+            type: string
+            description: Required. Month requested for the response.
+          year:
+            type: string
+            description: Required. Year requested for the response.
+          offset:
+            type: string
+            description: 'Required. "offset": 0 // Like all reports and search endpoints, you can specify the offset, which is the start point for the responses'
+          maxResults:
+            type: string
+            description: Required. Value must be between 1-1000.
+    SeeYourCommissionResponse:
+      type: object
+      title: Response
+      properties:
+        objectType:
+          type: string
+          enum:
+          - serviceConfig
+          description: The type of object that was returned as a result of the request.
+        reportId:
+          type: number
+          description: The ID of the report.
+        offset:
+          type: number
+          description: The first N skipped results.
+        maxResults:
+          type: number
+          description: The max number results.
+        totalResults:
+          type: number
+          description: The total number of results.
+        hasMore:
+          type: boolean
+          description: If are there more results for the search.
+        links:
+          type: array
+          description: Links for querying results.
+          items:
+            type: object
+            properties:
+              first:
+                type: string
+                description: First page of query results.
+              last:
+                type: string
+                description: Last page of query results.
+              next:
+                type: string
+                description: Next page of current query results.
+              previous:
+                type: string
+                description: Previous page of current query results.
+        results:
+          type: array
+          description: Results for the search.
+          items:
+            type: objectType
+            properties:
+              objectType:
+                type: string
+                description: Type of the returned response object
+              rowId:
+                type: string
+                description: The ID for the row.
+              parentAffiliate:
+                type: string
+                description: The ID of the affiliate directly above the merchant.
+              merchant:
+                type: object
+                properties:
+                  company:
+                    type: string
+                    description: Merchant's company name
+                  id:
+                    type: string
+                    description: The ID of the merchant
+                  externalIdentifier:
+                    type: string
+                    description: A description to further describe or identify the merchant
+              commission:
+                type: object
+                properties:
+                  name:
+                    type: string
+                    description: The name of the commission
+                  mcc:
+                    type: string
+                    description: The Merchant Category Code
+              processor:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    description: The id of the processor
+                  name:
+                    type: string
+                    description: The name of the processor
+              service:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    description: The id of the service
+                  name:
+                    type: string
+                    description: The name of the service
+              quantity:
+                type: string
+                description: The quantity of the commission
+              resale:
+                type: object
+                properties:
+                  objectType:
+                    type: string
+                    description: The type of object that was returned as a result of the request
+                  amount:
+                    type: string
+                    description: The amount of the resale
+                  currency:
+                    type: string
+                    description: The currency of the resale
+              totalResale:
+                type: object
+                properties:
+                  objectType:
+                    type: string
+                    description: The type of object that was returned as a result of the request
+                  amount:
+                    type: string
+                    description: The amount of the total resale
+                  currency:
+                    type: string
+                    description: The currency of the total resale
+              cost:
+                type: object
+                properties:
+                  objectType:
+                    type: string
+                    description: The type of object that was returned as a result of the request
+                  amount:
+                    type: string
+                    description: The amount of the cost
+                  currency:
+                    type: string
+                    description: The currency of the cost
+              totalCost:
+                type: object
+                properties:
+                  objectType:
+                    type: string
+                    description: The type of object that was returned as a result of the request
+                  amount:
+                    type: string
+                    description: The amount of the total cost
+                  currency:
+                    type: string
+                    description: The currency of the total cost
+              commissionEarned:
+                type: object
+                properties:
+                  objectType:
+                    type: string
+                    description: The type of object that was returned as a result of the request
+                  amount:
+                    type: string
+                    description: The amount of the commission earned
+                  currency:
+                    type: string
+                    description: The currency of the commission earned
+              recollections:
+                type: object
+                properties:
+                  objectType:
+                    type: string
+                    description: The type of object that was returned as a result of the request
+                  amount:
+                    type: string
+                    description: The amount of the recollections
+                  currency:
+                    type: string
+                    description: The currency of the recollections
+              returns:
+                type: object
+                properties:
+                  objectType:
+                    type: string
+                    description: The type of object that was returned as a result of the request
+                  amount:
+                    type: string
+                    description: The amount of the returns
+                  currency:
+                    type: string
+                    description: The currency of the returns
+              totalCommission:
+                type: object
+                properties:
+                  objectType:
+                    type: string
+                    description: The type of object that was returned as a result of the request
+                  amount:
+                    type: string
+                    description: The amount of the total commission
+                  currency:
+                    type: string
+                    description: The currency of the total commission
+              subAffiliate:
+                type: string
+                description: The quantity of the commission
+    SeeMerchantBillingResponse:
+      type: object
+      title: Response
+      properties:
+        objectType:
+          type: string
+          enum:
+          - serviceConfig
+          description: The type of object that was returned as a result of the request.
+        reportId:
+          type: number
+          description: The ID of the report.
+        offset:
+          type: number
+          description: The first N skipped results.
+        maxResults:
+          type: number
+          description: The max number results.
+        totalResults:
+          type: number
+          description: The total number of results.
+        hasMore:
+          type: boolean
+          description: If are there more results for the search.
+        links:
+          type: array
+          description: Links for querying results.
+          items:
+            type: object
+            properties:
+              first:
+                type: string
+                description: First page of query results.
+              last:
+                type: string
+                description: Last page of query results.
+              next:
+                type: string
+                description: Next page of current query results.
+              previous:
+                type: string
+                description: Previous page of current query results.
+        results:
+          type: array
+          description: Results for the search.
+          items:
+            type: object
+            properties:
+              objectType:
+                type: string
+                description: Type of the returned response object
+              rowId:
+                type: string
+                description: The ID for the row.
+              merchantId:
+                type: string
+                description: The merchant's Gateway ID.
+              affiliateId:
+                type: string
+                description: Affiliate ID. To get user information for a sub-affiliate account, pass in `affiliateId` instead of `merchantId`.
+              quantity:
+                type: string
+                description: Quantity
+              serviceId:
+                type: string
+                description: The ID of the service.
+              processorId:
+                type: string
+                description: The ID of the payment processor.
+              fee:
+                type: object
+                description: Response variables specifically related to fees.
+                properties:
+                  feeType:
+                    type: string
+                    description: The type of the fee.
+                  name:
+                    type: string
+                    description: The name of the fee.
+                  description:
+                    type: string
+                    description: The description of the fee.
+                  serviceId:
+                    type: string
+                    description: The ID of the fee service.
+              cost:
+                type: object
+                description: Response variables specifically related to cost.
+                properties:
+                  objectType:
+                    type: string
+                    description: The type of cost object that was returned as a result of the request.
+                  amount:
+                    type: string
+                    description: The amount of the cost object.
+                  currency:
+                    type: string
+                    description: The currency of the cost object.
+              total:
+                type: object
+                description: Response variables specifically related to total.
+                properties:
+                  objectType:
+                    type: string
+                    description: The type of total object that was returned as a result of the request.
+                  amount:
+                    type: string
+                    description: The amoount of the total object.
+                  currrency:
+                    type: string
+                    description: The currency of the total object.
+    SeeMerchantBillingRequest:
+      title: See Merchants' Billing
+      allOf:
+      - type: object
+        required:
+        - maxResults
+        - startDate
+        - endDate
+        - offset
+        properties:
+          maxResults:
+            type: string
+            description: Required. Value must be between 1-1000.
+          startDate:
+            type: string
+            description: Required. Start point for the responses.
+          endDate:
+            type: string
+            description: Required. End point for the responses.
+          offset:
+            type: string
+            description: 'Required. "offset": 0 // Like all reports and search endpoints, you can specify the offset, which is the start point for the responses'
+  examples:
+    SeeMerchantBillingExampleRequest:
+      summary: See Merchants' Billing
+      description: 'This will let you see what billing has occurred on merchants under your partner account. Billing reports are for Bill to Affiliate partners only. For Bill to Merchant partners, you will likely want commission and bill to me reports. '
+      value:
+        startDate: '2022-01-01'
+        endDate: '2022-01-31'
+        offset: 0
+        maxResults: 1000
+    SeeMerchantBillingExampleResponse:
+      summary: see Merchants' Billing Response
+      description: Gets merchants' billing
+      value:
+        objectType: report
+        reportId: 34567345
+        offset: null
+        maxResults: 100
+        totalResults: 43
+        hasMore: false
+        links:
+          first: https://sandbox.nmi.com/api/v4/merchants/reports/34567345?maxResults=100
+          last: https://sandbox.nmi.com/api/v4/merchants/reports/34567345?offset=0&maxResults=100
+          next: https://sandbox.nmi.com/api/v4/merchants/reports/34567345?offset=100&maxResults=100
+          previous: https://sandbox.nmi.com/api/v4/merchants/reports/34567345?offset=0&maxResults=100
+        results:
+        - objectType: report
+          reportId: 345459
+          offset: 0
+          maxResults: 1000
+          totalResults: 369
+          hasMore: false
+          links:
+            first: https://sandbox.nmi.com/api/v4/billing/reports/3?maxResults=1000
+            last: https://sandbox.nmi.com/api/v4/billing/reports/3?offset=0&maxResults= 1000
+            next: https://sandbox.nmi.com/api/v4/billing/reports/3?offset=1000&maxResul ts=1000
+            previous: https://sandbox.nmi.com/api/v4/billing/reports/3?offset=0&maxResults= 1000
+          results:
+          - objectType: billing
+            rowId: 1
+            merchantId: '33'
+            affiliateId: null
+            quantity: '1.9'
+            serviceId: tsys
+            processorId: '435'
+            fee:
+              feeType: null
+              name: Monthly Fee
+              description: null
+              serviceId: tsys
+            cost:
+              objectType: amount
+              amount: '10.00'
+              currency: USD
+            total:
+              objectType: amount
+              amount: '19.00'
+              currency: USD
+          - objectType: billing
+            rowId: 2
+            merchantId: '33'
+            affiliateId: null
+            quantity: '6'
+            serviceId: tsys
+            processorId: '435'
+            fee:
+              feeType: null
+              name: Per Transaction Fee
+              description: null
+              serviceId: tsys
+            cost:
+              objectType: amount
+              amount: '0.10'
+              currency: USD
+            total:
+              objectType: amount
+              amount: '0.60'
+              currency: USD
+    SeeYourCommissionExampleRequest:
+      summary: See Your Commission
+      description: This will let you see what billing has occurred on merchants under your partner account.
+      value:
+        month: '3'
+        year: '2023'
+        offset: 0
+        maxResults: 1000
+    SeeYourCommissionExampleResponse:
+      summary: See Your Commission Response
+      description: Gets Your Commission
+      value:
+        objectType: report
+        reportId: 1
+        offset: 0
+        maxResults: 1000
+        totalResults: 408
+        hasMore: false
+        links:
+          first: https://sandbox.nmi.com/api/v4/commission_reports/reports/1?maxResults=1000
+          last: https://sandbox.nmi.com/api/v4/commission_reports/reports/1?offset=0&maxResults=1000
+          next: https://sandbox.nmi.com/api/v4/commission_reports/reports/1?offset=1000&maxResults=1000
+          previous: https://sandbox.nmi.com/api/v4/commission_reports/reports/1?offset=0&maxResults=1000
+        results:
+        - objectType: commission
+          rowId: 1
+          parentAffiliate: null
+          merchant:
+            company: Test Account
+            id: '45342'
+            externalIdentifier: null
+          commission:
+            name: Monthly Fee
+            mcc: '0'
+          processor:
+            id: '126'
+            name: Retail TSYS
+          service:
+            id: tsys
+            name: TSYS - EMV
+          quantity: '1.00'
+          resale:
+            objectType: amount
+            amount: '10.00'
+            currency: USD
+          totalResale:
+            objectType: amount
+            amount: '10.00'
+            currency: USD
+          cost:
+            objectType: amount
+            amount: '7.00'
+            currency: USD
+          totalCost:
+            objectType: amount
+            amount: '7.00'
+            currency: USD
+          commissionEarned:
+            objectType: amount
+            amount: '3.00'
+            currency: USD
+          recollections:
+            objectType: amount
+            amount: '0.00'
+            currency: USD
+          returns:
+            objectType: amount
+            amount: '0.00'
+            currency: USD
+          totalCommission:
+            objectType: amount
+            amount: '0.00'
+            currency: USD
+          subAffiliate: null
+        - objectType: commission
+          rowId: 2
+          parentAffiliate: null
+          merchant:
+            company: aman
+            id: '3'
+            externalIdentifier: null
+          commission:
+            name: Monthly Fee
+            mcc: '0'
+          processor:
+            id: '175'
+            name: Geti DEFAULT
+          service:
+            id: geti
+            name: Paya (formerly GETI)
+          quantity: '1.03'
+          resale:
+            objectType: amount
+            amount: '10.00'
+            currency: USD
+          totalResale:
+            objectType: amount
+            amount: '10.30'
+            currency: USD
+          cost:
+            objectType: amount
+            amount: '10.00'
+            currency: USD
+          totalCost:
+            objectType: amount
+            amount: '10.30'
+            currency: USD
+          commissionEarned:
+            objectType: amount
+            amount: '0.00'
+            currency: USD
+          recollections:
+            objectType: amount
+            amount: '0.00'
+            currency: USD
+          returns:
+            objectType: amount
+            amount: '0.00'
+            currency: USD
+          totalCommission:
+            objectType: amount
+            amount: '0.00'
+            currency: USD
+          subAffiliate: null
+  parameters:
+    ContentType:
+      name: Content-Type
+      in: header
+      required: true
+      schema:
+        type: string
+      description: The Content-Type representation header is used to indicate the original media type of the resource (prior to any content encoding applied for sending).
+      example: application/json
+    Authorization:
+      name: Authorization
+      in: header
+      required: true
+      schema:
+        type: string
+      description: Your v4 API key that was generated in the Partner portal.
+  securitySchemes:
+    merchantApiKey:
+      type: apiKey
+      in: header
+      name: Authorization
+      description: Merchant API key for RESTful API authentication. This key is used for merchant-specific API access and can be generated from the merchant portal.
+externalDocs:
+  url: https://www.postman.com/nmi-integration-support/workspace/nmi-public-documentation/request/5480015-f4b0ec7b-bd84-4094-98c2-67c0b6508a7f
+  description: Public Documentation (Postman)
+x-tagGroups:
+- name: REST API (recommended)
+  tags:
+  - Payments
+  - Plans
+  - Subscriptions
+  - Products
+  - Invoicing
+  - Customers
+  - Devices
+- name: Classic API
+  tags:
+  - Payment Processing
+  - Data and Transaction Reporting
+  - Webhook Events
+  - Gateway Features
+  - Processors and Services
+  - Apple Pay
+x-provenance:
+  method: searched
+  source: https://docs.nmi.com/reference
+  harvested: '2026-10-14'
+  tool: harvest-readme-openapi.py
+  note: Assembled verbatim from the OpenAPI definition ReadMe embeds in each operation page of the provider's developer portal; paths and components merged by API title, nothing authored.
+  assembled_from:
+  - https://docs.nmi.com/reference/add-billing-address-v5.md
+  - https://docs.nmi.com/reference/add-processor-service.md
+  - https://docs.nmi.com/reference/add-shipping-address-v5.md
+  - https://docs.nmi.com/reference/adding-apple-pay.md
+  - https://docs.nmi.com/reference/cancel-device-display-v5.md
+  - https://docs.nmi.com/reference/cancel-device-payment-request-v5.md
+  - https://docs.nmi.com/reference/capture-payment-v5.md
+  - https://docs.nmi.com/reference/card-type.md
+  - https://docs.nmi.com/reference/check-services.md
+  - https://docs.nmi.com/reference/check-username-availability.md
+  - https://docs.nmi.com/reference/close-invoice-v5.md
+  - https://docs.nmi.com/reference/create-auth-v5.md
+  - https://docs.nmi.com/reference/create-credit-v5.md
+  - https://docs.nmi.com/reference/create-customer-v5.md
+  - https://docs.nmi.com/reference/create-device-payment-request-auth-v5.md
+  - https://docs.nmi.com/reference/create-device-payment-request-credit-v5.md
+  - https://docs.nmi.com/reference/create-device-payment-request-sale-v5.md
+  - https://docs.nmi.com/reference/create-device-payment-request-validate-v5.md
+  - https://docs.nmi.com/reference/create-invoice-v5.md
+  - https://docs.nmi.com/reference/create-merchant-key.md
+  - https://docs.nmi.com/reference/create-merchant.md
+  - https://docs.nmi.com/reference/create-plan-v5.md
+  - https://docs.nmi.com/reference/create-product-v5.md
+  - https://docs.nmi.com/reference/create-sale-v5.md
+  - https://docs.nmi.com/reference/create-subscription-v5.md
+  - https://docs.nmi.com/reference/delete-billing-address-v5.md
+  - https://docs.nmi.com/reference/delete-customer-v5.md
+  - https://docs.nmi.com/reference/delete-plan-v5.md
+  - https://docs.nmi.com/reference/delete-product-v5.md
+  - https://docs.nmi.com/reference/delete-shipping-address-v5.md
+  - https://docs.nmi.com/reference/delete-subscription-v5.md
+  - https://docs.nmi.com/reference/deregister-device-v5.md
+  - https://docs.nmi.com/reference/display-device-qr-code-v5.md
+  - https://docs.nmi.com/reference/get-billing-address-v5.md
+  - https://docs.nmi.com/reference/get-customer-v5.md
+  - https://docs.nmi.com/reference/get-device-payment-request-status-v5.md
+  - https://docs.nmi.com/reference/get-device-prompt-menu-status-v5.md
+  - https://docs.nmi.com/reference/get-device-prompt-sign-status-v5.md
+  - https://docs.nmi.com/reference/get-device-prompt-yes-no-status-v5.md
+  - https://docs.nmi.com/reference/get-device-v5.md
+  - https://docs.nmi.com/reference/get-fees-in-schedule.md
+  - https://docs.nmi.com/reference/get-invoice-v5.md
+  - https://docs.nmi.com/reference/get-merchant-list.md
+  - https://docs.nmi.com/reference/get-merchant-partner-user-info.md
+  - https://docs.nmi.com/reference/get-merchant-processors-value-added-services.md
+  - https://docs.nmi.com/reference/get-payment-v5.md
+  - https://docs.nmi.com/reference/get-plan-v5.md
+  - https://docs.nmi.com/reference/get-processor-config.md
+  - https://docs.nmi.com/reference/get-product-v5.md
+  - https://docs.nmi.com/reference/get-settlement-time.md
+  - https://docs.nmi.com/reference/get-shipping-address-v5.md
+  - https://docs.nmi.com/reference/get-specific-merchant-information.md
+  - https://docs.nmi.com/reference/get-sub-affiliate-list.md
+  - https://docs.nmi.com/reference/get-subscription-v5.md
+  - https://docs.nmi.com/reference/get-transaction-data.md
+  - https://docs.nmi.com/reference/list-customers-v5.md
+  - https://docs.nmi.com/reference/list-devices-v5.md
+  - https://docs.nmi.com/reference/list-invoices-v5.md
+  - https://docs.nmi.com/reference/list-plans-v5.md
+  - https://docs.nmi.com/reference/list-products-v5.md
+  - https://docs.nmi.com/reference/list-subscriptions-v5.md
+  - https://docs.nmi.com/reference/patch_v4-merchants-gateway-id-1.md
+  - https://docs.nmi.com/reference/prompt-device-menu-v5.md
+  - https://docs.nmi.com/reference/prompt-device-sign-v5.md
+  - https://docs.nmi.com/reference/prompt-device-yes-no-v5.md
+  - https://docs.nmi.com/reference/pull-all-fee-schedules.md
+  - https://docs.nmi.com/reference/query.md
+  - https://docs.nmi.com/reference/querying-merchants-apple-pay-status.md
+  - https://docs.nmi.com/reference/refund-payment-v5.md
+  - https://docs.nmi.com/reference/register-device-v5.md
+  - https://docs.nmi.com/reference/see-merchant-billing.md
+  - https://docs.nmi.com/reference/see-your-commission.md
+  - https://docs.nmi.com/reference/send-invoice-v5.md
+  - https://docs.nmi.com/reference/update-billing-address-v5.md
+  - https://docs.nmi.com/reference/update-customer-v5.md
+  - https://docs.nmi.com/reference/update-device-v5.md
+  - https://docs.nmi.com/reference/update-invoice-v5.md
+  - https://docs.nmi.com/reference/update-plan-v5.md
+  - https://docs.nmi.com/reference/update-product-v5.md
+  - https://docs.nmi.com/reference/update-shipping-address-v5.md
+  - https://docs.nmi.com/reference/update-subscription-v5.md
+  - https://docs.nmi.com/reference/updating-settlement-time.md
+  - https://docs.nmi.com/reference/validate-payment-v5.md
+  - https://docs.nmi.com/reference/void-payment-v5.md
+  merge:
+    pages: 84
+    deduped: 4356
+    conflicts_kept_first: 0

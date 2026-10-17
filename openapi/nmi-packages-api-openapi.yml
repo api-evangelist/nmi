@@ -1,0 +1,1808 @@
+openapi: 3.2.0
+info:
+  title: Payments Sign-Up Packages API
+  description: Payments Sign-Up API
+  version: 1.0.0
+  license:
+    name: Proprietary
+    url: https://api.nmipayments.com/license
+servers:
+- url: https://sandbox.signup.nmi.com/api/v1
+  description: Sandbox
+- url: https://secure.nmi.com/api/v5/signup
+  description: Production
+tags:
+- name: Packages
+  description: Get all the information required for application submissions
+paths:
+  /packages:
+    get:
+      tags:
+      - Packages
+      security:
+      - oauth:
+        - packages:read
+      summary: List all Packages
+      description: 'This operation returns a list of available application packages.
+
+
+        **Required scope:** `packages:read`'
+      operationId: getPackages
+      parameters:
+      - name: page
+        in: query
+        description: Page number
+        required: false
+        schema:
+          type: integer
+          minimum: 1
+          default: 1
+      - name: per_page
+        in: query
+        description: Number of packages per page
+        required: false
+        schema:
+          type: integer
+          enum:
+          - 10
+          - 20
+          - 50
+          - 100
+          default: 10
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/packages-list'
+                - $ref: '#/components/schemas/pagination'
+              examples:
+                success:
+                  summary: Success
+                  description: The response contains the standard package.
+                  value:
+                    packages:
+                    - id: pkg_merrick_tsys
+                      name: Merrick TSYS Application Package
+                      description: Merrick TSYS Application Package
+                    current_page: 1
+                    per_page: 10
+                    last_page: 1
+                    total: 1
+        '422':
+          $ref: '#/components/responses/validation-error-page-size'
+  /packages/{package}:
+    get:
+      tags:
+      - Packages
+      security:
+      - oauth:
+        - packages:read
+      summary: Get Package
+      description: 'The **Packages** endpoint provides package rules, a structured set of field details necessary for creating an
+
+        application. It defines the required and optional fields, their formats, and any conditional rules that
+
+        must be followed.
+
+
+        **Required scope:** `packages:read`'
+      operationId: getPackageById
+      parameters:
+      - name: package
+        in: path
+        description: Package ID
+        required: true
+        schema:
+          $ref: '#/components/schemas/package-id'
+      responses:
+        '200':
+          description: Successful response with the package information
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - id
+                - name
+                - description
+                - package_rules
+                - fields
+                - collections
+                properties:
+                  id:
+                    $ref: '#/components/schemas/package-id'
+                  name:
+                    $ref: '#/components/schemas/package-name'
+                  description:
+                    $ref: '#/components/schemas/package-description'
+                  package_rules:
+                    $ref: '#/components/schemas/package-rules'
+                  fields:
+                    $ref: '#/components/schemas/package-fields'
+                  collections:
+                    type: array
+                    maxItems: 100
+                    items:
+                      $ref: '#/components/schemas/package-collection'
+              examples:
+                standard-package:
+                  $ref: '#/components/examples/standard-package'
+        '404':
+          $ref: '#/components/responses/error-not-found'
+components:
+  schemas:
+    percent-field:
+      type: object
+      title: Percent
+      summary: Percent field.
+      description: This field allows the user to set a percent amount
+      required:
+      - id
+      - name
+      - type
+      - required
+      - default
+      - min
+      - max
+      properties:
+        id:
+          $ref: '#/components/schemas/field-id'
+        name:
+          $ref: '#/components/schemas/field-name'
+        required:
+          $ref: '#/components/schemas/field-required'
+        type:
+          type: string
+          description: The type of the field.
+          enum:
+          - percent
+        default:
+          type:
+          - string
+          - 'null'
+          description: The default value for the field.
+          maxLength: 9
+        min:
+          type: integer
+          description: The minimum length of the field.
+        max:
+          type: integer
+          description: The maximum length of the field.
+    package:
+      type: object
+      title: Package
+      description: Package information
+      required:
+      - id
+      - name
+      - description
+      properties:
+        id:
+          $ref: '#/components/schemas/package-id'
+        name:
+          $ref: '#/components/schemas/package-name'
+        description:
+          $ref: '#/components/schemas/package-description'
+    email-field:
+      type: object
+      title: String
+      summary: Email field.
+      description: This field allows the user to set an email.
+      required:
+      - id
+      - name
+      - type
+      - required
+      - default
+      properties:
+        id:
+          $ref: '#/components/schemas/field-id'
+        name:
+          $ref: '#/components/schemas/field-name'
+        required:
+          $ref: '#/components/schemas/field-required'
+        type:
+          type: string
+          description: The type of the field.
+          enum:
+          - email
+        default:
+          type:
+          - string
+          - 'null'
+          description: The default value for the field.
+          maxLength: 1000
+        min:
+          type: integer
+          description: The minimum length of the field.
+        max:
+          type: integer
+          description: The maximum length of the field.
+        regex:
+          type:
+          - string
+          - 'null'
+          description: The regular expression that the field must match.
+    field-id:
+      type: string
+      description: The unique identifier of the field.
+      pattern: ^fld_[a-z0-9_]{3,46}$
+      minLength: 7
+      maxLength: 50
+    routing-number-field:
+      type: object
+      title: String
+      summary: Bank Routing Number field.
+      description: This field allows the user to enter USA bank routing number.
+      required:
+      - id
+      - name
+      - type
+      - required
+      - default
+      properties:
+        id:
+          $ref: '#/components/schemas/field-id'
+        name:
+          $ref: '#/components/schemas/field-name'
+        required:
+          $ref: '#/components/schemas/field-required'
+        type:
+          type: string
+          description: The type of the field.
+          enum:
+          - routing_number
+        default:
+          type:
+          - string
+          - 'null'
+          description: The default value for the field.
+          maxLength: 9
+          minLength: 9
+        min:
+          type: integer
+          description: The minimum length of the field.
+          maxLength: 9
+          minLength: 9
+        max:
+          type: integer
+          description: The maximum length of the field.
+          maxLength: 9
+          minLength: 9
+    website-field:
+      type: object
+      title: String
+      summary: Website field.
+      description: This field allows the user to set a website URL.
+      required:
+      - id
+      - name
+      - type
+      - required
+      - default
+      properties:
+        id:
+          $ref: '#/components/schemas/field-id'
+        name:
+          $ref: '#/components/schemas/field-name'
+        required:
+          $ref: '#/components/schemas/field-required'
+        type:
+          type: string
+          description: The type of the field.
+          enum:
+          - website
+        default:
+          type:
+          - string
+          - 'null'
+          description: The default value for the field.
+          maxLength: 1000
+        min:
+          type: integer
+          description: The minimum length of the field.
+        max:
+          type: integer
+          description: The maximum length of the field.
+        regex:
+          type:
+          - string
+          - 'null'
+          description: The regular expression that the field must match.
+    decimal-field:
+      type: object
+      title: Decimal
+      summary: Decimal field.
+      description: This field allows the user to enter a decimal value.
+      required:
+      - id
+      - name
+      - type
+      - required
+      - default
+      - min
+      - max
+      properties:
+        id:
+          $ref: '#/components/schemas/field-id'
+        name:
+          $ref: '#/components/schemas/field-name'
+        required:
+          $ref: '#/components/schemas/field-required'
+        type:
+          type: string
+          description: The type of the field.
+          enum:
+          - decimal
+        default:
+          type:
+          - number
+          - 'null'
+          format: double
+          description: The default value for the field if no value is provided.
+        min:
+          type:
+          - number
+          - 'null'
+          format: double
+          description: The minimum value allowed for the field.
+        max:
+          type:
+          - number
+          - 'null'
+          format: double
+          description: The maximum value allowed for the field.
+    string-field:
+      type: object
+      title: String
+      summary: String field.
+      description: This field allows the user to set a string.
+      required:
+      - id
+      - name
+      - type
+      - required
+      - default
+      - min
+      - max
+      - regex
+      properties:
+        id:
+          $ref: '#/components/schemas/field-id'
+        name:
+          $ref: '#/components/schemas/field-name'
+        required:
+          $ref: '#/components/schemas/field-required'
+        type:
+          type: string
+          description: The type of the field.
+          enum:
+          - string
+        default:
+          type:
+          - string
+          - 'null'
+          description: The default value for the field.
+          maxLength: 1000
+        min:
+          type: integer
+          description: The minimum length of the field.
+        max:
+          type: integer
+          description: The maximum length of the field.
+        regex:
+          type:
+          - string
+          - 'null'
+          description: The regular expression that the field must match.
+    boolean-field:
+      type: object
+      title: Boolean
+      summary: Boolean field.
+      description: This field allows the user to provide a boolean value.
+      required:
+      - id
+      - name
+      - type
+      - required
+      - default
+      properties:
+        id:
+          $ref: '#/components/schemas/field-id'
+        name:
+          $ref: '#/components/schemas/field-name'
+        required:
+          $ref: '#/components/schemas/field-required'
+        type:
+          type: string
+          description: Type of the field.
+          enum:
+          - boolean
+        default:
+          type:
+          - boolean
+          - 'null'
+          description: Default value for the field.
+    field-required:
+      type: boolean
+      description: Whether the field is required.
+    integer-field:
+      type: object
+      title: Integer
+      summary: Integer field.
+      description: This field allows the user to enter an integer value.
+      required:
+      - id
+      - name
+      - type
+      - required
+      - default
+      - min
+      - max
+      properties:
+        id:
+          $ref: '#/components/schemas/field-id'
+        name:
+          $ref: '#/components/schemas/field-name'
+        required:
+          $ref: '#/components/schemas/field-required'
+        type:
+          type: string
+          description: The type of the field.
+          enum:
+          - integer
+        default:
+          type:
+          - integer
+          - 'null'
+          description: The default value for the field if no value is provided.
+        min:
+          type: integer
+          description: The minimum value that can be entered.
+        max:
+          type: integer
+          description: The maximum value that can be entered.
+    collection-id:
+      type: string
+      description: The unique identifier of the collection.
+      pattern: ^col_[a-z0-9_]{3,46}$
+      minLength: 7
+      maxLength: 50
+    collection-name:
+      type: string
+      description: The name of the package collection.
+      maxLength: 1000
+    postal-code-field:
+      type: object
+      title: String
+      summary: Postal Code field.
+      description: This field allows the user to set a postal code field.
+      required:
+      - id
+      - name
+      - type
+      - required
+      - default
+      properties:
+        id:
+          $ref: '#/components/schemas/field-id'
+        name:
+          $ref: '#/components/schemas/field-name'
+        required:
+          $ref: '#/components/schemas/field-required'
+        type:
+          type: string
+          description: The type of the field.
+          enum:
+          - postal_code
+        default:
+          type:
+          - string
+          - 'null'
+          description: The default value for the field.
+          maxLength: 5
+    package-rules:
+      type: array
+      description: The Package Rules
+      uniqueItems: true
+      minItems: 0
+      maxItems: 50
+      items:
+        type: string
+        description: The Package Rule
+        maxLength: 1000
+    choice-field:
+      type: object
+      title: Choice
+      summary: Single choice field.
+      description: This field allows the user to select a single value from a list of options.
+      required:
+      - id
+      - name
+      - type
+      - required
+      - default
+      - choices
+      properties:
+        id:
+          $ref: '#/components/schemas/field-id'
+        name:
+          $ref: '#/components/schemas/field-name'
+        required:
+          $ref: '#/components/schemas/field-required'
+        type:
+          type: string
+          description: Type of the field.
+          enum:
+          - choice
+        default:
+          type:
+          - string
+          - 'null'
+          description: Default value for the field.
+          maxLength: 1000
+        choices:
+          type: array
+          description: List of choices.
+          maxItems: 1000
+          items:
+            type: string
+            maxLength: 1000
+    package-name:
+      type: string
+      description: The name of the package
+      minLength: 1
+      maxLength: 1000
+      example: Merrick TSYS Application Package
+    package-collection:
+      type: object
+      title: Collection of Fields
+      summary: Fields grouped into a Collection
+      required:
+      - id
+      - name
+      - description
+      - min
+      - max
+      - fields
+      properties:
+        id:
+          $ref: '#/components/schemas/collection-id'
+        name:
+          $ref: '#/components/schemas/collection-name'
+        description:
+          $ref: '#/components/schemas/collection-description'
+        min:
+          type: integer
+          description: The minimum number of records that can be added to the collection.
+          minimum: 0
+          maximum: 100
+        max:
+          type: integer
+          description: The maximum number of records that can be added to the collection.
+          minimum: 0
+          maximum: 100
+        fields:
+          $ref: '#/components/schemas/package-fields'
+    phone-field:
+      type: object
+      title: String
+      summary: Phone field.
+      description: This field allows the user to set an phone.
+      required:
+      - id
+      - name
+      - type
+      - required
+      - default
+      properties:
+        id:
+          $ref: '#/components/schemas/field-id'
+        name:
+          $ref: '#/components/schemas/field-name'
+        required:
+          $ref: '#/components/schemas/field-required'
+        type:
+          type: string
+          description: The type of the field.
+          enum:
+          - phone
+        default:
+          type:
+          - string
+          - 'null'
+          description: The default value for the field.
+          maxLength: 15
+    collection-description:
+      type: string
+      description: The description of the package collection.
+      maxLength: 10000
+    multiselect-field:
+      type: object
+      title: Multi Select
+      summary: Multi select field.
+      description: This field allows the user to select several values from a list of options.
+      required:
+      - id
+      - name
+      - type
+      - required
+      - default
+      - choices
+      properties:
+        id:
+          $ref: '#/components/schemas/field-id'
+        name:
+          $ref: '#/components/schemas/field-name'
+        required:
+          $ref: '#/components/schemas/field-required'
+        type:
+          type: string
+          description: Type of the field.
+          enum:
+          - multiselect
+        default:
+          type:
+          - string
+          - 'null'
+          description: Default value for the field.
+          maxLength: 1000
+        min:
+          type: integer
+          description: Minimum number of choices.
+          minimum: 0
+          maximum: 1000
+        max:
+          type: integer
+          description: Maximum number of choices.
+          minimum: 0
+          maximum: 1000
+        choices:
+          type: array
+          description: List of choices.
+          maxItems: 1000
+          items:
+            type: string
+            maxLength: 1000
+    package-description:
+      type: string
+      description: The description of the package
+      minLength: 1
+      maxLength: 1000
+      example: This is a standard package
+    tax-id-field:
+      type: object
+      title: String
+      summary: Tax ID field.
+      description: This field allows the user to set a Tax ID.
+      required:
+      - id
+      - name
+      - type
+      - required
+      - default
+      properties:
+        id:
+          $ref: '#/components/schemas/field-id'
+        name:
+          $ref: '#/components/schemas/field-name'
+        required:
+          $ref: '#/components/schemas/field-required'
+        type:
+          type: string
+          description: The type of the field.
+          enum:
+          - ssn
+          - federal_tax_id
+        default:
+          type:
+          - string
+          - 'null'
+          description: The default value for the field.
+          maxLength: 9
+          minLength: 9
+        min:
+          type: integer
+          description: The minimum length of the field.
+          maxLength: 9
+          minLength: 9
+        max:
+          type: integer
+          description: The maximum length of the field.
+          maxLength: 9
+          minLength: 9
+    package-fields:
+      type: array
+      description: Array of package fields
+      maxItems: 1000
+      items:
+        oneOf:
+        - $ref: '#/components/schemas/integer-field'
+        - $ref: '#/components/schemas/string-field'
+        - $ref: '#/components/schemas/choice-field'
+        - $ref: '#/components/schemas/multiselect-field'
+        - $ref: '#/components/schemas/boolean-field'
+        - $ref: '#/components/schemas/decimal-field'
+        - $ref: '#/components/schemas/date-field'
+        - $ref: '#/components/schemas/percent-field'
+        - $ref: '#/components/schemas/website-field'
+        - $ref: '#/components/schemas/account-number-field'
+        - $ref: '#/components/schemas/email-field'
+        - $ref: '#/components/schemas/phone-field'
+        - $ref: '#/components/schemas/routing-number-field'
+        - $ref: '#/components/schemas/tax-id-field'
+        - $ref: '#/components/schemas/postal-code-field'
+        discriminator:
+          propertyName: type
+          mapping:
+            integer: '#/components/schemas/integer-field'
+            string: '#/components/schemas/string-field'
+            choice: '#/components/schemas/choice-field'
+            multiselect: '#/components/schemas/multiselect-field'
+            boolean: '#/components/schemas/boolean-field'
+            decimal: '#/components/schemas/decimal-field'
+            date: '#/components/schemas/date-field'
+            percent: '#/components/schemas/percent-field'
+            website: '#/components/schemas/website-field'
+            account_number: '#/components/schemas/account-number-field'
+            email: '#/components/schemas/email-field'
+            phone: '#/components/schemas/phone-field'
+            routing_number: '#/components/schemas/routing-number-field'
+            ssn: '#/components/schemas/tax-id-field'
+            federal_tax_id: '#/components/schemas/tax-id-field'
+            postal_code: '#/components/schemas/postal-code-field'
+    account-number-field:
+      type: object
+      title: String
+      summary: Bank Account Number field.
+      description: This field allows the user to set bank account number.
+      required:
+      - id
+      - name
+      - type
+      - required
+      - default
+      properties:
+        id:
+          $ref: '#/components/schemas/field-id'
+        name:
+          $ref: '#/components/schemas/field-name'
+        required:
+          $ref: '#/components/schemas/field-required'
+        type:
+          type: string
+          description: The type of the field.
+          enum:
+          - account_number
+        default:
+          type:
+          - string
+          - 'null'
+          description: The default value for the field.
+          maxLength: 17
+        min:
+          type: integer
+          description: The minimum length of the field.
+        max:
+          type: integer
+          description: The maximum length of the field.
+    packages-list:
+      type: object
+      description: List of application packages
+      required:
+      - packages
+      properties:
+        packages:
+          type: array
+          maxItems: 100
+          items:
+            $ref: '#/components/schemas/package'
+    package-id:
+      type: string
+      description: The unique identifier of the package.
+      pattern: ^pkg_[a-z0-9_]{3,16}$
+      minLength: 7
+      maxLength: 20
+      example: pkg_merrick_tsys
+    date-field:
+      type: object
+      title: Date
+      summary: Date field.
+      description: 'This field allows the user to set a date. Expected format: YYYY-MM-DD'
+      required:
+      - id
+      - name
+      - type
+      - required
+      - default
+      properties:
+        id:
+          $ref: '#/components/schemas/field-id'
+        name:
+          $ref: '#/components/schemas/field-name'
+        required:
+          $ref: '#/components/schemas/field-required'
+        type:
+          type: string
+          description: The type of the field.
+          enum:
+          - date
+        default:
+          type:
+          - string
+          - 'null'
+          description: The default value for the field.
+          minLength: 10
+          maxLength: 10
+        min:
+          type:
+          - string
+          - 'null'
+          format: date
+          minLength: 10
+          maxLength: 10
+          description: The minimum date that can be submitted.
+        max:
+          type:
+          - string
+          - 'null'
+          format: date
+          minLength: 10
+          maxLength: 10
+          description: The maximum date that can be submitted.
+    field-name:
+      type: string
+      description: Name of the field.
+      maxLength: 1000
+    pagination:
+      type: object
+      summary: Pagination information
+      required:
+      - current_page
+      - last_page
+      - per_page
+      - total
+      properties:
+        current_page:
+          type: integer
+          description: The current page number
+        last_page:
+          type: integer
+          description: The last page number
+        per_page:
+          type: integer
+          enum:
+          - 10
+          - 20
+          - 50
+          - 100
+          description: 'The number of items per page (allowed values: 10, 20, 50, 100)'
+        total:
+          type: integer
+          description: The total number of items
+  responses:
+    error-not-found:
+      description: Error response for resource not found
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              code:
+                type: string
+                description: Error code
+                maxLength: 100
+              message:
+                type: string
+                description: Error message
+                maxLength: 10000
+          examples:
+            not-found:
+              summary: Resource Not Found
+              description: The resource cannot be found
+              value:
+                code: NOT_FOUND
+                message: Resource not found
+    validation-error-page-size:
+      description: Bad request (validation error) response for invalid page size
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              code:
+                type: string
+                description: Error code
+                maxLength: 1000
+              message:
+                type: string
+                description: Error message
+                maxLength: 1000
+              errors:
+                type: array
+                maxItems: 1000
+                items:
+                  type: string
+                  description: The error message
+                  maxLength: 1000
+          examples:
+            standard:
+              summary: Invalid Page Size
+              description: This response is returned when the page size is invalid
+              value:
+                code: VALIDATION_ERROR
+                message: The selected per page is invalid.
+                errors:
+                - The selected per page is invalid.
+  examples:
+    standard-package:
+      summary: Success
+      description: The Merrick TSYS package configuration.
+      value:
+        id: pkg_merrick_tsys
+        name: Merrick TSYS Application Package
+        description: Merrick TSYS Application Package
+        package_rules:
+        - Field 'fld_qual_rate' is required when 'Flat Rate' pricing type is selected
+        - Field 'fld_qual_rate_per_auth' is required when 'Flat Rate' pricing type is selected
+        - Field 'fld_cost_plus' is required when 'Cost Plus' pricing type is selected
+        - Field 'fld_cost_plus_per_auth' is required when 'Cost Plus' pricing type is selected
+        - Field 'fld_business_website' is required when 'fld_percent_of_ecommerce' > 0
+        - The total percentage of the 'fld_percent_of_retail', 'fld_percent_key_entered', 'fld_percent_of_ecommerce' and 'fld_percent_of_moto' fields must be 100%
+        - B2C Sales is required when 'fld_percent_of_moto' > 25 %
+        - B2B Sales is required when 'fld_percent_of_moto' > 25 %
+        - Bank or Processing Statements are required when 'fld_average_ticket' ≥ 1000 or 'fld_high_ticket' ≥ 2500
+        fields:
+        - id: fld_amex_annual_volume
+          name: Amex Annual Volume
+          type: integer
+          required: false
+          default: null
+          min: 0
+          max: 999999999
+        - id: fld_average_ticket
+          name: Average Ticket
+          type: integer
+          required: true
+          default: null
+          min: 1
+          max: 9999999999
+        - id: fld_individual_with_control_address
+          name: Address
+          type: string
+          required: true
+          default: null
+          min: 3
+          max: 32
+          regex: null
+        - id: fld_individual_with_control_city
+          name: City
+          type: string
+          required: true
+          default: null
+          min: 3
+          max: 13
+          regex: null
+        - id: fld_individual_with_control_country
+          name: Country
+          type: choice
+          required: false
+          default: US
+          choices:
+          - US
+        - id: fld_individual_with_control_dob
+          name: Date of Birth
+          type: date
+          required: true
+          default: null
+          min: null
+          max: null
+        - id: fld_individual_with_control_first_name
+          name: First Name
+          type: string
+          required: true
+          default: null
+          min: 2
+          max: 25
+          regex: null
+        - id: fld_individual_with_control_last_name
+          name: Last Name
+          type: string
+          required: true
+          default: null
+          min: 2
+          max: 25
+          regex: null
+        - id: fld_individual_with_control_ownership_percentage
+          name: Percent of Ownership
+          type: integer
+          required: false
+          default: null
+          min: 0
+          max: 100
+        - id: fld_individual_with_control_postal_code
+          name: Zip Code
+          type: postal_code
+          required: true
+          default: null
+        - id: fld_individual_with_control_ssn
+          name: SSN
+          type: ssn
+          required: true
+          default: null
+        - id: fld_individual_with_control_state
+          name: State
+          type: choice
+          required: true
+          default: null
+          choices:
+          - AL
+          - AK
+          - AZ
+          - AR
+          - CA
+          - CO
+          - CT
+          - DE
+          - FL
+          - GA
+          - HI
+          - ID
+          - IL
+          - IN
+          - IA
+          - KS
+          - KY
+          - LA
+          - ME
+          - MD
+          - MA
+          - MI
+          - MN
+          - MS
+          - MO
+          - MT
+          - NE
+          - NV
+          - NH
+          - NJ
+          - NM
+          - NY
+          - NC
+          - ND
+          - OH
+          - OK
+          - OR
+          - PA
+          - RI
+          - SC
+          - SD
+          - TN
+          - TX
+          - UT
+          - VT
+          - VA
+          - WA
+          - WV
+          - WI
+          - WY
+          - DC
+        - id: fld_individual_with_control_title
+          name: Title
+          type: choice
+          required: false
+          default: Owner
+          choices:
+          - CEO
+          - CFO
+          - Chairman
+          - Co-Owner
+          - Comptroller
+          - Controller
+          - Director
+          - General Manager
+          - Office Manager
+          - Owner
+          - Partner
+          - President
+          - Treasurer
+          - Vice President
+        - id: fld_chargeback_email
+          name: Chargeback Email Address
+          type: email
+          required: false
+          default: null
+        - id: fld_date_opened
+          name: Open Date
+          type: date
+          required: false
+          default: null
+          min: null
+          max: null
+        - id: fld_dba_address
+          name: Address
+          type: string
+          required: true
+          default: null
+          min: 3
+          max: 32
+          regex: null
+        - id: fld_dba_city
+          name: City
+          type: string
+          required: true
+          default: null
+          min: 3
+          max: 13
+          regex: null
+        - id: fld_dba_email
+          name: Email Address
+          type: email
+          required: true
+          default: null
+        - id: fld_dba_name
+          name: DBA Name
+          type: string
+          required: true
+          default: null
+          min: 3
+          max: 32
+          regex: null
+        - id: fld_dba_phone_number
+          name: Phone
+          type: phone
+          required: true
+          default: null
+        - id: fld_dba_postal_code
+          name: Zip Code
+          type: postal_code
+          required: true
+          default: null
+        - id: fld_dba_state
+          name: State
+          type: choice
+          required: true
+          default: null
+          choices:
+          - AL
+          - AK
+          - AZ
+          - AR
+          - CA
+          - CO
+          - CT
+          - DE
+          - FL
+          - GA
+          - HI
+          - ID
+          - IL
+          - IN
+          - IA
+          - KS
+          - KY
+          - LA
+          - ME
+          - MD
+          - MA
+          - MI
+          - MN
+          - MS
+          - MO
+          - MT
+          - NE
+          - NV
+          - NH
+          - NJ
+          - NM
+          - NY
+          - NC
+          - ND
+          - OH
+          - OK
+          - OR
+          - PA
+          - RI
+          - SC
+          - SD
+          - TN
+          - TX
+          - UT
+          - VT
+          - VA
+          - WA
+          - WV
+          - WI
+          - WY
+          - DC
+        - id: fld_federal_tax_id
+          name: Federal Tax ID
+          type: federal_tax_id
+          required: true
+          default: null
+        - id: fld_high_ticket
+          name: High Ticket
+          type: integer
+          required: true
+          default: null
+          min: 0
+          max: 999999
+        - id: fld_legal_address
+          name: Address
+          type: string
+          required: true
+          default: null
+          min: 3
+          max: 32
+          regex: null
+        - id: fld_legal_city
+          name: City
+          type: string
+          required: true
+          default: null
+          min: 3
+          max: 24
+          regex: null
+        - id: fld_legal_country
+          name: Country
+          type: choice
+          required: false
+          default: US
+          choices:
+          - US
+        - id: fld_legal_name
+          name: Legal Name
+          type: string
+          required: true
+          default: null
+          min: 3
+          max: 32
+          regex: null
+        - id: fld_state_incorporated
+          name: State Incorporated
+          type: choice
+          required: true
+          default: null
+          choices:
+          - AL
+          - AK
+          - AZ
+          - AR
+          - CA
+          - CO
+          - CT
+          - DE
+          - FL
+          - GA
+          - HI
+          - ID
+          - IL
+          - IN
+          - IA
+          - KS
+          - KY
+          - LA
+          - ME
+          - MD
+          - MA
+          - MI
+          - MN
+          - MS
+          - MO
+          - MT
+          - NE
+          - NV
+          - NH
+          - NJ
+          - NM
+          - NY
+          - NC
+          - ND
+          - OH
+          - OK
+          - OR
+          - PA
+          - RI
+          - SC
+          - SD
+          - TN
+          - TX
+          - UT
+          - VT
+          - VA
+          - WA
+          - WV
+          - WI
+          - WY
+          - DC
+        - id: fld_legal_postal_code
+          name: Zip Code
+          type: postal_code
+          required: true
+          default: null
+        - id: fld_legal_state
+          name: State
+          type: choice
+          required: true
+          default: null
+          choices:
+          - AL
+          - AK
+          - AZ
+          - AR
+          - CA
+          - CO
+          - CT
+          - DE
+          - FL
+          - GA
+          - HI
+          - ID
+          - IL
+          - IN
+          - IA
+          - KS
+          - KY
+          - LA
+          - ME
+          - MD
+          - MA
+          - MI
+          - MN
+          - MS
+          - MO
+          - MT
+          - NE
+          - NV
+          - NH
+          - NJ
+          - NM
+          - NY
+          - NC
+          - ND
+          - OH
+          - OK
+          - OR
+          - PA
+          - RI
+          - SC
+          - SD
+          - TN
+          - TX
+          - UT
+          - VT
+          - VA
+          - WA
+          - WV
+          - WI
+          - WY
+          - DC
+        - id: fld_contact_name
+          name: Contact Name
+          type: string
+          required: true
+          default: null
+          min: 0
+          max: 25
+          regex: ^[A-Za-z0-9\-\.\,\(\)]+\s+[A-Za-z0-9\-\.\,\(\)]+(\s+[A-Za-z0-9\-\.\,\(\)]+)*$
+        - id: fld_mcc
+          name: SIC/MCC
+          type: string
+          required: false
+          default: null
+          min: 4
+          max: 4
+          regex: null
+        - id: fld_percent_key_entered
+          name: Percentage Key Entered
+          type: integer
+          required: true
+          default: null
+          min: 0
+          max: 100
+        - id: fld_percent_of_ecommerce
+          name: Percentage of E-Commerce
+          type: integer
+          required: true
+          default: null
+          min: 0
+          max: 100
+        - id: fld_percent_of_swiped
+          name: Percentage of Swiped
+          type: integer
+          required: true
+          default: null
+          min: 0
+          max: 100
+        - id: fld_type_of_goods_sold
+          name: Type of Goods Sold
+          type: string
+          required: false
+          default: null
+          min: 5
+          max: 50
+          regex: null
+        - id: fld_years_in_business
+          name: Years In Business (when opened)
+          type: integer
+          required: true
+          default: null
+          min: 0
+          max: 99
+        - id: fld_pricing_type
+          name: Pricing Type
+          type: choice
+          required: true
+          default: null
+          choices:
+          - Flat Rate
+          - Cost Plus
+        - id: fld_qual_rate
+          name: Qual Rate
+          type: percent
+          required: false
+          default: null
+          min: 0
+          max: 100
+        - id: fld_qual_rate_per_auth
+          name: Qual Rate Per Auth
+          type: decimal
+          required: false
+          default: null
+          min: 0
+          max: 100
+        - id: fld_cost_plus
+          name: Cost Plus
+          type: percent
+          required: false
+          default: null
+          min: 0
+          max: 100
+        - id: fld_cost_plus_per_auth
+          name: Cost Plus Per Auth
+          type: decimal
+          required: false
+          default: null
+          min: 0
+          max: 100
+        - id: fld_dba_country
+          name: Country
+          type: choice
+          required: false
+          default: US
+          choices:
+          - US
+        - id: fld_percent_of_moto
+          name: MOTO %
+          type: integer
+          required: true
+          default: null
+          min: 0
+          max: 100
+        - id: fld_type_business
+          name: Business Type
+          type: choice
+          required: true
+          default: null
+          choices:
+          - Sole Proprietor
+          - Partnership
+          - Corporation
+          - LLC
+          - Non-Profit
+          - Publicly Traded
+          - Government
+        - id: fld_business_nature
+          name: Nature of Business
+          type: choice
+          required: true
+          default: null
+          choices:
+          - Retail
+          - Internet
+          - Mail Order/Telephone Order
+        - id: fld_b2c_sales_percentage
+          name: B2C Sales
+          type: integer
+          required: false
+          default: null
+          min: 0
+          max: 100
+        - id: fld_b2b_sales_percentage
+          name: B2B Sales
+          type: integer
+          required: false
+          default: null
+          min: 0
+          max: 100
+        - id: fld_monthly_volume
+          name: Monthly Volume
+          type: integer
+          required: true
+          default: null
+          min: 1
+          max: 9999999999
+        - id: fld_individual_with_control_email
+          name: Email
+          type: email
+          required: false
+          default: null
+        - id: fld_owner_phone_num
+          name: Phone
+          type: phone
+          required: true
+          default: null
+        - id: fld_legal_phone_number
+          name: Corporate/Legal Phone
+          type: phone
+          required: true
+          default: null
+        - id: fld_individual_with_control_passport_num
+          name: Passport Number
+          type: string
+          required: false
+          default: null
+          min: 9
+          max: 9
+          regex: ^[0-9]+$
+        - id: fld_business_website
+          name: Website
+          type: website
+          required: false
+          default: null
+        - id: fld_amex_processor_fees
+          name: Amex Processor Fees
+          type: percent
+          required: false
+          default: null
+          min: 0
+          max: 100
+        - id: fld_amex_processor_per_auth
+          name: Amex Processor Per Auth
+          type: decimal
+          required: false
+          default: null
+          min: 0
+          max: 100
+        - id: fld_downgrade_surcharge
+          name: Downgrade Surcharge
+          type: percent
+          required: false
+          default: null
+          min: 0
+          max: 100
+        - id: fld_downgrade_per_auth
+          name: Downgrade Per Auth
+          type: decimal
+          required: false
+          default: null
+          min: 0
+          max: 100
+        - id: fld_international_rate
+          name: International Rate
+          type: percent
+          required: false
+          default: null
+          min: 0
+          max: 100
+        - id: fld_international_per_auth
+          name: International Per Auth
+          type: decimal
+          required: false
+          default: null
+          min: 0
+          max: 100
+        - id: fld_monthly_fee
+          name: Monthly Fee
+          type: decimal
+          required: false
+          default: null
+          min: 0
+          max: 100
+        - id: fld_chargeback_fee
+          name: Chargeback Fee
+          type: decimal
+          required: false
+          default: null
+          min: 0
+          max: 100
+        - id: fld_retrieval_request_fee
+          name: Retrieval Request Fee
+          type: decimal
+          required: false
+          default: null
+          min: 0
+          max: 100
+        - id: fld_voice_auth_fee
+          name: Voice Auth Fee
+          type: decimal
+          required: false
+          default: null
+          min: 0
+          max: 100
+        - id: fld_ach_return_fee
+          name: ACH Return Fee
+          type: decimal
+          required: false
+          default: null
+          min: 0
+          max: 100
+        - id: fld_batch_fee
+          name: Batch Fee
+          type: decimal
+          required: false
+          default: null
+          min: 0
+          max: 100
+        - id: fld_avs_fee
+          name: Address Verification Fee
+          type: decimal
+          required: false
+          default: null
+          min: 0
+          max: 100
+        - id: fld_1099_fee
+          name: Regulatory/1099 Fee
+          type: decimal
+          required: false
+          default: null
+          min: 0
+          max: 100
+        - id: fld_monthly_minimum
+          name: Monthly Minimum
+          type: decimal
+          required: false
+          default: null
+          min: 0
+          max: 100
+        - id: fld_annual_fee
+          name: Annual Fee
+          type: decimal
+          required: false
+          default: null
+          min: 0
+          max: 100
+        - id: fld_breach_monitoring_protection
+          name: Breach Monitoring Protection
+          type: decimal
+          required: false
+          default: null
+          min: 0
+          max: 100
+        collections:
+        - id: col_owners
+          name: Beneficial Owners
+          description: Beneficial Owners
+          min: 1
+          max: 4
+          fields:
+          - id: fld_beneficial_owners_address
+            name: Address
+            type: string
+            required: true
+            default: null
+            min: 2
+            max: 32
+            regex: null
+          - id: fld_beneficial_owners_city
+            name: City
+            type: string
+            required: true
+            default: null
+            min: 3
+            max: 13
+            regex: null
+          - id: fld_beneficial_owners_country
+            name: Country
+            type: choice
+            required: true
+            default: US
+            choices:
+            - US
+          - id: fld_beneficial_owners_dob
+            name: Date of Birth
+            type: date
+            required: true
+            default: null
+            min: null
+            max: null
+          - id: fld_beneficial_owners_first_name
+            name: First Name
+            type: string
+            required: true
+            default: null
+            min: 2
+            max: 25
+            regex: null
+          - id: fld_beneficial_owners_last_name
+            name: Last Name
+            type: string
+            required: true
+            default: null
+            min: 2
+            max: 25
+            regex: null
+          - id: fld_beneficial_owners_postal_code
+            name: Zip Code
+            type: string
+            required: true
+            default: null
+            min: 5
+            max: 7
+            regex: null
+          - id: fld_beneficial_owners_state
+            name: State
+            type: string
+            required: true
+            default: null
+            min: 2
+            max: 3
+            regex: null
+        - id: col_bank_info
+          name: Bank Info
+          description: Bank Info
+          min: 1
+          max: 2
+          fields:
+          - id: fld_dda_account_number
+            name: Account Number
+            type: account_number
+            required: true
+            default: null
+          - id: fld_dda_account_routing_number
+            name: Routing Number
+            type: routing_number
+            required: true
+            default: null
+          - id: fld_dda_name_on_account
+            name: Name on Account
+            type: string
+            required: true
+            default: null
+            min: 3
+            max: 100
+            regex: null
+  securitySchemes:
+    oauth:
+      type: oauth2
+      flows:
+        clientCredentials:
+          tokenUrl: /oauth/token
+          scopes:
+            '*': Full access
+            packages:read: Read packages information
+            applications:read: Read access to applications
+            applications:write: Write access to applications
+            subscriptions:read: Read access to subscriptions
+            subscriptions:write: Write access to subscriptions (subscribe/updated/delete)
+x-provenance:
+  method: searched
+  source: https://docs.nmi.com/reference
+  harvested: '2026-10-14'
+  tool: harvest-readme-openapi.py
+  note: Assembled verbatim from the OpenAPI definition ReadMe embeds in each operation page of the provider's developer portal; paths and components merged by API title, nothing authored.
+  assembled_from:
+  - https://docs.nmi.com/reference/createapplication.md
+  - https://docs.nmi.com/reference/createsubscription.md
+  - https://docs.nmi.com/reference/deletesubscription.md
+  - https://docs.nmi.com/reference/getaccesstoken.md
+  - https://docs.nmi.com/reference/getapplication.md
+  - https://docs.nmi.com/reference/getapplicationdownloadagreement.md
+  - https://docs.nmi.com/reference/getapplicationlegalconsent.md
+  - https://docs.nmi.com/reference/getapplications.md
+  - https://docs.nmi.com/reference/getpackagebyid.md
+  - https://docs.nmi.com/reference/getpackages.md
+  - https://docs.nmi.com/reference/getsubscription.md
+  - https://docs.nmi.com/reference/getsubscriptions.md
+  - https://docs.nmi.com/reference/submitapplication.md
+  - https://docs.nmi.com/reference/updateapplication.md
+  - https://docs.nmi.com/reference/updateapplicationinfo.md
+  - https://docs.nmi.com/reference/updatesubscription.md
+  - https://docs.nmi.com/reference/uploaddocument.md
+  merge:
+    pages: 17
+    deduped: 353
+    conflicts_kept_first: 0

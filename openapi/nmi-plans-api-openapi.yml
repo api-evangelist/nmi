@@ -1,0 +1,472 @@
+openapi: 3.2.0
+info:
+  version: 1.0.0
+  title: Payments Plans API
+  description: Our payments platform exposes two generations of API.
+  x-logo:
+    url: https://www.nmi.com/app/themes/nmi/images/NMI_Logo_Primary.webp
+servers:
+- url: https://sandbox.nmi.com/api
+security: []
+tags:
+- name: Plans
+  description: Recurring payment plan management endpoints
+paths:
+  /v5/plans:
+    post:
+      tags:
+      - Plans
+      operationId: create-plan-v5
+      summary: Create Plan
+      description: Create a new recurring payment plan. Plans can be used to define recurring billing schedules that subscriptions can be associated with.
+      security:
+      - merchantApiKey: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              allOf:
+              - $ref: '#/components/schemas/PlanCreateRequest'
+              - type: object
+                description: Creating a plan directly requires `id` and `plan_name`.
+                required:
+                - id
+                - plan_name
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PlanResponse'
+        '400':
+          description: Bad Request - Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Unauthorized
+    get:
+      tags:
+      - Plans
+      operationId: list-plans-v5
+      summary: List Plans
+      description: Retrieve a list of all recurring payment plans.
+      security:
+      - merchantApiKey: []
+      parameters:
+      - name: cursor
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 1
+        description: Cursor for pagination (plan ID to start after). Omit for first page.
+      - name: per_page
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 100
+          default: 20
+        description: 'Number of plans to return per page (default: 20, max: 100)'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  plans:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/PlanResponse'
+                  next_cursor:
+                    type: integer
+                    nullable: true
+                    description: Cursor for the next page. Use this value in the cursor parameter for the next request. Null if there are no more results.
+                  per_page:
+                    type: integer
+                    description: Number of plans per page
+        '401':
+          description: Unauthorized
+  /v5/plans/{id}:
+    get:
+      tags:
+      - Plans
+      operationId: get-plan-v5
+      summary: Get Plan
+      description: Retrieve details for a specific recurring payment plan.
+      security:
+      - merchantApiKey: []
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+        description: The plan ID to retrieve
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PlanResponse'
+        '401':
+          description: Unauthorized
+        '404':
+          description: Plan not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    put:
+      tags:
+      - Plans
+      operationId: update-plan-v5
+      summary: Update Plan
+      description: Update an existing recurring payment plan. Be careful when updating an existing plan, as all customers signed up for this plan will have their billing changed based on your edits.
+      security:
+      - merchantApiKey: []
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+        description: The plan ID to update
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PlanUpdateRequest'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PlanResponse'
+        '400':
+          description: Bad Request - Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Unauthorized
+        '404':
+          description: Plan not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    delete:
+      tags:
+      - Plans
+      operationId: delete-plan-v5
+      summary: Delete Plan
+      description: Delete a recurring payment plan.
+      security:
+      - merchantApiKey: []
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+        description: The plan ID to delete
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+        '401':
+          description: Unauthorized
+        '404':
+          description: Plan not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+components:
+  schemas:
+    PlanResponse:
+      type: object
+      title: Plan Response
+      description: Plan response matching PlanRestSerializer structure
+      properties:
+        object:
+          type: string
+          enum:
+          - plan
+          description: Resource type identifier
+        id:
+          type: string
+          description: Plan ID (SKU)
+        plan_name:
+          type: string
+          description: Plan name
+        plan_amount:
+          type: string
+          description: Plan amount
+        plan_payments:
+          type: string
+          description: Number of payments (0 = until canceled)
+        day_frequency:
+          type: string
+          description: Day frequency (0 if not applicable, empty if not set)
+        month_frequency:
+          type: string
+          description: Month frequency (0 if not applicable, empty if not set)
+        day_of_month:
+          type: string
+          description: Day of month (empty if not applicable)
+      required:
+      - object
+      - id
+    ValidationErrorDetail:
+      type: object
+      title: Validation Error Detail
+      description: Validation error detail
+      required:
+      - fieldName
+      - message
+      properties:
+        fieldName:
+          type: string
+          description: Request field path.
+        message:
+          type: string
+          description: Human-readable validation message for the field.
+      additionalProperties: false
+    ErrorResponse:
+      type: object
+      title: Error Response
+      description: Error response structure matching SecureApiErrorResponseFactory
+      properties:
+        type:
+          type: string
+          description: Error type (e.g., 'validationError', 'internalError', 'authenticationError')
+        error_code:
+          type: string
+          description: Error code (e.g., 'E_INTERNAL', 'E_VALIDATION')
+        message:
+          type: string
+          description: Human-readable error message
+        ref_id:
+          type: string
+          nullable: true
+          description: Reference ID for the error (transaction ID, etc.)
+        details:
+          type: array
+          nullable: true
+          description: Validation error details
+          items:
+            $ref: '#/components/schemas/ValidationErrorDetail'
+      required:
+      - type
+      - error_code
+      - message
+    PlanCreateRequest:
+      type: object
+      required:
+      - plan_amount
+      - plan_payments
+      properties:
+        plan_amount:
+          type: number
+          minimum: 0
+          description: 'The plan amount to be charged each billing cycle. Format: `x.xx`'
+        plan_payments:
+          type: integer
+          minimum: 0
+          maximum: 999
+          description: The number of payments before the recurring plan is complete. Use '0' for until canceled
+        id:
+          type: string
+          maxLength: 50
+          description: The unique identifier for the plan. Required when creating a plan directly; optional when defining a custom plan inline via a subscription.
+        plan_name:
+          type: string
+          maxLength: 50
+          description: The display name of the plan
+      oneOf:
+      - title: Monthly Plan
+        required:
+        - month_frequency
+        - day_of_month
+        properties:
+          month_frequency:
+            type: integer
+            minimum: 1
+            maximum: 24
+            description: How often, in months, to charge the customer.
+          day_of_month:
+            type: integer
+            minimum: 1
+            maximum: 31
+            description: The day of the month that the customer will be charged. For months without 29, 30, or 31 days, the charge will be on the last day.
+      - title: Daily Plan
+        required:
+        - day_frequency
+        properties:
+          day_frequency:
+            type: integer
+            minimum: 1
+            description: How often, in days, to charge the customer.
+    PlanUpdateRequest:
+      title: Plan Update Request
+      description: Update an existing plan. The plan being updated is identified by the `{id}` path parameter. Body fields are optional; send only the fields to change. When changing the billing schedule, include a complete monthly (`month_frequency` + `day_of_month`) or daily (`day_frequency`) set.
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/PlanCreateRequest'
+      - type: object
+        properties:
+          id:
+            type: string
+            maxLength: 50
+            description: New plan identifier when renaming the plan. Omit to keep the existing ID from the path. Distinct from the path parameter `{id}`, which identifies the plan being updated.
+          plan_name:
+            type: string
+            maxLength: 50
+            description: Updated display name of the plan. Optional on update.
+          current_plan_id:
+            type: string
+            maxLength: 50
+            description: Existing plan ID being updated. Optional; the path parameter `{id}` is authoritative and is applied when this is omitted or differs.
+  securitySchemes:
+    merchantApiKey:
+      type: apiKey
+      in: header
+      name: Authorization
+      description: Merchant API key for RESTful API authentication. This key is used for merchant-specific API access and can be generated from the merchant portal.
+externalDocs:
+  url: https://www.postman.com/nmi-integration-support/workspace/nmi-public-documentation/request/5480015-f4b0ec7b-bd84-4094-98c2-67c0b6508a7f
+  description: Public Documentation (Postman)
+x-tagGroups:
+- name: REST API (recommended)
+  tags:
+  - Payments
+  - Plans
+  - Subscriptions
+  - Products
+  - Invoicing
+  - Customers
+  - Devices
+- name: Classic API
+  tags:
+  - Payment Processing
+  - Data and Transaction Reporting
+  - Webhook Events
+  - Gateway Features
+  - Processors and Services
+  - Apple Pay
+x-provenance:
+  method: searched
+  source: https://docs.nmi.com/reference
+  harvested: '2026-10-14'
+  tool: harvest-readme-openapi.py
+  note: Assembled verbatim from the OpenAPI definition ReadMe embeds in each operation page of the provider's developer portal; paths and components merged by API title, nothing authored.
+  assembled_from:
+  - https://docs.nmi.com/reference/add-billing-address-v5.md
+  - https://docs.nmi.com/reference/add-processor-service.md
+  - https://docs.nmi.com/reference/add-shipping-address-v5.md
+  - https://docs.nmi.com/reference/adding-apple-pay.md
+  - https://docs.nmi.com/reference/cancel-device-display-v5.md
+  - https://docs.nmi.com/reference/cancel-device-payment-request-v5.md
+  - https://docs.nmi.com/reference/capture-payment-v5.md
+  - https://docs.nmi.com/reference/card-type.md
+  - https://docs.nmi.com/reference/check-services.md
+  - https://docs.nmi.com/reference/check-username-availability.md
+  - https://docs.nmi.com/reference/close-invoice-v5.md
+  - https://docs.nmi.com/reference/create-auth-v5.md
+  - https://docs.nmi.com/reference/create-credit-v5.md
+  - https://docs.nmi.com/reference/create-customer-v5.md
+  - https://docs.nmi.com/reference/create-device-payment-request-auth-v5.md
+  - https://docs.nmi.com/reference/create-device-payment-request-credit-v5.md
+  - https://docs.nmi.com/reference/create-device-payment-request-sale-v5.md
+  - https://docs.nmi.com/reference/create-device-payment-request-validate-v5.md
+  - https://docs.nmi.com/reference/create-invoice-v5.md
+  - https://docs.nmi.com/reference/create-merchant-key.md
+  - https://docs.nmi.com/reference/create-merchant.md
+  - https://docs.nmi.com/reference/create-plan-v5.md
+  - https://docs.nmi.com/reference/create-product-v5.md
+  - https://docs.nmi.com/reference/create-sale-v5.md
+  - https://docs.nmi.com/reference/create-subscription-v5.md
+  - https://docs.nmi.com/reference/delete-billing-address-v5.md
+  - https://docs.nmi.com/reference/delete-customer-v5.md
+  - https://docs.nmi.com/reference/delete-plan-v5.md
+  - https://docs.nmi.com/reference/delete-product-v5.md
+  - https://docs.nmi.com/reference/delete-shipping-address-v5.md
+  - https://docs.nmi.com/reference/delete-subscription-v5.md
+  - https://docs.nmi.com/reference/deregister-device-v5.md
+  - https://docs.nmi.com/reference/display-device-qr-code-v5.md
+  - https://docs.nmi.com/reference/get-billing-address-v5.md
+  - https://docs.nmi.com/reference/get-customer-v5.md
+  - https://docs.nmi.com/reference/get-device-payment-request-status-v5.md
+  - https://docs.nmi.com/reference/get-device-prompt-menu-status-v5.md
+  - https://docs.nmi.com/reference/get-device-prompt-sign-status-v5.md
+  - https://docs.nmi.com/reference/get-device-prompt-yes-no-status-v5.md
+  - https://docs.nmi.com/reference/get-device-v5.md
+  - https://docs.nmi.com/reference/get-fees-in-schedule.md
+  - https://docs.nmi.com/reference/get-invoice-v5.md
+  - https://docs.nmi.com/reference/get-merchant-list.md
+  - https://docs.nmi.com/reference/get-merchant-partner-user-info.md
+  - https://docs.nmi.com/reference/get-merchant-processors-value-added-services.md
+  - https://docs.nmi.com/reference/get-payment-v5.md
+  - https://docs.nmi.com/reference/get-plan-v5.md
+  - https://docs.nmi.com/reference/get-processor-config.md
+  - https://docs.nmi.com/reference/get-product-v5.md
+  - https://docs.nmi.com/reference/get-settlement-time.md
+  - https://docs.nmi.com/reference/get-shipping-address-v5.md
+  - https://docs.nmi.com/reference/get-specific-merchant-information.md
+  - https://docs.nmi.com/reference/get-sub-affiliate-list.md
+  - https://docs.nmi.com/reference/get-subscription-v5.md
+  - https://docs.nmi.com/reference/get-transaction-data.md
+  - https://docs.nmi.com/reference/list-customers-v5.md
+  - https://docs.nmi.com/reference/list-devices-v5.md
+  - https://docs.nmi.com/reference/list-invoices-v5.md
+  - https://docs.nmi.com/reference/list-plans-v5.md
+  - https://docs.nmi.com/reference/list-products-v5.md
+  - https://docs.nmi.com/reference/list-subscriptions-v5.md
+  - https://docs.nmi.com/reference/patch_v4-merchants-gateway-id-1.md
+  - https://docs.nmi.com/reference/prompt-device-menu-v5.md
+  - https://docs.nmi.com/reference/prompt-device-sign-v5.md
+  - https://docs.nmi.com/reference/prompt-device-yes-no-v5.md
+  - https://docs.nmi.com/reference/pull-all-fee-schedules.md
+  - https://docs.nmi.com/reference/query.md
+  - https://docs.nmi.com/reference/querying-merchants-apple-pay-status.md
+  - https://docs.nmi.com/reference/refund-payment-v5.md
+  - https://docs.nmi.com/reference/register-device-v5.md
+  - https://docs.nmi.com/reference/see-merchant-billing.md
+  - https://docs.nmi.com/reference/see-your-commission.md
+  - https://docs.nmi.com/reference/send-invoice-v5.md
+  - https://docs.nmi.com/reference/update-billing-address-v5.md
+  - https://docs.nmi.com/reference/update-customer-v5.md
+  - https://docs.nmi.com/reference/update-device-v5.md
+  - https://docs.nmi.com/reference/update-invoice-v5.md
+  - https://docs.nmi.com/reference/update-plan-v5.md
+  - https://docs.nmi.com/reference/update-product-v5.md
+  - https://docs.nmi.com/reference/update-shipping-address-v5.md
+  - https://docs.nmi.com/reference/update-subscription-v5.md
+  - https://docs.nmi.com/reference/updating-settlement-time.md
+  - https://docs.nmi.com/reference/validate-payment-v5.md
+  - https://docs.nmi.com/reference/void-payment-v5.md
+  merge:
+    pages: 84
+    deduped: 4356
+    conflicts_kept_first: 0

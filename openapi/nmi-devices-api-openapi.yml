@@ -1,0 +1,2748 @@
+openapi: 3.2.0
+info:
+  version: 1.0.0
+  title: Payments Devices API
+  description: Our payments platform exposes two generations of API.
+  x-logo:
+    url: https://www.nmi.com/app/themes/nmi/images/NMI_Logo_Primary.webp
+servers:
+- url: https://sandbox.nmi.com/api
+security: []
+tags:
+- name: Devices
+  description: Cloud device management and payment request endpoints
+paths:
+  /v5/devices:
+    get:
+      tags:
+      - Devices
+      operationId: list-devices-v5
+      summary: List Cloud Devices
+      description: Retrieve a list of all cloud devices registered to the merchant with optional pagination and status information.
+      security:
+      - merchantApiKey: []
+      parameters:
+      - name: limit
+        in: query
+        required: false
+        description: 'Number of devices to return per page (default: 50, max: 100)'
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 100
+          default: 50
+      - name: offset
+        in: query
+        required: false
+        description: 'Pagination offset (default: 0)'
+        schema:
+          type: integer
+          minimum: 0
+          default: 0
+      - name: include_status
+        in: query
+        required: false
+        description: 'If true, include battery and wifi info in the response (default: false)'
+        schema:
+          type: string
+          enum:
+          - 'true'
+          - 'false'
+      - name: include_connection_info
+        in: query
+        required: false
+        description: 'If true, include connection status info in the response (default: true)'
+        schema:
+          type: string
+          enum:
+          - 'true'
+          - 'false'
+      - name: connection_status
+        in: query
+        required: false
+        description: 'Filter devices by connection status: ''true'' returns only connected devices, ''false'' returns only disconnected devices. Omit to return all devices.'
+        schema:
+          type: string
+          enum:
+          - 'true'
+          - 'false'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeviceListResponse'
+              examples:
+                DeviceListResponse:
+                  $ref: '#/components/examples/DeviceListResponseExample'
+        '401':
+          description: Unauthorized
+    post:
+      tags:
+      - Devices
+      operationId: register-device-v5
+      summary: Register Cloud Device
+      description: Register a new cloud device with the merchant using a registration code.
+      security:
+      - merchantApiKey: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegisterDeviceRequest'
+            examples:
+              RegisterDevice:
+                $ref: '#/components/examples/RegisterDeviceExample'
+      responses:
+        '201':
+          description: Device registered successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeviceResponse'
+              examples:
+                DeviceResponse:
+                  $ref: '#/components/examples/DeviceResponseExample'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+        '401':
+          description: Unauthorized
+  /v5/devices/{device_id}:
+    get:
+      tags:
+      - Devices
+      operationId: get-device-v5
+      summary: Get Cloud Device
+      description: Retrieve a specific cloud device by its ID.
+      security:
+      - merchantApiKey: []
+      parameters:
+      - name: device_id
+        in: path
+        required: true
+        description: The device ID to retrieve.
+        schema:
+          type: string
+      - name: include_status
+        in: query
+        required: false
+        description: 'If true, include battery and wifi info in the response (default: false)'
+        schema:
+          type: string
+          enum:
+          - 'true'
+          - 'false'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeviceResponse'
+              examples:
+                DeviceResponse:
+                  $ref: '#/components/examples/DeviceResponseExample'
+        '401':
+          description: Unauthorized
+        '404':
+          description: Device not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+    patch:
+      tags:
+      - Devices
+      operationId: update-device-v5
+      summary: Update Cloud Device
+      description: Update a cloud device's nickname or default status.
+      security:
+      - merchantApiKey: []
+      parameters:
+      - name: device_id
+        in: path
+        required: true
+        description: The device ID to update.
+        schema:
+          type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateDeviceRequest'
+            examples:
+              UpdateDevice:
+                $ref: '#/components/examples/UpdateDeviceExample'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeviceResponse'
+              examples:
+                DeviceResponse:
+                  $ref: '#/components/examples/DeviceResponseExample'
+        '401':
+          description: Unauthorized
+        '404':
+          description: Device not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+    delete:
+      tags:
+      - Devices
+      operationId: deregister-device-v5
+      summary: Deregister Cloud Device
+      description: Deregister a cloud device from the merchant. Once deregistered, the device cannot be used for transactions.
+      security:
+      - merchantApiKey: []
+      parameters:
+      - name: device_id
+        in: path
+        required: true
+        description: The device ID to deregister.
+        schema:
+          type: string
+      responses:
+        '204':
+          description: Device deregistered successfully
+        '401':
+          description: Unauthorized
+        '404':
+          description: Device not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+  /v5/devices/{device_id}/display:
+    delete:
+      tags:
+      - Devices
+      operationId: cancel-device-display-v5
+      summary: Cancel Display on Device
+      description: Cancel any active display (e.g., QR code) on a cloud device.
+      security:
+      - merchantApiKey: []
+      parameters:
+      - name: device_id
+        in: path
+        required: true
+        description: The device ID to cancel the display on.
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    description: Response from the cancel display operation
+        '401':
+          description: Unauthorized
+        '404':
+          description: Device not found
+  /v5/devices/{device_id}/display/qr-code:
+    post:
+      tags:
+      - Devices
+      operationId: display-device-qr-code-v5
+      summary: Display QR Code on Device
+      description: Display a QR code on a cloud device screen.
+      security:
+      - merchantApiKey: []
+      parameters:
+      - name: device_id
+        in: path
+        required: true
+        description: The device ID to display the QR code on.
+        schema:
+          type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - header
+              - qr_data
+              properties:
+                header:
+                  type: string
+                  maxLength: 27
+                  description: Header message to display on the device
+                  pattern: ^[a-zA-Z0-9.,?!&\/#'-= ]{0,27}$
+                qr_data:
+                  type: string
+                  maxLength: 1500
+                  description: QR code data to display
+                user_cancelled_allowed:
+                  type: boolean
+                  description: Whether the user is allowed to cancel the display
+                  default: false
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    description: Response from the device display operation
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+        '401':
+          description: Unauthorized
+        '404':
+          description: Device not found
+  /v5/devices/{device_id}/payment-requests:
+    delete:
+      tags:
+      - Devices
+      operationId: cancel-device-payment-request-v5
+      summary: Cancel Payment Request on Device
+      description: Cancel an in-flight asynchronous payment request on a cloud device before authorization completes. If the transaction cannot be cancelled (for example, it has already completed), process a void once the transaction is complete. After a successful cancellation, polling GET /api/v5/devices/{device_id}/payment-requests/{request_id} may report a cancelled status such as `cancelledByApi`.
+      security:
+      - merchantApiKey: []
+      parameters:
+      - name: device_id
+        in: path
+        required: true
+        schema:
+          type: string
+        description: The unique identifier of the cloud device whose in-flight payment request should be cancelled
+      responses:
+        '200':
+          description: Cancellation request processed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaymentRequestCancellationResponse'
+              examples:
+                success:
+                  summary: Cancellation requested successfully
+                  value:
+                    object: payment-request-cancellation
+                    success: true
+                    message: Transaction cancellation requested. If the transaction cannot be cancelled, you must process a void request once the transaction is complete.
+                    response_code: '100'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /v5/devices/{device_id}/payment-requests/auth:
+    post:
+      tags:
+      - Devices
+      operationId: create-device-payment-request-auth-v5
+      summary: Create Authorization Payment Request on Device
+      description: Initiate an asynchronous authorization payment request on a specific cloud device. The device_id is specified in the URL path. Payment details (card number, expiration, CVV) are collected by the device itself, so they should not be included in the request body. This endpoint always operates in asynchronous mode. For synchronous payment processing with a device, use POST /api/v5/payments/auth with device_id in the request body. This endpoint uses the same underlying functionality as POST /api/v5/payments/auth.
+      security:
+      - merchantApiKey: []
+      parameters:
+      - name: device_id
+        in: path
+        required: true
+        schema:
+          type: string
+        description: The unique identifier of the cloud device
+      requestBody:
+        required: true
+        description: Payment request body. Payment details (payment_details object with card_number, card_exp, cvv) should not be included as the device will collect this information from the customer.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DevicePaymentRequest'
+      responses:
+        '200':
+          description: Payment request created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaymentRequestStatusResponse'
+              examples:
+                pending:
+                  summary: Payment request created and pending
+                  value:
+                    object: payment-request
+                    id: 1a00e97e-91d1-f011-869b-005056b9afb7
+                    status: pending
+        '400':
+          description: Bad Request - Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Unauthorized
+        '404':
+          description: Device not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /v5/devices/{device_id}/payment-requests/credit:
+    post:
+      tags:
+      - Devices
+      operationId: create-device-payment-request-credit-v5
+      summary: Create Credit Payment Request on Device
+      description: Initiate an asynchronous credit (refund) payment request on a specific cloud device. The device_id is specified in the URL path. Payment details (card number, expiration, CVV) are collected by the device itself, so they should not be included in the request body. This endpoint always operates in asynchronous mode. For synchronous payment processing with a device, use POST /api/v5/payments/credit with device_id in the request body. This endpoint uses the same underlying functionality as POST /api/v5/payments/credit.
+      security:
+      - merchantApiKey: []
+      parameters:
+      - name: device_id
+        in: path
+        required: true
+        schema:
+          type: string
+        description: The unique identifier of the cloud device
+      requestBody:
+        required: true
+        description: Payment request body. Payment details (payment_details object with card_number, card_exp, cvv) should not be included as the device will collect this information from the customer.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DevicePaymentRequest'
+      responses:
+        '200':
+          description: Payment request created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaymentRequestStatusResponse'
+              examples:
+                pending:
+                  summary: Payment request created and pending
+                  value:
+                    object: payment-request
+                    id: 1a00e97e-91d1-f011-869b-005056b9afb7
+                    status: pending
+        '400':
+          description: Bad Request - Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Unauthorized
+        '404':
+          description: Device not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /v5/devices/{device_id}/payment-requests/sale:
+    post:
+      tags:
+      - Devices
+      operationId: create-device-payment-request-sale-v5
+      summary: Create Sale Payment Request on Device
+      description: Initiate an asynchronous sale payment request on a specific cloud device. The device_id is specified in the URL path. Payment details (card number, expiration, CVV) are collected by the device itself, so they should not be included in the request body. This endpoint always operates in asynchronous mode. For synchronous payment processing with a device, use POST /api/v5/payments/sale with device_id in the request body. This endpoint uses the same underlying functionality as POST /api/v5/payments/sale.
+      security:
+      - merchantApiKey: []
+      parameters:
+      - name: device_id
+        in: path
+        required: true
+        schema:
+          type: string
+        description: The unique identifier of the cloud device
+      requestBody:
+        required: true
+        description: Payment request body. Payment details (payment_details object with card_number, card_exp, cvv) should not be included as the device will collect this information from the customer at the device.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DevicePaymentRequest'
+      responses:
+        '200':
+          description: Payment request created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaymentRequestStatusResponse'
+              examples:
+                pending:
+                  summary: Payment request created and pending
+                  value:
+                    object: payment-request
+                    id: 1a00e97e-91d1-f011-869b-005056b9afb7
+                    status: pending
+        '400':
+          description: Bad Request - Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Unauthorized
+        '404':
+          description: Device not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /v5/devices/{device_id}/payment-requests/validate:
+    post:
+      tags:
+      - Devices
+      operationId: create-device-payment-request-validate-v5
+      summary: Create Validation Payment Request on Device
+      description: Initiate an asynchronous validation payment request on a specific cloud device. The device_id is specified in the URL path. Payment details (card number, expiration, CVV) are collected by the device itself, so they should not be included in the request body. This endpoint always operates in asynchronous mode. For synchronous payment processing with a device, use POST /api/v5/payments/validate with device_id in the request body. This endpoint uses the same underlying functionality as POST /api/v5/payments/validate.
+      security:
+      - merchantApiKey: []
+      parameters:
+      - name: device_id
+        in: path
+        required: true
+        schema:
+          type: string
+        description: The unique identifier of the cloud device
+      requestBody:
+        required: true
+        description: 'Payment request body. Note: device_id should not be included in the body as it is specified in the URL path. Payment details (payment_details object with card_number, card_exp, cvv) should not be included as the device will collect this information from the customer.'
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PaymentDeviceValidateRequest'
+      responses:
+        '200':
+          description: Payment request created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaymentRequestStatusResponse'
+              examples:
+                pending:
+                  summary: Payment request created and pending
+                  value:
+                    object: payment-request
+                    id: 1a00e97e-91d1-f011-869b-005056b9afb7
+                    status: pending
+        '400':
+          description: Bad Request - Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Unauthorized
+        '404':
+          description: Device not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /v5/devices/{device_id}/payment-requests/{request_id}:
+    get:
+      tags:
+      - Devices
+      operationId: get-device-payment-request-status-v5
+      summary: Get Payment Request Status
+      description: Retrieve the status of an asynchronous payment request initiated on a cloud device. The request_id is obtained from the initial payment request response (e.g., from POST /api/v5/devices/{deviceId}/payment-requests/sale). The device_id must match the device that initiated the payment request. This endpoint uses the same underlying functionality as GET /api/asyncstatus.
+      security:
+      - merchantApiKey: []
+      parameters:
+      - name: device_id
+        in: path
+        required: true
+        schema:
+          type: string
+        description: The unique identifier of the cloud device that initiated the payment request
+      - name: request_id
+        in: path
+        required: true
+        schema:
+          type: string
+        description: The unique identifier of the payment request, obtained from the initial payment request response
+      responses:
+        '200':
+          description: Payment request status retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaymentRequestStatusResponse'
+              examples:
+                inFlight:
+                  summary: Customer is still interacting with the device
+                  value:
+                    object: payment-request
+                    id: abc123def456
+                    status: inFlight
+                interactionCompleteApproved:
+                  summary: Device interaction finished with an approved transaction
+                  value:
+                    object: payment-request
+                    id: abc123def456
+                    status: interactionComplete
+                    transaction:
+                      id: 12345
+                      type: sale
+                      success: true
+                      condition: pendingsettlement
+                      approval: '123456'
+                      authorized_amount: '10.00'
+                      auth_code: AUTH123
+                interactionCompleteDeclined:
+                  summary: Device interaction finished with a declined transaction
+                  value:
+                    object: payment-request
+                    id: abc123def456
+                    status: interactionComplete
+                    transaction:
+                      id: 12345
+                      type: sale
+                      success: false
+                      condition: failed
+                      auth_code: ''
+                interactionCompleteError:
+                  summary: Device interaction finished with an error
+                  value:
+                    object: payment-request
+                    id: abc123def456
+                    status: interactionComplete
+                    error:
+                      code: '300'
+                      ref_id: '58523101'
+                      message: error message will appear here
+                poiDeviceInUse:
+                  summary: Another payment request is already in progress on the device
+                  value:
+                    object: payment-request
+                    id: abc123def456
+                    status: poiDeviceInUse
+                cancelledAtTerminal:
+                  summary: Customer cancelled at the device
+                  value:
+                    object: payment-request
+                    id: abc123def456
+                    status: cancelledAtTerminal
+                cancelledByApi:
+                  summary: Payment request cancelled via DELETE /api/v5/devices/{device_id}/payment-requests
+                  value:
+                    object: payment-request
+                    id: abc123def456
+                    status: cancelledByApi
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /v5/devices/{device_id}/prompt/menu:
+    post:
+      tags:
+      - Devices
+      operationId: prompt-device-menu-v5
+      summary: Prompt Device for Menu Selection
+      description: Prompt a cloud device to request a menu selection from the user.
+      security:
+      - merchantApiKey: []
+      parameters:
+      - name: device_id
+        in: path
+        required: true
+        description: The device ID to prompt.
+        schema:
+          type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - header
+              - options
+              properties:
+                header:
+                  type: string
+                  maxLength: 24
+                  description: Header message to display on the device
+                  pattern: ^[a-zA-Z0-9.,?!\/#&'-= ]{0,24}$
+                options:
+                  type: array
+                  minItems: 2
+                  maxItems: 20
+                  description: Array of menu options (2-20 items)
+                  items:
+                    type: string
+                    maxLength: 24
+                    pattern: ^[a-zA-Z0-9.,?!\/#'-= ]{0,24}$
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PromptRequestStatusResponse'
+              examples:
+                created:
+                  summary: Prompt request created
+                  value:
+                    object: request
+                    id: 9519a52b-07e7-49e7-8e40-76ef69c053cc
+                    status: in_progress
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+        '401':
+          description: Unauthorized
+        '404':
+          description: Device not found
+  /v5/devices/{device_id}/prompt/menu/{reference}:
+    get:
+      tags:
+      - Devices
+      operationId: get-device-prompt-menu-status-v5
+      summary: Get Menu Prompt Status
+      description: Retrieve the status of a menu selection prompt request initiated on a cloud device. The reference is obtained from the initial prompt request response (e.g., from POST /api/v5/devices/{deviceId}/prompt/menu).
+      security:
+      - merchantApiKey: []
+      parameters:
+      - name: device_id
+        in: path
+        required: true
+        schema:
+          type: string
+        description: The unique identifier of the cloud device
+      - name: reference
+        in: path
+        required: true
+        schema:
+          type: string
+        description: The unique identifier of the prompt request, obtained from the initial prompt request response
+      responses:
+        '200':
+          description: Prompt request status retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PromptRequestStatusResponse'
+              examples:
+                in_progress:
+                  summary: Prompt request is in progress
+                  value:
+                    object: request
+                    id: 9519a52b-07e7-49e7-8e40-76ef69c053cc
+                    status: in_progress
+                completed:
+                  summary: Prompt request completed with selection
+                  value:
+                    object: request
+                    id: 9519a52b-07e7-49e7-8e40-76ef69c053cc
+                    status: completed
+                    result: Option 1
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /v5/devices/{device_id}/prompt/sign:
+    post:
+      tags:
+      - Devices
+      operationId: prompt-device-sign-v5
+      summary: Prompt Device for Signature
+      description: Prompt a cloud device to request a signature from the user.
+      security:
+      - merchantApiKey: []
+      parameters:
+      - name: device_id
+        in: path
+        required: true
+        description: The device ID to prompt.
+        schema:
+          type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - header
+              properties:
+                header:
+                  type: string
+                  maxLength: 100
+                  description: Header message to display on the device
+                  pattern: ^[a-zA-Z0-9.,?!&\/#'-= ]{0,100}$
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PromptRequestStatusResponse'
+              examples:
+                created:
+                  summary: Prompt request created
+                  value:
+                    object: request
+                    id: 9519a52b-07e7-49e7-8e40-76ef69c053cc
+                    status: in_progress
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+        '401':
+          description: Unauthorized
+        '404':
+          description: Device not found
+  /v5/devices/{device_id}/prompt/sign/{reference}:
+    get:
+      tags:
+      - Devices
+      operationId: get-device-prompt-sign-status-v5
+      summary: Get Signature Prompt Status
+      description: Retrieve the status of a signature prompt request initiated on a cloud device. The reference is obtained from the initial prompt request response (e.g., from POST /api/v5/devices/{deviceId}/prompt/sign).
+      security:
+      - merchantApiKey: []
+      parameters:
+      - name: device_id
+        in: path
+        required: true
+        schema:
+          type: string
+        description: The unique identifier of the cloud device
+      - name: reference
+        in: path
+        required: true
+        schema:
+          type: string
+        description: The unique identifier of the prompt request, obtained from the initial prompt request response
+      responses:
+        '200':
+          description: Prompt request status retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PromptRequestStatusResponse'
+              examples:
+                in_progress:
+                  summary: Prompt request is in progress
+                  value:
+                    object: request
+                    id: 9519a52b-07e7-49e7-8e40-76ef69c053cc
+                    status: in_progress
+                completed:
+                  summary: Prompt request completed with signature
+                  value:
+                    object: request
+                    id: 9519a52b-07e7-49e7-8e40-76ef69c053cc
+                    status: completed
+                    signature: base64_encoded_signature_data
+                    signature_format: png
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /v5/devices/{device_id}/prompt/yes-no:
+    post:
+      tags:
+      - Devices
+      operationId: prompt-device-yes-no-v5
+      summary: Prompt Device for Yes/No Response
+      description: Prompt a cloud device to request a yes/no response from the user.
+      security:
+      - merchantApiKey: []
+      parameters:
+      - name: device_id
+        in: path
+        required: true
+        description: The device ID to prompt.
+        schema:
+          type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - header
+              - message
+              properties:
+                header:
+                  type: string
+                  maxLength: 100
+                  description: Header message to display on the device
+                  pattern: ^[a-zA-Z0-9.,?!&\/#'-= ]{0,100}$
+                message:
+                  type: string
+                  maxLength: 100
+                  description: Message to display on the device
+                  pattern: ^[a-zA-Z0-9.,?!&\/#'-= ]{0,100}$
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PromptRequestStatusResponse'
+              examples:
+                created:
+                  summary: Prompt request created
+                  value:
+                    object: request
+                    id: 9519a52b-07e7-49e7-8e40-76ef69c053cc
+                    status: in_progress
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+        '401':
+          description: Unauthorized
+        '404':
+          description: Device not found
+  /v5/devices/{device_id}/prompt/yes-no/{reference}:
+    get:
+      tags:
+      - Devices
+      operationId: get-device-prompt-yes-no-status-v5
+      summary: Get Yes/No Prompt Status
+      description: Retrieve the status of a yes/no prompt request initiated on a cloud device. The reference is obtained from the initial prompt request response (e.g., from POST /api/v5/devices/{deviceId}/prompt/yes-no).
+      security:
+      - merchantApiKey: []
+      parameters:
+      - name: device_id
+        in: path
+        required: true
+        schema:
+          type: string
+        description: The unique identifier of the cloud device
+      - name: reference
+        in: path
+        required: true
+        schema:
+          type: string
+        description: The unique identifier of the prompt request, obtained from the initial prompt request response
+      responses:
+        '200':
+          description: Prompt request status retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PromptRequestStatusResponse'
+              examples:
+                in_progress:
+                  summary: Prompt request is in progress
+                  value:
+                    object: request
+                    id: 9519a52b-07e7-49e7-8e40-76ef69c053cc
+                    status: in_progress
+                completed:
+                  summary: Prompt request completed
+                  value:
+                    object: request
+                    id: 9519a52b-07e7-49e7-8e40-76ef69c053cc
+                    status: completed
+                    result: 'yes'
+                cancelled:
+                  summary: Prompt request was cancelled
+                  value:
+                    object: request
+                    id: 9519a52b-07e7-49e7-8e40-76ef69c053cc
+                    status: cancelled
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+components:
+  responses:
+    NotFound:
+      description: Not Found - The requested resource could not be found
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                description: Error message describing what resource was not found
+              code:
+                type: string
+                description: Error code for programmatic handling
+          example:
+            error: Resource not found
+            code: NOT_FOUND
+    Unauthorized:
+      description: Unauthorized - Authentication credentials were missing or invalid
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                description: Error message describing the authentication failure
+              code:
+                type: string
+                description: Error code for programmatic handling
+          example:
+            error: Invalid or missing API key
+            code: UNAUTHORIZED
+    InternalServerError:
+      description: Internal Server Error - An unexpected error occurred on the server
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                description: Error message describing the server error
+              code:
+                type: string
+                description: Error code for programmatic handling
+          example:
+            error: An unexpected error occurred
+            code: INTERNAL_SERVER_ERROR
+    BadRequest:
+      description: Bad Request - The request was malformed or contained invalid parameters
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                description: Error message describing what was wrong with the request
+              code:
+                type: string
+                description: Error code for programmatic handling
+          example:
+            error: Invalid request parameters
+            code: BAD_REQUEST
+  schemas:
+    RetailMagTekMagensaEncryptedSwipe:
+      type: object
+      title: Retail MagTek Magensa encrypted swipe
+      description: Card-present payment using encrypted magnetic stripe data from a MagTek Magensa reader. Set `industry` to `retail` on the payment request.
+      additionalProperties: false
+      required:
+      - magnesafe_track_1
+      - magnesafe_track_2
+      properties:
+        magnesafe_track_1:
+          type: string
+          description: Raw MagTek Magensa data.
+        magnesafe_track_2:
+          type: string
+          description: Raw MagTek Magensa data.
+        magnesafe_magneprint:
+          type: string
+          description: Raw MagTek Magensa data.
+        magnesafe_ksn:
+          type: string
+          description: Raw MagTek Magensa data.
+        magnesafe_magneprint_status:
+          type: string
+          description: Raw MagTek Magensa data.
+    RegisterDeviceRequest:
+      type: object
+      title: Register Device Request
+      description: Request to register a new cloud device
+      required:
+      - registration_code
+      properties:
+        registration_code:
+          type: string
+          description: The registration code provided with the device
+        nickname:
+          type: string
+          description: Optional nickname for the device
+        default:
+          type: boolean
+          description: Whether to set this device as the default cloud device for the merchant
+    RetailIngenicoNfc:
+      type: object
+      title: Retail Ingenico Telium 2 NFC
+      description: Card-present NFC payment from an Ingenico Telium 2 reader. Set `industry` to `retail` on the payment request.
+      additionalProperties: false
+      required:
+      - entry_mode
+      - emv_device
+      - encrypted_ksn
+      - encrypted_track_2
+      properties:
+        entry_mode:
+          type: string
+          enum:
+          - nfc_msd
+          description: The type of transaction data to be processed.
+        emv_device:
+          type: string
+          enum:
+          - ingenico_rba
+          description: The EMV-capable card reader.
+        encrypted_ksn:
+          type: string
+          description: Raw encrypted data.
+        encrypted_track_2:
+          type: string
+          description: Raw encrypted data.
+    ShippingAddressRest:
+      type: object
+      title: Shipping Address & Information
+      description: Shipping address and information
+      properties:
+        id:
+          type: string
+          maxLength: 32
+          description: Shipping address ID (max 32 characters). Generated if omitted on create.
+        first_name:
+          type: string
+          maxLength: 50
+          description: Shipping first name
+        last_name:
+          type: string
+          maxLength: 50
+          description: Shipping last name
+        company:
+          type: string
+          maxLength: 100
+          description: Shipping company
+        address1:
+          type: string
+          maxLength: 100
+          description: Shipping address
+        address2:
+          type: string
+          maxLength: 100
+          description: Shipping address, line 2
+        city:
+          type: string
+          maxLength: 50
+          description: Shipping city
+        state:
+          type: string
+          maxLength: 50
+          description: Shipping state.
+        zip:
+          type: string
+          maxLength: 20
+          description: Shipping zip code
+        country:
+          type: string
+          maxLength: 2
+          description: 'ISO 3166-1 alpha-2 country code. Example: `US`'
+        email:
+          type: string
+          format: email
+          description: Shipping email address
+        carrier:
+          type: string
+          enum:
+          - ups
+          - fedex
+          - dhl
+          - usps
+          description: Shipping carrier
+    LineItem:
+      type: object
+      title: Line Item
+      description: Line item details for order details
+      properties:
+        product_code:
+          type: string
+          maxLength: 50
+          description: Product code
+        description:
+          type: string
+          maxLength: 255
+          description: Line item description
+        commodity_code:
+          type: string
+          maxLength: 50
+          description: Commodity code
+        unit_of_measure:
+          type: string
+          maxLength: 50
+          description: Unit of measure
+        unit_cost:
+          type: number
+          minimum: 0
+          description: Unit cost
+        quantity:
+          type: integer
+          minimum: 0
+          maximum: 999999
+          description: Quantity
+        total_amount:
+          type: number
+          minimum: 0
+          description: Total amount
+        tax_amount:
+          type: number
+          minimum: 0
+          description: Tax amount
+        tax_rate:
+          type: number
+          minimum: 0
+          description: Tax rate
+        discount_amount:
+          type: number
+          minimum: 0
+          description: Discount amount
+        discount_rate:
+          type: number
+          minimum: 0
+          description: Discount rate
+        tax_type:
+          type: string
+          maxLength: 50
+          description: Tax type
+        alternate_tax_id:
+          type: string
+          maxLength: 50
+          description: Alternate tax ID
+    PaymentFacilitator:
+      type: object
+      title: Payment Facilitator
+      description: Payment facilitator information for submerchant transactions
+      properties:
+        id:
+          type: string
+          maxLength: 50
+          description: Payment facilitator ID
+        submerchant_id:
+          type: string
+          maxLength: 255
+          description: Submerchant ID
+        submerchant_name:
+          type: string
+          maxLength: 255
+          description: Submerchant name
+        submerchant_address:
+          type: string
+          maxLength: 50
+          description: Submerchant address
+        submerchant_city:
+          type: string
+          maxLength: 50
+          description: Submerchant city
+        submerchant_state:
+          type: string
+          maxLength: 20
+          description: Submerchant state
+        submerchant_postal:
+          type: string
+          maxLength: 20
+          description: Submerchant postal code
+        submerchant_country:
+          type: string
+          maxLength: 2
+          description: Submerchant country
+        submerchant_phone:
+          type: string
+          description: Submerchant phone
+        submerchant_email:
+          type: string
+          format: email
+          description: Submerchant email
+    RetailIdTechEncryptedKeyed:
+      type: object
+      title: Retail ID Tech M130 encrypted keyed
+      description: Card-present encrypted keyed entry data from an ID Tech M130 reader. Set `industry` to `retail` on the payment request.
+      additionalProperties: false
+      required:
+      - encrypted_data
+      properties:
+        encrypted_data:
+          type: string
+          description: Raw encrypted data.
+    PoiDevicePromptFields:
+      title: POI Device Prompt Fields
+      type: object
+      description: Optional Cloud EMV POI device prompts for asynchronous device payment-request endpoints. New integrations should send these fields on `/v5/devices/{device_id}/payment-requests/{sale|auth|credit|validate}`, not on `/v5/payments/*`.
+      properties:
+        poi_prompt_tip:
+          type: string
+          enum:
+          - 'true'
+          - 'false'
+          description: When set to `"true"`, allows the cardholder to enter or confirm a tip amount on the POI device.
+        poi_prompt_quicktip_amounts:
+          type: string
+          description: Comma-delimited quick tip amount options to show on the POI device. Valid only when `poi_prompt_tip` is `"true"`.
+        poi_prompt_quicktip_percentages:
+          type: string
+          description: Comma-delimited quick tip percentage options to show on the POI device. Valid only when `poi_prompt_tip` is `"true"`.
+        poi_enable_keyed:
+          type: string
+          enum:
+          - 'true'
+          - 'false'
+          description: When set to `"true"`, provides the option for the cardholder to key in card details on the POI device.
+        poi_require_keyed:
+          type: string
+          enum:
+          - 'true'
+          - 'false'
+          description: When set to `"true"`, requires keyed entry on the POI device. Cannot be `"true"` at the same time as `poi_enable_keyed`.
+        poi_keyed_type:
+          type: string
+          enum:
+          - cnp
+          - card_present
+          - ecommerce
+          - mail_order
+          - telephone_order
+          description: Keyed transaction type to use when keyed entry is enabled or required on the POI device.
+        poi_prompt_cvv:
+          type: string
+          enum:
+          - 'true'
+          - 'false'
+          description: Controls whether the POI device prompts for CVV during keyed entry.
+        poi_prompt_zip:
+          type: string
+          enum:
+          - 'true'
+          - 'false'
+          description: When set to `"true"`, requires ZIP or postal code entry on the POI device.
+        poi_prompt_signature:
+          type: string
+          enum:
+          - 'true'
+          - 'false'
+          description: Controls whether the POI device prompts for signature capture where supported.
+        poi_prompt_amount_confirmation:
+          type: string
+          enum:
+          - 'true'
+          - 'false'
+          description: When set to `"true"`, requires the cardholder to confirm the amount on the POI device.
+        poi_automatic_fall_forward:
+          type: string
+          enum:
+          - 'true'
+          - 'false'
+          description: Controls fall-forward behavior on supported POI devices.
+        poi_enable_void:
+          type: string
+          enum:
+          - 'true'
+          - 'false'
+          description: When set to `"true"`, allows the device flow to void the transaction if the cardholder removes the card before finalization.
+    PaymentRequestStatusResponse:
+      type: object
+      title: Payment Request Status Response
+      description: Payment request response. Returned when creating an asynchronous payment request or polling for its status.
+      properties:
+        object:
+          type: string
+          enum:
+          - payment-request
+          description: Resource type identifier
+        id:
+          type: string
+          description: Payment request ID
+        status:
+          type: string
+          enum:
+          - pending
+          - inFlight
+          - interactionComplete
+          - cancelled
+          - cancelledAtTerminal
+          - cancelledByApi
+          - cancelledByTimeout
+          - poiDeviceInUse
+          - poiDeviceDisconnected
+          - terminatedBadCardRead
+          description: Status of the payment request. When a payment request is first created, the status is always `pending`. When polling for status, values are more granular to show the progress of the transaction based on the device's status or customer's interaction.
+        transaction:
+          type: object
+          description: Transaction details if the payment request has been processed
+          properties:
+            id:
+              type: integer
+              nullable: true
+              description: Transaction ID
+            type:
+              type: string
+              description: Transaction type (e.g., 'sale', 'auth', 'credit', 'validate')
+            success:
+              type: boolean
+              description: Whether the transaction was successful
+            condition:
+              type: string
+              description: Transaction condition/status
+            approval:
+              type: string
+              description: Approval code
+            authorized_amount:
+              type: string
+              description: 'Authorized amount. Format: `x.xx`'
+            auth_code:
+              type: string
+              description: Authorization code
+            customer_vault_id:
+              type: string
+              description: Customer vault ID associated with the transaction
+            emv_metadata:
+              type: object
+              description: EMV (chip card) metadata
+              properties:
+                customer_verification_method:
+                  type: string
+                  description: Customer verification method used
+                application_id:
+                  type: string
+                  description: EMV application ID
+                application_label:
+                  type: string
+                  description: EMV application label
+                application_preferred_name:
+                  type: string
+                  description: EMV application preferred name
+                application_pan_sequence_number:
+                  type: string
+                  description: EMV application PAN sequence number
+                transaction_status_information:
+                  type: string
+                  description: EMV transaction status information
+                masked_merchant_number:
+                  type: string
+                  description: Masked merchant number
+                masked_terminal_number:
+                  type: string
+                  description: Masked terminal number
+            card_tokens:
+              type: array
+              description: Card tokens associated with the transaction
+              items:
+                type: object
+                properties:
+                  token:
+                    type: string
+                    description: Card token
+                  type:
+                    type: string
+                    description: Token type
+        error:
+          type: object
+          description: Error information if the payment request failed
+          properties:
+            code:
+              type: string
+              description: Error code
+            ref_id:
+              type: string
+              description: Error reference ID
+            message:
+              type: string
+              description: Error message
+      required:
+      - object
+      - id
+      - status
+    ErrorResponse:
+      type: object
+      title: Error Response
+      description: Error response structure matching SecureApiErrorResponseFactory
+      properties:
+        type:
+          type: string
+          description: Error type (e.g., 'validationError', 'internalError', 'authenticationError')
+        error_code:
+          type: string
+          description: Error code (e.g., 'E_INTERNAL', 'E_VALIDATION')
+        message:
+          type: string
+          description: Human-readable error message
+        ref_id:
+          type: string
+          nullable: true
+          description: Reference ID for the error (transaction ID, etc.)
+        details:
+          type: array
+          nullable: true
+          description: Validation error details
+          items:
+            $ref: '#/components/schemas/ValidationErrorDetail'
+      required:
+      - type
+      - error_code
+      - message
+    RetailIngenicoKeyed:
+      type: object
+      title: Retail Ingenico Telium 2 keyed
+      description: Card-present encrypted keyed entry from an Ingenico Telium 2 reader. Set `industry` to `retail` on the payment request.
+      additionalProperties: false
+      required:
+      - entry_mode
+      - emv_device
+      - encrypted_ksn
+      - encrypted_track_2
+      properties:
+        entry_mode:
+          type: string
+          enum:
+          - keyed
+          description: The type of transaction data to be processed.
+        emv_device:
+          type: string
+          enum:
+          - ingenico_rba
+          description: The EMV-capable card reader.
+        encrypted_ksn:
+          type: string
+          description: Raw encrypted data.
+        encrypted_track_2:
+          type: string
+          description: Raw encrypted data.
+    PaymentSaleBase:
+      title: Payment Sale Base Fields
+      type: object
+      required:
+      - amount
+      properties:
+        amount:
+          type: number
+          description: 'Total amount to be charged. Format: `x.xx`'
+        surcharge:
+          type: number
+          minimum: 0
+          description: 'Surcharge amount. Format: `x.xx`'
+        convenience_fee:
+          type: number
+          minimum: 0
+          description: 'Convenience fee amount. Format: `x.xx`'
+        misc_fee:
+          type: number
+          minimum: 0
+          description: 'Miscellaneous fee amount. Format: `x.xx`'
+        misc_fee_name:
+          type: string
+          maxLength: 50
+          description: 'Custom miscellaneous fee name. Default: `Miscellaneous Fee`'
+        tip:
+          type: number
+          minimum: 0
+          description: 'The final tip amount, included in the payment. Format: `x.xx`'
+        currency:
+          type: string
+          minLength: 3
+          maxLength: 3
+          description: 'The ISO 4217 currency code. Example: `USD`'
+        processor_id:
+          type: string
+          maxLength: 50
+          description: If using multiple processors, route to the specified processor ID. Omit for default processor or when using a single processor.
+        dup_seconds:
+          type: integer
+          minimum: 0
+          maximum: 7862400
+          description: Sets the time in seconds for duplicate checking on supported processors. Set to 0 to disable duplicate checking
+        transaction_session_id:
+          type: string
+          minLength: 32
+          maxLength: 32
+          description: A single use session ID used by Kount to link the payment and Data Collector information together
+        customer_receipt:
+          type: boolean
+          description: If set to true, when the customer is charged, they will be sent a receipt
+        pinless_debit_override:
+          type: boolean
+          description: Set to true if you have Pinless Debit Conversion enabled but want to opt out for this payment
+        industry:
+          type: string
+          enum:
+          - retail
+          - restaurant
+          - ecommerce
+          - moto
+          - lodging
+          description: Industry type for the payment
+        signature_image:
+          type: string
+          description: Base64 encoded signature image
+        network_tokenize:
+          type: boolean
+          description: Enable network tokenization
+        partial_payments:
+          type: string
+          enum:
+          - settle_partial
+          - payment_in_full
+          description: '`settle_partial`: Settles any amount of tender collected at cut off. `payment_in_full`: Required that any split tendered payment is collected in-full before settlement gets initiated'
+        partial_payment_id:
+          type: string
+          maxLength: 50
+          description: A numeric identifier which is used when submitting subsequent payments for partial payments
+        billing_address:
+          $ref: '#/components/schemas/BillingAddressRest'
+        shipping_address:
+          $ref: '#/components/schemas/ShippingAddressRest'
+        order_details:
+          $ref: '#/components/schemas/OrderDetailsRest'
+        payment_facilitator:
+          $ref: '#/components/schemas/PaymentFacilitator'
+        payment_descriptor:
+          $ref: '#/components/schemas/PaymentDescriptor'
+        cardholder_auth:
+          $ref: '#/components/schemas/CardholderAuth'
+        merchant_defined_fields:
+          $ref: '#/components/schemas/MerchantDefinedFields'
+        cit_mit:
+          $ref: '#/components/schemas/CitMit'
+    RetailIdTechEncryptedSwipe:
+      type: object
+      title: Retail ID Tech M130 encrypted swipe
+      description: Card-present encrypted swipe data from an ID Tech M130 reader. Set `industry` to `retail` on the payment request.
+      additionalProperties: false
+      required:
+      - encrypted_track_1
+      - encrypted_track_2
+      properties:
+        encrypted_track_1:
+          type: string
+          description: Raw encrypted data.
+        encrypted_track_2:
+          type: string
+          description: Raw encrypted data.
+        encrypted_track_3:
+          type: string
+          description: Raw encrypted data.
+        encrypted_ksn:
+          type: string
+          description: Raw encrypted data.
+    PaymentDescriptor:
+      type: object
+      title: Payment Descriptor
+      description: Payment descriptor information for transaction statements
+      properties:
+        descriptor:
+          type: string
+          maxLength: 255
+          description: Payment descriptor
+        phone:
+          type: string
+          description: Payment descriptor phone
+        address:
+          type: string
+          maxLength: 255
+          description: Payment descriptor address
+        city:
+          type: string
+          maxLength: 50
+          description: Payment descriptor city
+        state:
+          type: string
+          maxLength: 50
+          description: Payment descriptor state
+        postal_code:
+          type: string
+          maxLength: 20
+          description: Payment descriptor postal code
+        country:
+          type: string
+          maxLength: 2
+          description: Payment descriptor country
+        mcc:
+          type: string
+          maxLength: 4
+          description: Merchant category code
+        merchant_id:
+          type: string
+          maxLength: 50
+          description: Merchant ID
+        url:
+          type: string
+          format: uri
+          pattern: ^https://
+          minLength: 1
+          description: Merchant URL (must be HTTPS)
+    DevicePaymentRequest:
+      title: Device Payment Request
+      description: Asynchronous device payment request (sale, auth, or credit). Payment details are collected on the device. Include POI prompt fields here rather than on `/v5/payments/*`.
+      allOf:
+      - $ref: '#/components/schemas/PaymentSaleBase'
+      - $ref: '#/components/schemas/PoiDevicePromptFields'
+    DeviceListResponse:
+      type: object
+      title: Device List Response
+      description: Response containing a list of devices with pagination
+      required:
+      - devices
+      - total_count
+      - limit
+      - offset
+      - has_more
+      properties:
+        devices:
+          type: array
+          description: Array of device objects
+          items:
+            $ref: '#/components/schemas/DeviceResponse'
+        total_count:
+          type: integer
+          description: Total number of devices registered to the merchant
+        limit:
+          type: integer
+          description: Number of devices returned per page
+        offset:
+          type: integer
+          description: Pagination offset
+        has_more:
+          type: boolean
+          description: Whether there are more devices available
+    RetailIngenicoChip:
+      type: object
+      title: Retail Ingenico Telium 2 chip (EMV)
+      description: Card-present EMV chip payment from an Ingenico Telium 2 reader. Set `industry` to `retail` on the payment request.
+      additionalProperties: false
+      required:
+      - entry_mode
+      - emv_auth_request_data
+      - emv_device
+      - verification_method
+      - encrypted_ksn
+      - encrypted_track_2
+      properties:
+        entry_mode:
+          type: string
+          enum:
+          - emv_icc
+          description: The type of transaction data to be processed.
+        emv_auth_request_data:
+          type: string
+          description: EMV data for the transaction as received from the EMV chip card SDK.
+        emv_device:
+          type: string
+          enum:
+          - ingenico_rba
+          description: The EMV-capable card reader.
+        verification_method:
+          type: string
+          enum:
+          - signature
+          - offline_pin
+          - offline_pin_signature
+          - none
+          description: Method used to verify the EMV transaction.
+        encrypted_ksn:
+          type: string
+          description: Raw encrypted data.
+        encrypted_track_2:
+          type: string
+          description: Raw encrypted data.
+    PromptRequestStatusResponse:
+      type: object
+      title: Prompt Request Status Response
+      description: Prompt request status response matching the structure returned by GET /api/v5/devices/{deviceId}/prompt/{type}/{reference}
+      properties:
+        object:
+          type: string
+          enum:
+          - request
+          description: Resource type identifier
+        id:
+          type: string
+          description: Prompt request ID (reference)
+        status:
+          type: string
+          enum:
+          - in_progress
+          - completed
+          - cancelled
+          - cancelledAtTerminal
+          - cancelledByApi
+          - cancelledByTimeout
+          - poiDeviceInUse
+          - poiDeviceDisconnected
+          - terminatedBadCardRead
+          description: Status of the prompt request
+        result:
+          type: string
+          description: The result of the prompt (e.g., 'yes', 'no', or selected menu option). Only present when status is 'completed'.
+        signature:
+          type: string
+          description: Base64-encoded signature image. Only present for sign prompts when status is 'completed'.
+        signature_format:
+          type: string
+          description: Format of the signature image (e.g., 'png'). Only present for sign prompts when status is 'completed'.
+      required:
+      - object
+      - id
+      - status
+    PaymentRequestCancellationResponse:
+      type: object
+      title: Payment Request Cancellation Response
+      description: Response returned when canceling an in-flight payment request on a cloud device.
+      properties:
+        object:
+          type: string
+          enum:
+          - payment-request-cancellation
+          description: Resource type identifier
+        success:
+          type: boolean
+          description: Whether the cancellation request was accepted
+        message:
+          type: string
+          description: Human-readable result message from the cancellation request
+        response_code:
+          type: string
+          nullable: true
+          description: Processor/gateway response code for the cancellation request
+      required:
+      - object
+      - success
+      - message
+    PaymentDeviceValidateRequest:
+      title: Device Payment Validate Request
+      description: Validate request when payment details are collected on the device. Include POI prompt fields here rather than on `/v5/payments/validate`.
+      allOf:
+      - $ref: '#/components/schemas/PoiDevicePromptFields'
+      - type: object
+        properties:
+          industry:
+            type: string
+            enum:
+            - retail
+            - restaurant
+            - ecommerce
+            - moto
+            - lodging
+            description: Industry type for the transaction
+          signature_image:
+            type: string
+            description: Base64 encoded signature image
+          billing_address:
+            $ref: '#/components/schemas/BillingAddressRest'
+          merchant_defined_fields:
+            $ref: '#/components/schemas/MerchantDefinedFields'
+    RetailMobileSdkEncryptedPayment:
+      type: object
+      title: Mobile SDK encrypted payment
+      description: RSA-encrypted card data from the NMI Mobile SDK (iOS/Android). Use in place of raw card number, expiration, and CVV. Set `industry` to `retail` on the payment request when processing as a card-present transaction.
+      additionalProperties: false
+      required:
+      - encrypted_payment
+      properties:
+        encrypted_payment:
+          type: string
+          description: Encrypted payment blob returned by the Mobile SDK.
+    UpdateDeviceRequest:
+      type: object
+      title: Update Device Request
+      description: Request to update a cloud device
+      properties:
+        nickname:
+          type: string
+          description: New nickname for the device
+        default:
+          type: boolean
+          description: Whether to set this device as the default cloud device for the merchant
+    MerchantDefinedFields:
+      type: object
+      title: Merchant Defined Fields
+      description: Custom fields configured in the merchant control panel under Settings → Merchant Defined Fields (`field_1` through `field_20`).
+      properties:
+        field_1:
+          type: string
+          maxLength: 255
+          description: Merchant defined field 1
+        field_2:
+          type: string
+          maxLength: 255
+          description: Merchant defined field 2
+        field_3:
+          type: string
+          maxLength: 255
+          description: Merchant defined field 3
+        field_4:
+          type: string
+          maxLength: 255
+          description: Merchant defined field 4
+        field_5:
+          type: string
+          maxLength: 255
+          description: Merchant defined field 5
+        field_6:
+          type: string
+          maxLength: 255
+          description: Merchant defined field 6
+        field_7:
+          type: string
+          maxLength: 255
+          description: Merchant defined field 7
+        field_8:
+          type: string
+          maxLength: 255
+          description: Merchant defined field 8
+        field_9:
+          type: string
+          maxLength: 255
+          description: Merchant defined field 9
+        field_10:
+          type: string
+          maxLength: 255
+          description: Merchant defined field 10
+        field_11:
+          type: string
+          maxLength: 255
+          description: Merchant defined field 11
+        field_12:
+          type: string
+          maxLength: 255
+          description: Merchant defined field 12
+        field_13:
+          type: string
+          maxLength: 255
+          description: Merchant defined field 13
+        field_14:
+          type: string
+          maxLength: 255
+          description: Merchant defined field 14
+        field_15:
+          type: string
+          maxLength: 255
+          description: Merchant defined field 15
+        field_16:
+          type: string
+          maxLength: 255
+          description: Merchant defined field 16
+        field_17:
+          type: string
+          maxLength: 255
+          description: Merchant defined field 17
+        field_18:
+          type: string
+          maxLength: 255
+          description: Merchant defined field 18
+        field_19:
+          type: string
+          maxLength: 255
+          description: Merchant defined field 19
+        field_20:
+          type: string
+          maxLength: 255
+          description: Merchant defined field 20
+    PaymentDetails:
+      title: Payment Details
+      description: 'Payment method details. Exactly one variant: raw card data, ACH (check) data, **payment_token**, wallet payloads, or **retail card-present** data from a card reader. Do not combine fields from different variants.'
+      oneOf:
+      - type: object
+        title: Credit card
+        description: Non-tokenized credit card data.
+        additionalProperties: false
+        required:
+        - card_number
+        - card_exp
+        properties:
+          card_number:
+            type: string
+            description: Credit card number
+          card_exp:
+            type: string
+            description: 'Credit card expiration date. Format: `MMYY`'
+          card_cvv:
+            type: string
+            maxLength: 4
+            description: The card security code.
+      - $ref: '#/components/schemas/RetailUnencryptedMagneticStripe'
+      - $ref: '#/components/schemas/RetailMagTekMagensaEncryptedSwipe'
+      - $ref: '#/components/schemas/RetailIdTechEncryptedSwipe'
+      - $ref: '#/components/schemas/RetailIdTechEncryptedKeyed'
+      - $ref: '#/components/schemas/RetailIngenicoChip'
+      - $ref: '#/components/schemas/RetailIngenicoSwipe'
+      - $ref: '#/components/schemas/RetailIngenicoNfc'
+      - $ref: '#/components/schemas/RetailIngenicoKeyed'
+      - $ref: '#/components/schemas/RetailMobileSdkEncryptedPayment'
+      - type: object
+        title: ACH / check
+        description: Bank account (ACH) details for this transaction.
+        additionalProperties: false
+        required:
+        - check_name
+        - check_aba
+        - check_account
+        - account_type
+        - account_holder_type
+        - sec_code
+        properties:
+          check_name:
+            type: string
+            maxLength: 50
+            description: The name on the customer's ACH account
+          check_aba:
+            type: number
+            description: The customer's bank routing number
+          check_account:
+            type: number
+            description: The customer's bank account number
+          account_type:
+            type: string
+            enum:
+            - checking
+            - savings
+            description: The type of ACH account the customer has
+          account_holder_type:
+            type: string
+            enum:
+            - personal
+            - business
+            description: The type of ACH account the customer has
+          sec_code:
+            type: string
+            enum:
+            - PPD
+            - WEB
+            - TEL
+            - CCD
+            - POP
+            - RCK
+            description: The Standard Entry Class code of the ACH transaction
+          check_number:
+            type: string
+            maxLength: 20
+            description: Check number
+      - type: object
+        title: Payment token
+        description: Single-use or vault token from [Payment Component](../docs/payment-component) or [Collect.js](https://secure.networkmerchants.com/merchants/resources/integration/integration_portal.php#cjs_methodology) (not Apple Pay / Google Pay).
+        additionalProperties: false
+        required:
+        - payment_token
+        properties:
+          payment_token:
+            type: string
+            description: The tokenized version of the customer's card or check information
+      - type: object
+        title: Apple Pay
+        description: Encrypted payment data from the Apple Pay SDK.
+        additionalProperties: false
+        required:
+        - applepay_payment_data
+        properties:
+          applepay_payment_data:
+            type: string
+            description: The encrypted token created when integration directly to the Apple Pay SDK
+      - type: object
+        title: Google Pay
+        description: Encrypted payment data from the Google Pay SDK.
+        additionalProperties: false
+        required:
+        - googlepay_payment_data
+        properties:
+          googlepay_payment_data:
+            type: string
+            description: The encrypted token created when integration directly to the Google Pay SDK
+      - type: object
+        title: Decrypted Apple Pay
+        description: Merchant-decrypted Apple Pay payment data.
+        additionalProperties: false
+        required:
+        - decrypted_applepay_data
+        - card_number
+        - card_exp
+        properties:
+          decrypted_applepay_data:
+            type: boolean
+            enum:
+            - true
+            description: Set to `true` when submitting merchant-decrypted Apple Pay data.
+          card_number:
+            type: string
+            description: Credit card number
+          card_exp:
+            type: string
+            description: 'Credit card expiration date. Format: `MMYY`'
+      - type: object
+        title: Decrypted Google Pay
+        description: Merchant-decrypted Google Pay payment data.
+        additionalProperties: false
+        required:
+        - decrypted_googlepay_data
+        - card_number
+        - card_exp
+        properties:
+          decrypted_googlepay_data:
+            type: boolean
+            enum:
+            - true
+            description: Set to `true` when submitting merchant-decrypted Google Pay data.
+          card_number:
+            type: string
+            description: Credit card number
+          card_exp:
+            type: string
+            description: 'Credit card expiration date. Format: `MMYY`'
+    RetailUnencryptedMagneticStripe:
+      type: object
+      title: Retail unencrypted magnetic stripe
+      description: Card-present payment using raw magnetic stripe data from a card reader. Set `industry` to `retail` on the payment request.
+      additionalProperties: false
+      required:
+      - track_1
+      - track_2
+      properties:
+        track_1:
+          type: string
+          description: Raw magnetic stripe data.
+        track_2:
+          type: string
+          description: Raw magnetic stripe data.
+        track_3:
+          type: string
+          description: Raw magnetic stripe data.
+    ValidationErrorDetail:
+      type: object
+      title: Validation Error Detail
+      description: Validation error detail
+      required:
+      - fieldName
+      - message
+      properties:
+        fieldName:
+          type: string
+          description: Request field path.
+        message:
+          type: string
+          description: Human-readable validation message for the field.
+      additionalProperties: false
+    RetailIngenicoSwipe:
+      type: object
+      title: Retail Ingenico Telium 2 swipe
+      description: Card-present encrypted swipe from an Ingenico Telium 2 reader. Set `industry` to `retail` on the payment request.
+      additionalProperties: false
+      required:
+      - entry_mode
+      - emv_device
+      - encrypted_ksn
+      - encrypted_track_1
+      - encrypted_track_2
+      properties:
+        entry_mode:
+          type: string
+          enum:
+          - swiped
+          - swiped_emv_fallback
+          description: The type of transaction data to be processed.
+        emv_device:
+          type: string
+          enum:
+          - ingenico_rba
+          description: The EMV-capable card reader.
+        encrypted_ksn:
+          type: string
+          description: Raw encrypted data.
+        encrypted_track_1:
+          type: string
+          description: Raw encrypted data.
+        encrypted_track_2:
+          type: string
+          description: Raw encrypted data.
+    OrderDetailsRest:
+      type: object
+      title: Order Details
+      description: Order details and line items
+      properties:
+        template_id:
+          type: string
+          maxLength: 50
+          description: Order template ID
+        description:
+          type: string
+          maxLength: 100
+          description: Order description
+        id:
+          type: string
+          maxLength: 50
+          description: Order ID (for payment requests)
+        order_id:
+          type: string
+          maxLength: 255
+          description: Order ID (for invoice requests and responses)
+        customer_id:
+          type: string
+          maxLength: 255
+          description: Customer ID (invoice-specific)
+        customer_tax_id:
+          type: string
+          maxLength: 255
+          description: Customer tax ID (invoice-specific)
+        tax:
+          type: number
+          minimum: 0
+          description: Tax amount
+        shipping:
+          type: number
+          minimum: 0
+          description: Shipping amount
+        po_number:
+          type: string
+          maxLength: 255
+          description: Purchase order number (maxLength 50 for payments, 255 for invoices)
+        shipping_postal_code:
+          type: string
+          maxLength: 20
+          description: Shipping postal code
+        ship_from_postal_code:
+          type: string
+          maxLength: 20
+          description: Ship from postal code
+        summary_commodity_code:
+          type: string
+          maxLength: 50
+          description: Summary commodity code
+        duty_amount:
+          type: number
+          minimum: 0
+          description: Duty amount
+        discount_amount:
+          type: number
+          minimum: 0
+          description: Discount amount
+        national_tax_amount:
+          type: number
+          minimum: 0
+          description: National tax amount
+        alternate_tax_amount:
+          type: number
+          minimum: 0
+          description: Alternate tax amount
+        alternate_tax_id:
+          type: string
+          maxLength: 50
+          description: Alternate tax ID
+        vat_tax_amount:
+          type: number
+          minimum: 0
+          description: VAT tax amount
+        vat_tax_rate:
+          type: number
+          minimum: 0
+          description: VAT tax rate
+        vat_invoice_reference_number:
+          type: string
+          maxLength: 50
+          description: VAT invoice reference number
+        customer_vat_registration:
+          type: string
+          maxLength: 50
+          description: Customer VAT registration
+        merchant_vat_registration:
+          type: string
+          maxLength: 50
+          description: Merchant VAT registration
+        order_date:
+          type: string
+          format: date
+          description: Order date
+        order_description:
+          type: string
+          maxLength: 255
+          description: Order description (maxLength 255 for both payments and invoices)
+        ip_address:
+          type: string
+          description: IP address of cardholder (IPv4 or IPv6). Format validated as IP address
+        line_items:
+          type: array
+          items:
+            $ref: '#/components/schemas/LineItem'
+    CardholderAuth:
+      type: object
+      title: Cardholder Authentication
+      description: Cardholder authentication data. Use the 3-D Secure variant for EMV authentication results. Use the Decrypted wallet variant for merchant-decrypted Apple Pay or Google Pay, which relays the cryptogram and ECI to the 3-D Secure fields.
+      oneOf:
+      - type: object
+        title: 3-D Secure
+        description: EMV 3-D Secure authentication result fields.
+        additionalProperties: false
+        required:
+        - status
+        - cavv
+        properties:
+          status:
+            type: string
+            enum:
+            - verified
+            - attempted
+            description: Set 3D Secure condition. Value used to determine E-commerce indicator (ECI).
+          cavv:
+            type: string
+            maxLength: 50
+            description: 'Cardholder authentication verification value from the 3-D Secure authentication response. Format: base64 encoded.'
+          xid:
+            type: string
+            maxLength: 50
+            description: 'Cardholder authentication transaction id. Format: base64 encoded.'
+          three_ds_version:
+            type: string
+            maxLength: 10
+            description: 3DSecure version (for example `2.1.0` or `2.2.0`).
+          directory_server_id:
+            type: string
+            maxLength: 50
+            description: 'Directory Server Transaction ID from 3DSecure 2.0 authentication. Format: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx'
+      - type: object
+        title: Decrypted wallet (Apple Pay / Google Pay)
+        description: Wallet authentication for decrypted Apple Pay or Google Pay payments.
+        additionalProperties: false
+        required:
+        - cavv
+        properties:
+          cavv:
+            type: string
+            maxLength: 50
+            description: Wallet payment cryptogram (submitted in the repurposed 3-D Secure `cavv` field).
+          eci:
+            type: string
+            maxLength: 10
+            description: Electronic Commerce Indicator from the wallet payment data (submitted in the repurposed 3-D Secure `eci` field).
+    CitMit:
+      type: object
+      title: Credential on File
+      description: Credential on File information
+      properties:
+        initiated_by:
+          type: string
+          enum:
+          - customer
+          - merchant
+          description: Whether the transaction was initiated by the customer or merchant
+        initial_transaction_id:
+          type: string
+          description: Initial payment ID from the stored credentials payment request. Used on subsequent follow up payments.
+        stored_credential_indicator:
+          type: string
+          enum:
+          - stored
+          - used
+          description: Stored credential indicator
+    BillingAddressRest:
+      type: object
+      title: Billing Address & Information
+      description: Billing address for a payment transaction request.
+      properties:
+        method:
+          type: string
+          enum:
+          - initial_recurring
+          - recurring
+          - installment
+          description: 'Recurring or installment classification for the processor.
+
+
+            - `initial_recurring`: First transaction in a recurring sequence only.
+
+            - `recurring`: Later charges in that sequence.
+
+            - `installment`: Installment transactions; use `number` and `total` on supported processors.
+
+
+            Which values apply depends on the processor.'
+        number:
+          type: integer
+          minimum: 0
+          maximum: 99
+          description: Specify installment billing number, on supported processors. For use when `billing.method` is set to "installment"
+        total:
+          type: number
+          minimum: 0
+          description: Specify installment billing total on supported processors. For use when `billing.method` is set to "installment"
+        first_name:
+          type: string
+          maxLength: 50
+          description: Cardholder's first name
+        last_name:
+          type: string
+          maxLength: 50
+          description: Cardholder's last name
+        company:
+          type: string
+          maxLength: 100
+          description: Cardholder's company
+        address1:
+          type: string
+          maxLength: 100
+          description: Card billing address
+        address2:
+          type: string
+          maxLength: 100
+          description: Card billing address, line 2
+        city:
+          type: string
+          maxLength: 50
+          description: Card billing city
+        state:
+          type: string
+          maxLength: 50
+          description: 'Card billing state. Format: `CC`'
+        zip:
+          type: string
+          maxLength: 20
+          description: Card billing zip code
+        country:
+          type: string
+          maxLength: 2
+          description: 'Card billing country. Country codes are as shown in ISO 3166-1 alpha-2. Format: `CC`'
+        phone:
+          type: string
+          description: Billing phone number
+        email:
+          type: string
+          format: email
+          description: Billing email address
+        fax:
+          type: string
+          maxLength: 50
+          description: Billing fax number
+        cell_phone:
+          type: string
+          description: Billing cell phone number
+        website:
+          type: string
+          maxLength: 255
+          description: Website (invoice-specific field)
+        drivers_license_number:
+          type: string
+          maxLength: 20
+          description: Driver's license number
+        drivers_license_dob:
+          type: string
+          pattern: ^\d{4}-\d{2}-\d{2}$
+          description: 'Driver''s license date of birth. Format: `YYYY-MM-DD`'
+        drivers_license_state:
+          type: string
+          maxLength: 2
+          description: 'Driver''s license state. Format: `CC`'
+        payment_details:
+          $ref: '#/components/schemas/PaymentDetails'
+        cardholder_auth:
+          $ref: '#/components/schemas/CardholderAuth'
+    DeviceResponse:
+      type: object
+      title: Device Response
+      description: Response containing cloud device data
+      required:
+      - object
+      - id
+      - registration_status
+      properties:
+        object:
+          type: string
+          enum:
+          - device
+          description: String representing the object's type. Always 'device' for device objects.
+        id:
+          type: string
+          description: Unique identifier for the device
+        device_nickname:
+          type: string
+          nullable: true
+          description: Nickname assigned to the device
+        make:
+          type: string
+          nullable: true
+          description: Device manufacturer
+        model:
+          type: string
+          nullable: true
+          description: Device model
+        serial_number:
+          type: string
+          nullable: true
+          description: Device serial number
+        registration_status:
+          type: string
+          enum:
+          - registered
+          - deregistered
+          description: Current registration status of the device
+        last_transaction_date:
+          type: string
+          format: date-time
+          nullable: true
+          description: Date and time of the last transaction processed on this device
+        date_registered:
+          type: string
+          format: date-time
+          nullable: true
+          description: Date and time when the device was registered
+        date_deregistered:
+          type: string
+          format: date-time
+          nullable: true
+          description: Date and time when the device was deregistered
+        connection_status:
+          type: boolean
+          nullable: true
+          description: Whether the device is currently connected
+        last_connected_date:
+          type: string
+          format: date-time
+          nullable: true
+          description: Date and time when the device was last connected
+        last_disconnected_date:
+          type: string
+          format: date-time
+          nullable: true
+          description: Date and time when the device was last disconnected
+        battery_info:
+          type: object
+          nullable: true
+          description: Battery information (only included when current_status=true)
+        wifi_info:
+          type: object
+          nullable: true
+          description: WiFi information (only included when current_status=true)
+  examples:
+    DeviceListResponseExample:
+      summary: List of registered cloud devices
+      value:
+        devices:
+        - object: device
+          id: DEV123456789
+          device_nickname: Store Front Counter
+          make: Ingenico
+          model: Telium 2
+          serial_number: SN123456789
+          registration_status: registered
+          last_transaction_date: '2025-01-15T10:30:00+00:00'
+          date_registered: '2025-01-01T08:00:00+00:00'
+          date_deregistered: null
+          connection_status: true
+          last_connected_date: '2025-01-15T10:25:00+00:00'
+          last_disconnected_date: null
+        - object: device
+          id: DEV987654321
+          device_nickname: Back Office Terminal
+          make: Ingenico
+          model: Telium 2
+          serial_number: SN987654321
+          registration_status: registered
+          last_transaction_date: '2025-01-14T15:45:00+00:00'
+          date_registered: '2025-01-02T09:00:00+00:00'
+          date_deregistered: null
+          connection_status: false
+          last_connected_date: '2025-01-14T15:40:00+00:00'
+          last_disconnected_date: '2025-01-14T16:00:00+00:00'
+        total_count: 2
+        limit: 50
+        offset: 0
+        has_more: false
+    UpdateDeviceExample:
+      summary: Update cloud device settings
+      value:
+        nickname: Updated Store Counter
+        default: false
+    RegisterDeviceExample:
+      summary: Register a new cloud device
+      value:
+        registration_code: ABC123XYZ
+        nickname: Store Front Counter
+        default: true
+    DeviceResponseExample:
+      summary: Registered cloud device details
+      value:
+        object: device
+        id: DEV123456789
+        device_nickname: Store Front Counter
+        make: Ingenico
+        model: Telium 2
+        serial_number: SN123456789
+        registration_status: registered
+        last_transaction_date: '2025-01-15T10:30:00+00:00'
+        date_registered: '2025-01-01T08:00:00+00:00'
+        date_deregistered: null
+        connection_status: true
+        last_connected_date: '2025-01-15T10:25:00+00:00'
+        last_disconnected_date: null
+        battery_info: null
+        wifi_info: null
+  securitySchemes:
+    merchantApiKey:
+      type: apiKey
+      in: header
+      name: Authorization
+      description: Merchant API key for RESTful API authentication. This key is used for merchant-specific API access and can be generated from the merchant portal.
+externalDocs:
+  url: https://www.postman.com/nmi-integration-support/workspace/nmi-public-documentation/request/5480015-f4b0ec7b-bd84-4094-98c2-67c0b6508a7f
+  description: Public Documentation (Postman)
+x-tagGroups:
+- name: REST API (recommended)
+  tags:
+  - Payments
+  - Plans
+  - Subscriptions
+  - Products
+  - Invoicing
+  - Customers
+  - Devices
+- name: Classic API
+  tags:
+  - Payment Processing
+  - Data and Transaction Reporting
+  - Webhook Events
+  - Gateway Features
+  - Processors and Services
+  - Apple Pay
+x-provenance:
+  method: searched
+  source: https://docs.nmi.com/reference
+  harvested: '2026-10-14'
+  tool: harvest-readme-openapi.py
+  note: Assembled verbatim from the OpenAPI definition ReadMe embeds in each operation page of the provider's developer portal; paths and components merged by API title, nothing authored.
+  assembled_from:
+  - https://docs.nmi.com/reference/add-billing-address-v5.md
+  - https://docs.nmi.com/reference/add-processor-service.md
+  - https://docs.nmi.com/reference/add-shipping-address-v5.md
+  - https://docs.nmi.com/reference/adding-apple-pay.md
+  - https://docs.nmi.com/reference/cancel-device-display-v5.md
+  - https://docs.nmi.com/reference/cancel-device-payment-request-v5.md
+  - https://docs.nmi.com/reference/capture-payment-v5.md
+  - https://docs.nmi.com/reference/card-type.md
+  - https://docs.nmi.com/reference/check-services.md
+  - https://docs.nmi.com/reference/check-username-availability.md
+  - https://docs.nmi.com/reference/close-invoice-v5.md
+  - https://docs.nmi.com/reference/create-auth-v5.md
+  - https://docs.nmi.com/reference/create-credit-v5.md
+  - https://docs.nmi.com/reference/create-customer-v5.md
+  - https://docs.nmi.com/reference/create-device-payment-request-auth-v5.md
+  - https://docs.nmi.com/reference/create-device-payment-request-credit-v5.md
+  - https://docs.nmi.com/reference/create-device-payment-request-sale-v5.md
+  - https://docs.nmi.com/reference/create-device-payment-request-validate-v5.md
+  - https://docs.nmi.com/reference/create-invoice-v5.md
+  - https://docs.nmi.com/reference/create-merchant-key.md
+  - https://docs.nmi.com/reference/create-merchant.md
+  - https://docs.nmi.com/reference/create-plan-v5.md
+  - https://docs.nmi.com/reference/create-product-v5.md
+  - https://docs.nmi.com/reference/create-sale-v5.md
+  - https://docs.nmi.com/reference/create-subscription-v5.md
+  - https://docs.nmi.com/reference/delete-billing-address-v5.md
+  - https://docs.nmi.com/reference/delete-customer-v5.md
+  - https://docs.nmi.com/reference/delete-plan-v5.md
+  - https://docs.nmi.com/reference/delete-product-v5.md
+  - https://docs.nmi.com/reference/delete-shipping-address-v5.md
+  - https://docs.nmi.com/reference/delete-subscription-v5.md
+  - https://docs.nmi.com/reference/deregister-device-v5.md
+  - https://docs.nmi.com/reference/display-device-qr-code-v5.md
+  - https://docs.nmi.com/reference/get-billing-address-v5.md
+  - https://docs.nmi.com/reference/get-customer-v5.md
+  - https://docs.nmi.com/reference/get-device-payment-request-status-v5.md
+  - https://docs.nmi.com/reference/get-device-prompt-menu-status-v5.md
+  - https://docs.nmi.com/reference/get-device-prompt-sign-status-v5.md
+  - https://docs.nmi.com/reference/get-device-prompt-yes-no-status-v5.md
+  - https://docs.nmi.com/reference/get-device-v5.md
+  - https://docs.nmi.com/reference/get-fees-in-schedule.md
+  - https://docs.nmi.com/reference/get-invoice-v5.md
+  - https://docs.nmi.com/reference/get-merchant-list.md
+  - https://docs.nmi.com/reference/get-merchant-partner-user-info.md
+  - https://docs.nmi.com/reference/get-merchant-processors-value-added-services.md
+  - https://docs.nmi.com/reference/get-payment-v5.md
+  - https://docs.nmi.com/reference/get-plan-v5.md
+  - https://docs.nmi.com/reference/get-processor-config.md
+  - https://docs.nmi.com/reference/get-product-v5.md
+  - https://docs.nmi.com/reference/get-settlement-time.md
+  - https://docs.nmi.com/reference/get-shipping-address-v5.md
+  - https://docs.nmi.com/reference/get-specific-merchant-information.md
+  - https://docs.nmi.com/reference/get-sub-affiliate-list.md
+  - https://docs.nmi.com/reference/get-subscription-v5.md
+  - https://docs.nmi.com/reference/get-transaction-data.md
+  - https://docs.nmi.com/reference/list-customers-v5.md
+  - https://docs.nmi.com/reference/list-devices-v5.md
+  - https://docs.nmi.com/reference/list-invoices-v5.md
+  - https://docs.nmi.com/reference/list-plans-v5.md
+  - https://docs.nmi.com/reference/list-products-v5.md
+  - https://docs.nmi.com/reference/list-subscriptions-v5.md
+  - https://docs.nmi.com/reference/patch_v4-merchants-gateway-id-1.md
+  - https://docs.nmi.com/reference/prompt-device-menu-v5.md
+  - https://docs.nmi.com/reference/prompt-device-sign-v5.md
+  - https://docs.nmi.com/reference/prompt-device-yes-no-v5.md
+  - https://docs.nmi.com/reference/pull-all-fee-schedules.md
+  - https://docs.nmi.com/reference/query.md
+  - https://docs.nmi.com/reference/querying-merchants-apple-pay-status.md
+  - https://docs.nmi.com/reference/refund-payment-v5.md
+  - https://docs.nmi.com/reference/register-device-v5.md
+  - https://docs.nmi.com/reference/see-merchant-billing.md
+  - https://docs.nmi.com/reference/see-your-commission.md
+  - https://docs.nmi.com/reference/send-invoice-v5.md
+  - https://docs.nmi.com/reference/update-billing-address-v5.md
+  - https://docs.nmi.com/reference/update-customer-v5.md
+  - https://docs.nmi.com/reference/update-device-v5.md
+  - https://docs.nmi.com/reference/update-invoice-v5.md
+  - https://docs.nmi.com/reference/update-plan-v5.md
+  - https://docs.nmi.com/reference/update-product-v5.md
+  - https://docs.nmi.com/reference/update-shipping-address-v5.md
+  - https://docs.nmi.com/reference/update-subscription-v5.md
+  - https://docs.nmi.com/reference/updating-settlement-time.md
+  - https://docs.nmi.com/reference/validate-payment-v5.md
+  - https://docs.nmi.com/reference/void-payment-v5.md
+  merge:
+    pages: 84
+    deduped: 4356
+    conflicts_kept_first: 0

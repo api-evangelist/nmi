@@ -1,0 +1,2165 @@
+openapi: 3.2.0
+info:
+  title: Payments Sign-Up Applications API
+  description: Payments Sign-Up API
+  version: 1.0.0
+  license:
+    name: Proprietary
+    url: https://api.nmipayments.com/license
+servers:
+- url: https://sandbox.signup.nmi.com/api/v1
+  description: Sandbox
+- url: https://secure.nmi.com/api/v5/signup
+  description: Production
+tags:
+- name: Applications
+  description: Manage merchant applications
+paths:
+  /applications:
+    get:
+      tags:
+      - Applications
+      security:
+      - oauth:
+        - applications:read
+      summary: List all Applications
+      description: 'This operation returns a list of applications. You can filter applications by:
+
+
+        - `status`: Filter by application status (e.g. "draft", "submitted", "approved", etc.)
+
+        - `updated_from`: Filter applications updated on or after a specific date (YYYY-MM-DD)
+
+        - `updated_to`: Filter applications updated on or before a specific date (YYYY-MM-DD)
+
+        - `package`: Filter by package ID
+
+        - `sort_dir`: Sort by updated_at in ascending or descending order (values: asc, desc, default: desc)
+
+
+        Example: `GET /applications?status=submitted&updated_from=2025-01-01&updated_to=2025-03-01&sort_dir=asc`
+
+
+        **Required scope:** `applications:read`'
+      operationId: getApplications
+      parameters:
+      - name: page
+        in: query
+        description: Page number
+        required: false
+        schema:
+          type: integer
+          minimum: 1
+          default: 1
+      - name: per_page
+        in: query
+        description: Number of applications per page
+        required: false
+        schema:
+          type: integer
+          enum:
+          - 10
+          - 20
+          - 50
+          - 100
+          default: 10
+      - name: package
+        in: query
+        description: Filter by package id
+        required: false
+        schema:
+          $ref: '#/components/schemas/package-id'
+      - name: status
+        in: query
+        description: Filter by application status
+        required: false
+        schema:
+          $ref: '#/components/schemas/application-status'
+      - name: updated_from
+        in: query
+        description: 'Filter applications updated on or after this date (format: YYYY-MM-DD)'
+        required: false
+        schema:
+          type: string
+          format: date
+          maxLength: 10
+      - name: updated_to
+        in: query
+        description: 'Filter applications updated on or before this date (format: YYYY-MM-DD)'
+        required: false
+        schema:
+          type: string
+          format: date
+          maxLength: 10
+      - name: sort_dir
+        in: query
+        description: Sort by updated_at in ascending or descending order
+        required: false
+        schema:
+          type: string
+          enum:
+          - asc
+          - desc
+          default: desc
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                allOf:
+                - type: object
+                  required:
+                  - applications
+                  properties:
+                    applications:
+                      type: array
+                      maxItems: 100
+                      items:
+                        type: object
+                        title: Application
+                        description: An application object
+                        required:
+                        - id
+                        - package_id
+                        - status
+                        - created_at
+                        - updated_at
+                        properties:
+                          id:
+                            $ref: '#/components/schemas/application-id'
+                          package_id:
+                            $ref: '#/components/schemas/package-id'
+                          status:
+                            $ref: '#/components/schemas/application-status'
+                          created_at:
+                            $ref: '#/components/schemas/application-created-at'
+                          updated_at:
+                            $ref: '#/components/schemas/application-updated-at'
+                - $ref: '#/components/schemas/pagination'
+              examples:
+                applications:
+                  summary: Success
+                  description: A few applications with different statuses
+                  value:
+                    applications:
+                    - id: app_d4b24397ac2e7e6d
+                      package_id: pkg_merrick_tsys
+                      status: draft
+                      created_at: '2025-03-03T18:42:42+00:00'
+                      updated_at: '2025-03-03T18:43:01+00:00'
+                    - id: app_4ce586f17e2e82bc
+                      package_id: pkg_merrick_tsys
+                      status: submitted
+                      created_at: '2025-03-03T18:36:12+00:00'
+                      updated_at: '2025-03-03T18:36:24+00:00'
+                    - id: app_c001e6d3205f7f35
+                      package_id: pkg_merrick_tsys
+                      status: draft
+                      created_at: '2025-03-03T18:33:32+00:00'
+                      updated_at: '2025-03-03T18:33:32+00:00'
+                    - id: app_008b833cbe3a60f9
+                      package_id: pkg_merrick_tsys
+                      status: submitted
+                      created_at: '2025-03-03T18:32:25+00:00'
+                      updated_at: '2025-03-03T18:32:39+00:00'
+                    - id: app_1f0790ab56a533dd
+                      package_id: pkg_merrick_tsys
+                      status: draft
+                      created_at: '2025-03-03T18:31:26+00:00'
+                      updated_at: '2025-03-03T18:31:26+00:00'
+                    - id: app_86e8d0f06dad389b
+                      package_id: pkg_merrick_tsys
+                      status: submitted
+                      created_at: '2025-03-03T18:29:58+00:00'
+                      updated_at: '2025-03-03T18:30:05+00:00'
+                    - id: app_210c577599afe0b6
+                      package_id: pkg_merrick_tsys
+                      status: draft
+                      created_at: '2025-03-03T17:17:17+00:00'
+                      updated_at: '2025-03-03T17:17:17+00:00'
+                    - id: app_18dcd5f0f2a7a306
+                      package_id: pkg_merrick_tsys
+                      status: submitted
+                      created_at: '2025-03-03T17:15:34+00:00'
+                      updated_at: '2025-03-03T17:15:42+00:00'
+                    - id: app_2aac56be70d4c5ab
+                      package_id: pkg_merrick_tsys
+                      status: draft
+                      created_at: '2025-03-03T17:13:38+00:00'
+                      updated_at: '2025-03-03T17:13:38+00:00'
+                    - id: app_38d3aaf0b9ca2441
+                      package_id: pkg_merrick_tsys
+                      status: draft
+                      created_at: '2025-03-03T17:03:27+00:00'
+                      updated_at: '2025-03-03T17:03:27+00:00'
+                    current_page: 1
+                    per_page: 10
+                    last_page: 3
+                    total: 22
+        '422':
+          $ref: '#/components/responses/validation-error-page-size'
+    post:
+      tags:
+      - Applications
+      security:
+      - oauth:
+        - applications:write
+      summary: Create a new application
+      description: 'In the Sandbox environment, the application''s status is determined by the **Monthly Volume Field** (`fld_monthly_volume`).
+
+
+        Based on this value, the system will send one of the following webhook events:
+
+
+        ### Pending
+
+        * Webhook event: `application.updated.data.requested`
+
+        * Monthly volume is **greater than or equal to $100,000**
+
+
+        ### Approved
+
+        * Webhook event: `application.approved`
+
+        * Monthly volume is **between $5,000 and $99,999**
+
+
+        ### Declined
+
+        * Webhook event: `application.declined`
+
+        * Monthly volume is **less than $5,000**
+
+
+        **Required scope:** `applications:write`'
+      operationId: createApplication
+      parameters:
+      - in: header
+        name: Idempotency-Key
+        description: Provide a random key (for example, UUID) to make the request idempotent
+        schema:
+          type: string
+          minLength: 10
+          maxLength: 100
+        required: false
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/create-application'
+            examples:
+              approve:
+                $ref: '#/components/examples/sample-application-approve'
+              pend:
+                $ref: '#/components/examples/sample-application-pend'
+              decline:
+                $ref: '#/components/examples/sample-application-decline'
+        description: New application data
+        required: true
+      responses:
+        '200':
+          description: Application created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/full-application'
+              examples:
+                success:
+                  summary: Application Created
+                  $ref: '#/components/examples/sample-application'
+        '404':
+          $ref: '#/components/responses/error-not-found'
+        '422':
+          description: Validation Failed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/validation-error'
+              examples:
+                invalid-package:
+                  summary: Invalid Package
+                  description: Invalid package error
+                  value:
+                    code: VALIDATION_ERROR
+                    message: The package is not found.
+                    errors:
+                    - The package is not found.
+  /applications/{application}:
+    get:
+      tags:
+      - Applications
+      security:
+      - oauth:
+        - applications:read
+      summary: Get Application Information
+      description: 'Returns information about a given application
+
+
+        **Required scope:** `applications:read`'
+      operationId: getApplication
+      parameters:
+      - name: application
+        in: path
+        description: The ID of the application to retrieve
+        required: true
+        schema:
+          $ref: '#/components/schemas/application-id'
+      responses:
+        '200':
+          description: Application Information
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/full-application'
+              examples:
+                sample-app:
+                  $ref: '#/components/examples/sample-application'
+        '404':
+          $ref: '#/components/responses/error-not-found'
+    patch:
+      tags:
+      - Applications
+      security:
+      - oauth:
+        - applications:write
+      summary: Update an Application
+      description: 'Partially update an application. An application can be updated only when it is in `draft` status.
+
+
+        **Required scope:** `applications:write`'
+      operationId: updateApplication
+      parameters:
+      - name: Idempotency-Key
+        in: header
+        description: Provide a random key (for example, UUID) to make the request idempotent
+        schema:
+          type: string
+          minLength: 10
+          maxLength: 100
+        required: false
+      - name: application
+        in: path
+        description: The ID of the application to update
+        required: true
+        schema:
+          $ref: '#/components/schemas/application-id'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/update-application'
+            examples:
+              success:
+                summary: Success
+                description: Partially update application fields
+                value:
+                  fields:
+                  - id: fld_monthly_volume
+                    value: '20'
+                  collections:
+                  - id: col_bank_info
+                    records:
+                    - id: bank1
+                      fields:
+                      - id: fld_dda_account_number
+                        value: '123456789'
+                      - id: fld_dda_account_routing_number
+                        value: '021000021'
+                  - id: col_owners
+                    records:
+                    - id: owner1
+                      fields:
+                      - id: fld_owner_name
+                        value: John Doe
+                      - id: fld_owner_first_name
+                        value: John
+                      - id: fld_owner_last_name
+                        value: Doe
+                      - id: fld_owner_address
+                        value: 789 main st
+                      - id: fld_owner_city
+                        value: New York
+                      - id: fld_owner_country
+                        value: US
+                      - id: fld_owner_postal_code
+                        value: '10001'
+                      - id: fld_owner_state
+                        value: NY
+                      - id: fld_owner_dob
+                        value: '1970-12-31'
+                      - id: fld_owner_ssn
+                        value: 003456789
+              invalid-field-value:
+                summary: Invalid Field Value
+                description: Invalid field value example
+                value:
+                  fields:
+                  - id: fld_dba_name
+                    value: 1234
+              invalid-field-name:
+                summary: Invalid Field Name
+                description: Invalid field name example
+                value:
+                  fields:
+                  - id: fld_dba_name2
+                    value: Network Merchant Inc
+        description: Update application payload
+        required: true
+      responses:
+        '200':
+          description: Application updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/full-application'
+              examples:
+                sample-app:
+                  $ref: '#/components/examples/sample-application'
+        '404':
+          $ref: '#/components/responses/error-not-found'
+        '422':
+          description: Invalid Update
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/validation-error'
+              examples:
+                invalid-field-value:
+                  summary: Invalid Field Value
+                  description: Invalid field value example
+                  value:
+                    code: VALIDATION_ERROR
+                    message: Field 'fld_dba_name' value must be an string.
+                    errors:
+                    - Field 'fld_dba_name' value must be an string.
+                invalid-field-name:
+                  summary: Invalid Field Name
+                  description: Invalid field name example
+                  value:
+                    code: VALIDATION_ERROR
+                    message: This field 'fld_dba1' does not exist in the package.
+                    errors:
+                    - This field 'fld_dba1' does not exist in the package.
+                other-validation-errors:
+                  summary: Other Validation Errors
+                  description: Multiple application validation errors
+                  value:
+                    code: VALIDATION_ERROR
+                    message: Field 'fld_legal_phone_number' value must be a valid phone number, '212-000-0000' given
+                    errors:
+                    - Field 'fld_legal_phone_number' value must be a valid phone number, '212-000-0000' given
+                    - Field 'fld_legal_postal_code' value must be a valid postal code, '100010' given
+                    - Field 'fld_date_opened' must be a date in the past
+                    - 'Field ''fld_business_nature'' value must be one of the following: [Retail, Internet, Mail Order/Telephone Order]'
+                    - Field 'fld_monthly_volume' must be greater or equal to 1
+                    - Field 'fld_percent_key_entered' must be less than or equal 100
+                    - The field 'fld_contact_name' must match the regular expression '^[A-Za-z0-9'\-\.\,\(\)]+\s+[A-Za-z0-9'\-\.\,\(\)]+(\s+[A-Za-z0-9'\-\.\,\(\)]+)*$'
+                    - Field 'fld_annual_fee' must be greater or equal to 0
+                    - Field 'fld_qual_rate' is required when 'Flat Rate' pricing type is selected
+                    - The total percentage of the 'fld_percent_of_swiped', 'fld_percent_key_entered', 'fld_percent_of_ecommerce' and 'fld_percent_of_moto' fields must be 100%
+  /applications/{application}/documents:
+    post:
+      tags:
+      - Applications
+      security:
+      - oauth:
+        - applications:write
+      summary: Upload Document
+      description: 'Provide supporting documents for the application. Documents can only be uploaded while the application is the `draft` or `underwriter_requested_information` status.
+
+
+        **Required scope:** `applications:write`'
+      operationId: uploadDocument
+      parameters:
+      - name: Idempotency-Key
+        in: header
+        description: Provide a random key (for example, UUID) to make the request idempotent
+        schema:
+          type: string
+          minLength: 10
+          maxLength: 100
+        required: false
+      - name: application
+        in: path
+        description: The ID of the application to provide document
+        required: true
+        schema:
+          $ref: '#/components/schemas/application-id'
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required:
+              - type
+              - file
+              properties:
+                type:
+                  $ref: '#/components/schemas/application-document-type'
+                file:
+                  type: string
+                  description: 'The document to upload (accepted formats: image/png, image/jpg, image/jpeg, application/pdf, max filesize 20 MB)'
+                  format: binary
+                  maxLength: 20971520
+            examples:
+              upload-void-check:
+                summary: Upload void check document
+                description: Upload void check document for an application
+                value:
+                  type: Void Check
+                  file: '[binary file content]'
+        required: true
+      responses:
+        '200':
+          description: Document uploaded successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/application-document'
+              examples:
+                success:
+                  $ref: '#/components/examples/sample-document-void-check'
+        '404':
+          $ref: '#/components/responses/error-not-found'
+        '422':
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/validation-error'
+              examples:
+                sample-error:
+                  summary: Invalid Request
+                  description: Error when attempting to upload invalid file type
+                  value:
+                    code: VALIDATION_ERROR
+                    message: 'The file field must be a file of type: pdf, jpg, jpeg, png.'
+                    errors:
+                    - 'The file field must be a file of type: pdf, jpg, jpeg, png.'
+  /applications/{application}/download-agreement:
+    get:
+      tags:
+      - Applications
+      security:
+      - oauth:
+        - applications:read
+      summary: Download Signed Agreement
+      description: 'This endpoint downloads the signed agreement for the application.
+
+        The agreement can only be downloaded after the application is submitted.
+
+
+        **Required scope:** `applications:read`'
+      operationId: getApplicationDownloadAgreement
+      parameters:
+      - name: application
+        in: path
+        description: The ID of the created application
+        required: true
+        schema:
+          $ref: '#/components/schemas/application-id'
+      responses:
+        '200':
+          description: PDF file
+          content:
+            application/octet-stream:
+              schema:
+                type: string
+                format: binary
+                maxLength: 104857600
+                description: The agreement file in binary form.
+              examples:
+                sample-file:
+                  $ref: '#/components/examples/sample-agreement'
+        '404':
+          $ref: '#/components/responses/error-not-found'
+        '422':
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/validation-error'
+              examples:
+                sample-error:
+                  summary: Invalid Request
+                  description: Error when attempting to download the agreement before the application is submitted
+                  value:
+                    code: VALIDATION_ERROR
+                    message: Application wasn't submitted yet.
+                    errors: []
+  /applications/{application}/info:
+    post:
+      tags:
+      - Applications
+      security:
+      - oauth:
+        - applications:write
+      summary: Update Application Information
+      description: Add more information to an application that is in the `underwriter_requested_information` status.
+      operationId: updateApplicationInfo
+      parameters:
+      - name: application
+        in: path
+        description: The ID of the application to update
+        required: true
+        schema:
+          $ref: '#/components/schemas/application-id'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                note:
+                  type: string
+                  minLength: 1
+                  maxLength: 10000
+                  description: Additional information or note to be added to the application
+              required:
+              - note
+            examples:
+              success:
+                summary: Success
+                description: Add additional information to application
+                value:
+                  note: Additional documentation has been uploaded to support the application review process.
+        description: Application information update payload
+        required: true
+      responses:
+        '200':
+          description: Application information updated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                    example: SUCCESS
+                    maxLength: 100
+                  message:
+                    type: string
+                    example: Application information updated successfully
+                    maxLength: 100
+              examples:
+                success:
+                  summary: Success
+                  description: Successful information update
+                  value:
+                    code: SUCCESS
+                    message: Application information updated successfully
+        '404':
+          $ref: '#/components/responses/error-not-found'
+        '422':
+          description: Invalid Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/validation-error'
+              examples:
+                invalid-status:
+                  summary: Invalid Application Status
+                  description: Application is not in the correct status for information updates
+                  value:
+                    code: VALIDATION_ERROR
+                    message: 'The application information can only be updated when in the ''underwriter_requested_information'' status. Current status: draft'
+                    errors:
+                    - 'The application information can only be updated when in the ''underwriter_requested_information'' status. Current status: draft'
+                invalid-note:
+                  summary: Invalid Note
+                  description: Note field validation error
+                  value:
+                    code: VALIDATION_ERROR
+                    message: The note field is required.
+                    errors:
+                    - The note field is required.
+  /applications/{application}/legal-consent:
+    get:
+      tags:
+      - Applications
+      security:
+      - oauth:
+        - applications:read
+      summary: Get Legal Consent
+      description: 'Get the legal consent URL for the application. Legal consent is required prior to application submission.
+
+
+        Once you have the legal consent URL use Embed Helper to embed the widget into your form.
+
+
+        Please refer to the Legal Consent Helper section for more information.
+
+
+        **Required scope:** `applications:read`'
+      operationId: getApplicationLegalConsent
+      parameters:
+      - name: application
+        in: path
+        description: The ID of the created application
+        required: true
+        schema:
+          $ref: '#/components/schemas/application-id'
+      responses:
+        '200':
+          description: URL to the application Legal Consent
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/application-legal-consent'
+              examples:
+                sample-app:
+                  $ref: '#/components/examples/sample-legal-consent'
+        '404':
+          $ref: '#/components/responses/error-not-found'
+        '422':
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/validation-error'
+              examples:
+                sample-error:
+                  summary: Missing Requirement
+                  description: Validation error when `fld_owner_first_name` or `fld_owner_last_name` are missing from the application
+                  value:
+                    code: VALIDATION_ERROR
+                    message: The field fld_owner_first_name must be filled
+                    errors: []
+  /applications/{application}/submit:
+    post:
+      tags:
+      - Applications
+      security:
+      - oauth:
+        - applications:write
+      summary: Submit Application
+      description: 'Submit the application for review
+
+
+        To expedite the merchant application underwriting process it is recommended to include the __Bank or Processing Statement (3 Months of Statements)__ if the merchant meets any of these criteria:
+
+        * `fld_average_ticket ≥ 1000`
+
+        * `fld_high_ticket ≥ 2500`
+
+
+        **Required scope:** `applications:write`'
+      operationId: submitApplication
+      parameters:
+      - name: Idempotency-Key
+        in: header
+        description: Provide a random key (for example, UUID) to make the request idempotent
+        schema:
+          type: string
+          minLength: 10
+          maxLength: 100
+        required: false
+      - name: application
+        in: path
+        description: The ID of the application to submit
+        required: true
+        schema:
+          $ref: '#/components/schemas/application-id'
+      - name: skip_merchant_email
+        in: query
+        description: Flag to indicate whether to skip sending an email to the merchant with the signed agreement
+        schema:
+          type: boolean
+        required: false
+      responses:
+        '200':
+          description: Application submitted successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/full-application'
+              examples:
+                success:
+                  $ref: '#/components/examples/sample-submitted-application'
+        '404':
+          $ref: '#/components/responses/error-not-found'
+        '422':
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/validation-error'
+              examples:
+                sample-error:
+                  summary: Invalid Request
+                  description: Application with invalid information
+                  value:
+                    code: VALIDATION_ERROR
+                    message: The 'fld_dba_name' is required
+                    errors:
+                    - The 'fld_dba_name' is required
+components:
+  schemas:
+    application-created-at:
+      type: string
+      description: 'The date and time when the application was created.
+
+        '
+      format: date-time
+      maxLength: 32
+      example: '2025-01-01T00:00:00Z'
+    application-document-status:
+      type: string
+      description: The status of the document
+      enum:
+      - draft
+      - submitted
+    application-id:
+      type: string
+      description: The unique identifier of the application.
+      pattern: ^app_[a-f0-9]{16}$
+      minLength: 20
+      maxLength: 20
+    application-legal-consent:
+      type: object
+      description: Application legal consent URL.
+      required:
+      - url
+      properties:
+        url:
+          $ref: '#/components/schemas/legal-consent-url'
+    field-id:
+      type: string
+      description: The unique identifier of the field.
+      pattern: ^fld_[a-z0-9_]{3,46}$
+      minLength: 7
+      maxLength: 50
+    create-application:
+      type: object
+      required:
+      - package_id
+      properties:
+        package_id:
+          $ref: '#/components/schemas/package-id'
+        fields:
+          $ref: '#/components/schemas/application-fields'
+        collections:
+          $ref: '#/components/schemas/application-collections'
+    application-collections:
+      type: array
+      description: 'This field is used to store collections.
+
+        '
+      maxItems: 1000
+      items:
+        type: object
+        properties:
+          id:
+            $ref: '#/components/schemas/collection-id'
+          records:
+            type: array
+            description: 'This field is used to store all records of the same collection.
+
+              '
+            maxItems: 1000
+            items:
+              type: object
+              required:
+              - id
+              - fields
+              properties:
+                id:
+                  type: string
+                  description: 'The unique identifier of the record.
+
+                    '
+                  minLength: 1
+                  maxLength: 100
+                fields:
+                  $ref: '#/components/schemas/application-fields'
+    datetime-updated-at:
+      type: string
+      description: 'The date and time when was last updated.
+
+        '
+      format: date-time
+      maxLength: 32
+      example: '2025-01-01T00:00:00Z'
+    datetime-created-at:
+      type: string
+      description: 'The date and time when was created.
+
+        '
+      format: date-time
+      maxLength: 32
+      example: '2025-01-01T00:00:00Z'
+    collection-id:
+      type: string
+      description: The unique identifier of the collection.
+      pattern: ^col_[a-z0-9_]{3,46}$
+      minLength: 7
+      maxLength: 50
+    application-status:
+      type: string
+      enum:
+      - draft
+      - submitted
+      - approved
+      - rejected
+      - underwriter_requested_information
+      - requested_information_sent
+      - boarded
+    application-document:
+      type: object
+      description: 'Application document info.
+
+        '
+      required:
+      - id
+      - application_id
+      - type
+      - file_name
+      - status
+      - created_at
+      - updated_at
+      properties:
+        id:
+          type: string
+          description: The unique identifier of the document.
+          pattern: ^doc_[a-f0-9]{16}$
+          minLength: 20
+          maxLength: 20
+        application_id:
+          $ref: '#/components/schemas/application-id'
+        type:
+          $ref: '#/components/schemas/application-document-type'
+        file_name:
+          type: string
+          maxLength: 255
+        status:
+          $ref: '#/components/schemas/application-document-status'
+        created_at:
+          $ref: '#/components/schemas/datetime-created-at'
+        updated_at:
+          $ref: '#/components/schemas/datetime-updated-at'
+    legal-consent-url:
+      type: string
+      description: The application legal consent URL.
+      maxLength: 1024
+    application-updated-at:
+      type: string
+      description: 'The date and time when the application was last updated.
+
+        '
+      format: date-time
+      maxLength: 32
+      example: '2025-01-01T00:00:00Z'
+    package-id:
+      type: string
+      description: The unique identifier of the package.
+      pattern: ^pkg_[a-z0-9_]{3,16}$
+      minLength: 7
+      maxLength: 20
+      example: pkg_merrick_tsys
+    application-fields:
+      type: array
+      description: Application fields
+      maxItems: 1000
+      items:
+        type: object
+        required:
+        - id
+        - value
+        properties:
+          id:
+            $ref: '#/components/schemas/field-id'
+          value:
+            $ref: '#/components/schemas/field-value-mixed'
+    update-application:
+      type: object
+      description: Update an application.
+      properties:
+        fields:
+          $ref: '#/components/schemas/application-fields'
+        collections:
+          $ref: '#/components/schemas/application-collections'
+    pagination:
+      type: object
+      summary: Pagination information
+      required:
+      - current_page
+      - last_page
+      - per_page
+      - total
+      properties:
+        current_page:
+          type: integer
+          description: The current page number
+        last_page:
+          type: integer
+          description: The last page number
+        per_page:
+          type: integer
+          enum:
+          - 10
+          - 20
+          - 50
+          - 100
+          description: 'The number of items per page (allowed values: 10, 20, 50, 100)'
+        total:
+          type: integer
+          description: The total number of items
+    full-application:
+      type: object
+      description: 'Full application object.
+
+        '
+      required:
+      - id
+      - package_id
+      - status
+      - fields
+      - collections
+      - created_at
+      - updated_at
+      properties:
+        id:
+          $ref: '#/components/schemas/application-id'
+        package_id:
+          $ref: '#/components/schemas/package-id'
+        status:
+          $ref: '#/components/schemas/application-status'
+        fields:
+          $ref: '#/components/schemas/application-fields'
+        collections:
+          $ref: '#/components/schemas/application-collections'
+        created_at:
+          $ref: '#/components/schemas/application-created-at'
+        updated_at:
+          $ref: '#/components/schemas/application-updated-at'
+    application-document-type:
+      type: string
+      description: The type of the document
+      enum:
+      - Void Check
+      - Marketing Materials
+      - 3 Months of Statements
+      - Driver License
+      - SSN Card
+      - Form SS4
+      - Other
+    field-value-mixed:
+      type:
+      - string
+      - integer
+      - number
+      - boolean
+      - array
+      - 'null'
+      description: 'Field value type depends on the field definition.
+
+        '
+    validation-error:
+      type: object
+      properties:
+        code:
+          type: string
+          description: Error code
+          maxLength: 1000
+        message:
+          type: string
+          description: Error message
+          maxLength: 1000
+        errors:
+          type: array
+          maxItems: 10
+          items:
+            type: string
+            description: The error message
+            maxLength: 1000
+  examples:
+    sample-legal-consent:
+      summary: Success
+      description: An application legal consent URL
+      value:
+        url: https://sandbox.signup.nmi.com/consent/apc_nsL5Xr2tYN8C
+    sample-application:
+      summary: Application
+      description: A sample application
+      value:
+        id: app_6e9361041666a79e
+        package_id: pkg_merrick_tsys
+        status: draft
+        fields:
+        - id: fld_dba_name
+          value: Network Merchant Inc
+        - id: fld_dba_address
+          value: '1450 American Ln #1200'
+        - id: fld_dba_city
+          value: Schaumburg
+        - id: fld_dba_country
+          value: US
+        - id: fld_dba_email
+          value: john@doe.com
+        - id: fld_dba_phone_number
+          value: 8473524850
+        - id: fld_dba_postal_code
+          value: 60173
+        - id: fld_dba_state
+          value: IL
+        - id: fld_legal_name
+          value: Network Merchant Inc
+        - id: fld_state_incorporated
+          value: DE
+        - id: fld_legal_phone_number
+          value: 847-352-4850
+        - id: fld_legal_address
+          value: '1450 American Ln #1200'
+        - id: fld_legal_city
+          value: Schaumburg
+        - id: fld_legal_country
+          value: US
+        - id: fld_legal_postal_code
+          value: 60173
+        - id: fld_legal_state
+          value: IL
+        - id: fld_contact_name
+          value: Jane Doe
+        - id: fld_business_website
+          value: https://www.nmi.com/
+        - id: fld_mcc
+          value: 5812
+        - id: fld_date_opened
+          value: '2022-01-01'
+        - id: fld_federal_tax_id
+          value: 223456789
+        - id: fld_business_nature
+          value: Internet
+        - id: fld_monthly_volume
+          value: 6000
+        - id: fld_average_ticket
+          value: 50
+        - id: fld_individual_with_control_address
+          value: '1450 American Ln #1200'
+        - id: fld_individual_with_control_city
+          value: Schaumburg
+        - id: fld_individual_with_control_postal_code
+          value: 60173
+        - id: fld_individual_with_control_ssn
+          value: 003456789
+        - id: fld_individual_with_control_state
+          value: IL
+        - id: fld_individual_with_control_country
+          value: US
+        - id: fld_individual_with_control_dob
+          value: '1990-01-01'
+        - id: fld_individual_with_control_first_name
+          value: John
+        - id: fld_individual_with_control_last_name
+          value: Doe
+        - id: fld_individual_with_control_title
+          value: Owner
+        - id: fld_individual_with_control_ownership_percentage
+          value: 100
+        - id: fld_individual_with_control_phone
+          value: 847-352-4850
+        - id: fld_individual_with_control_email
+          value: aaa@aa.com
+        - id: fld_high_ticket
+          value: 100
+        - id: fld_percent_key_entered
+          value: 20
+        - id: fld_percent_of_ecommerce
+          value: 0
+        - id: fld_percent_of_moto
+          value: 0
+        - id: fld_percent_of_swiped
+          value: 80
+        - id: fld_type_business
+          value: LLC
+        - id: fld_type_of_goods_sold
+          value: FinTech
+        - id: fld_years_in_business
+          value: 2
+        - id: fld_pricing_type
+          value: Flat Rate
+        - id: fld_qual_rate
+          value: 0.1
+        - id: fld_qual_rate_per_auth
+          value: 0.1
+        - id: fld_amex_processor_fees
+          value: '4.25'
+        - id: fld_amex_processor_per_auth
+          value: '0.25'
+        - id: fld_downgrade_surcharge
+          value: '0.00'
+        - id: fld_downgrade_per_auth
+          value: '0.00'
+        - id: fld_international_rate
+          value: '0.00'
+        - id: fld_international_per_auth
+          value: '0.00'
+        - id: fld_monthly_fee
+          value: '10.00'
+        - id: fld_chargeback_fee
+          value: '25.00'
+        - id: fld_retrieval_request_fee
+          value: '10.00'
+        - id: fld_voice_auth_fee
+          value: '0.95'
+        - id: fld_ach_return_fee
+          value: '25.00'
+        - id: fld_batch_fee
+          value: '0.25'
+        - id: fld_avs_fee
+          value: '0.07'
+        - id: fld_1099_fee
+          value: '6.95'
+        - id: fld_monthly_minimum
+          value: '10.00'
+        - id: fld_annual_fee
+          value: '99.00'
+        - id: fld_breach_monitoring_protection
+          value: '0.00'
+        collections:
+        - id: col_bank_info
+          records:
+          - id: bank1
+            fields:
+            - id: fld_dda_account_number
+              value: '123456789'
+            - id: fld_dda_account_routing_number
+              value: '021000021'
+            - id: fld_dda_name_on_account
+              value: John Doe
+        - id: col_owners
+          records:
+          - id: owner1
+            fields:
+            - id: fld_owner_first_name
+              value: John
+            - id: fld_owner_last_name
+              value: Doe
+            - id: fld_owner_address
+              value: 789 main st
+            - id: fld_owner_city
+              value: New York
+            - id: fld_owner_country
+              value: US
+            - id: fld_owner_postal_code
+              value: 10001
+            - id: fld_owner_state
+              value: NY
+            - id: fld_owner_dob
+              value: '1970-12-31'
+            - id: fld_owner_ssn
+              value: 003456789
+            - id: fld_owner_ownership_percentage
+              value: '20'
+            - id: fld_owner_title
+              value: CEO
+            - id: fld_owner_email
+              value: abc@abc.com
+            - id: fld_owner_phone_num
+              value: 847-352-4850
+        created_at: '2025-01-01T00:00:00Z'
+        updated_at: '2025-01-01T00:00:00Z'
+    sample-agreement:
+      summary: Sample of the PDF file content
+      description: PDF file content
+      value: '%PDF-1.3
+
+        %?????????
+
+        3 0 obj
+
+        << /Filter /FlateDecode /Length 11 >>
+
+        stream
+
+        x+??
+
+        endstream
+
+        endobj
+
+        1 0 obj
+
+        << /Type /Page /Parent 2 0 R /Resources 4 0 R /Contents 3 0 R /MediaBox [0 0 595 842]
+
+        >>
+
+        endobj
+
+        4 0 obj
+
+        << /ProcSet [ /PDF ] >>
+
+        endobj
+
+        2 0 obj
+
+        << /Type /Pages /MediaBox [0 0 595 842] /Count 1 /Kids [ 1 0 R ] >>
+
+        endobj
+
+        5 0 obj
+
+        << /Type /Catalog /Pages 2 0 R >>
+
+        endobj
+
+        6 0 obj
+
+        << /Title (test) /Producer (macOS Version 15.3.1 \(Build 24D70\) Quartz PDFContext)
+
+        /Creator (TextEdit) /CreationDate (D:20250310181026Z00''00'') /ModDate (D:20250310181026Z00''00'')
+
+        >>
+
+        endobj
+
+        xref
+
+        0 7
+
+        0000000000 65535 f
+
+        0000000104 00000 n
+
+        0000000247 00000 n
+
+        0000000022 00000 n
+
+        0000000208 00000 n
+
+        0000000330 00000 n
+
+        0000000379 00000 n
+
+        trailer
+
+        << /Size 7 /Root 5 0 R /Info 6 0 R /ID [ <86610b3021f3bffa0135d876941bfa71>
+
+        <86610b3021f3bffa0135d876941bfa71> ] >>
+
+        startxref
+
+        576
+
+        %%EOF
+
+        '
+    sample-application-decline:
+      summary: Decline
+      description: This application will be automatically declined after submission
+      value:
+        package_id: pkg_merrick_tsys
+        fields:
+        - id: fld_dba_name
+          value: Network Merchant Inc
+        - id: fld_dba_address
+          value: '1450 American Ln #1200'
+        - id: fld_dba_city
+          value: Schaumburg
+        - id: fld_dba_country
+          value: US
+        - id: fld_dba_email
+          value: john@doe.com
+        - id: fld_dba_phone_number
+          value: '8473524850'
+        - id: fld_dba_postal_code
+          value: 60173
+        - id: fld_dba_state
+          value: IL
+        - id: fld_legal_name
+          value: Network Merchant Inc
+        - id: fld_legal_phone_number
+          value: 847-352-4850
+        - id: fld_legal_address
+          value: '1450 American Ln #1200'
+        - id: fld_legal_city
+          value: Schaumburg
+        - id: fld_legal_country
+          value: US
+        - id: fld_legal_postal_code
+          value: 60173
+        - id: fld_legal_state
+          value: IL
+        - id: fld_contact_name
+          value: Jane Doe
+        - id: fld_business_website
+          value: https://www.nmi.com/
+        - id: fld_mcc
+          value: 5812
+        - id: fld_date_opened
+          value: '2022-01-01'
+        - id: fld_federal_tax_id
+          value: 223456789
+        - id: fld_business_nature
+          value: Internet
+        - id: fld_monthly_volume
+          value: 4000
+        - id: fld_average_ticket
+          value: 50
+        - id: fld_individual_with_control_address
+          value: '1450 American Ln #1200'
+        - id: fld_individual_with_control_city
+          value: Schaumburg
+        - id: fld_individual_with_control_postal_code
+          value: 60173
+        - id: fld_individual_with_control_ssn
+          value: 003456789
+        - id: fld_individual_with_control_state
+          value: IL
+        - id: fld_individual_with_control_country
+          value: US
+        - id: fld_individual_with_control_dob
+          value: '2000-01-01'
+        - id: fld_individual_with_control_first_name
+          value: John
+        - id: fld_individual_with_control_last_name
+          value: Doe
+        - id: fld_individual_with_control_title
+          value: Owner
+        - id: fld_individual_with_control_ownership_percentage
+          value: 100
+        - id: fld_individual_with_control_phone
+          value: 847-352-4850
+        - id: fld_individual_with_control_email
+          value: aaa@aa.com
+        - id: fld_high_ticket
+          value: 100
+        - id: fld_percent_key_entered
+          value: 20
+        - id: fld_percent_of_ecommerce
+          value: 0
+        - id: fld_percent_of_moto
+          value: 0
+        - id: fld_percent_of_swiped
+          value: 80
+        - id: fld_type_business
+          value: LLC
+        - id: fld_state_incorporated
+          value: NY
+        - id: fld_type_of_goods_sold
+          value: FinTech
+        - id: fld_years_in_business
+          value: 2
+        - id: fld_pricing_type
+          value: Flat Rate
+        - id: fld_qual_rate
+          value: 0.1
+        - id: fld_qual_rate_per_auth
+          value: 0.1
+        - id: fld_amex_processor_fees
+          value: '4.25'
+        - id: fld_amex_processor_per_auth
+          value: '0.25'
+        - id: fld_downgrade_surcharge
+          value: '0.00'
+        - id: fld_downgrade_per_auth
+          value: '0.00'
+        - id: fld_international_rate
+          value: '0.00'
+        - id: fld_international_per_auth
+          value: '0.00'
+        - id: fld_monthly_fee
+          value: '10.00'
+        - id: fld_chargeback_fee
+          value: '25.00'
+        - id: fld_retrieval_request_fee
+          value: '10.00'
+        - id: fld_voice_auth_fee
+          value: '0.95'
+        - id: fld_ach_return_fee
+          value: '25.00'
+        - id: fld_batch_fee
+          value: '0.25'
+        - id: fld_avs_fee
+          value: '0.07'
+        - id: fld_1099_fee
+          value: '6.95'
+        - id: fld_monthly_minimum
+          value: '10.00'
+        - id: fld_annual_fee
+          value: '99.00'
+        - id: fld_breach_monitoring_protection
+          value: '0.00'
+        collections:
+        - id: col_bank_info
+          records:
+          - id: bank1
+            fields:
+            - id: fld_dda_account_number
+              value: '123456789'
+            - id: fld_dda_account_routing_number
+              value: '021000021'
+            - id: fld_dda_name_on_account
+              value: John Doe
+        - id: col_owners
+          records:
+          - id: owner1
+            fields:
+            - id: fld_owner_first_name
+              value: John
+            - id: fld_owner_last_name
+              value: Doe
+            - id: fld_owner_address
+              value: 789 main st
+            - id: fld_owner_city
+              value: New York
+            - id: fld_owner_country
+              value: US
+            - id: fld_owner_postal_code
+              value: 10001
+            - id: fld_owner_state
+              value: NY
+            - id: fld_owner_dob
+              value: '1970-12-31'
+            - id: fld_owner_ssn
+              value: 003456789
+            - id: fld_owner_ownership_percentage
+              value: '20'
+            - id: fld_owner_title
+              value: CEO
+            - id: fld_owner_email
+              value: abc@abc.com
+            - id: fld_owner_phone_num
+              value: 847-352-4850
+    sample-application-approve:
+      summary: Approve
+      description: This application will be automatically approved after submission
+      value:
+        package_id: pkg_merrick_tsys
+        fields:
+        - id: fld_dba_name
+          value: Network Merchant Inc
+        - id: fld_dba_address
+          value: '1450 American Ln #1200'
+        - id: fld_dba_city
+          value: Schaumburg
+        - id: fld_dba_country
+          value: US
+        - id: fld_dba_email
+          value: john@doe.com
+        - id: fld_dba_phone_number
+          value: '8473524850'
+        - id: fld_dba_postal_code
+          value: 60173
+        - id: fld_dba_state
+          value: IL
+        - id: fld_legal_name
+          value: Network Merchant Inc
+        - id: fld_legal_phone_number
+          value: 847-352-4850
+        - id: fld_legal_address
+          value: '1450 American Ln #1200'
+        - id: fld_legal_city
+          value: Schaumburg
+        - id: fld_legal_country
+          value: US
+        - id: fld_legal_postal_code
+          value: 60173
+        - id: fld_legal_state
+          value: IL
+        - id: fld_contact_name
+          value: Jane Doe
+        - id: fld_business_website
+          value: https://www.nmi.com/
+        - id: fld_mcc
+          value: 5812
+        - id: fld_date_opened
+          value: '2022-01-01'
+        - id: fld_federal_tax_id
+          value: 223456789
+        - id: fld_business_nature
+          value: Internet
+        - id: fld_monthly_volume
+          value: 6000
+        - id: fld_average_ticket
+          value: 50
+        - id: fld_individual_with_control_address
+          value: '1450 American Ln #1200'
+        - id: fld_individual_with_control_city
+          value: Schaumburg
+        - id: fld_individual_with_control_postal_code
+          value: 60173
+        - id: fld_individual_with_control_ssn
+          value: 003456789
+        - id: fld_individual_with_control_state
+          value: IL
+        - id: fld_individual_with_control_country
+          value: US
+        - id: fld_individual_with_control_dob
+          value: '2000-01-01'
+        - id: fld_individual_with_control_first_name
+          value: John
+        - id: fld_individual_with_control_last_name
+          value: Doe
+        - id: fld_individual_with_control_title
+          value: Owner
+        - id: fld_individual_with_control_ownership_percentage
+          value: 100
+        - id: fld_individual_with_control_phone
+          value: 847-352-4850
+        - id: fld_individual_with_control_email
+          value: aaa@aa.com
+        - id: fld_high_ticket
+          value: 100
+        - id: fld_percent_key_entered
+          value: 20
+        - id: fld_percent_of_ecommerce
+          value: 0
+        - id: fld_percent_of_moto
+          value: 0
+        - id: fld_percent_of_swiped
+          value: 80
+        - id: fld_type_business
+          value: LLC
+        - id: fld_state_incorporated
+          value: NY
+        - id: fld_type_of_goods_sold
+          value: FinTech
+        - id: fld_years_in_business
+          value: 2
+        - id: fld_pricing_type
+          value: Flat Rate
+        - id: fld_qual_rate
+          value: 0.1
+        - id: fld_qual_rate_per_auth
+          value: 0.1
+        - id: fld_amex_processor_fees
+          value: '4.25'
+        - id: fld_amex_processor_per_auth
+          value: '0.25'
+        - id: fld_downgrade_surcharge
+          value: '0.00'
+        - id: fld_downgrade_per_auth
+          value: '0.00'
+        - id: fld_international_rate
+          value: '0.00'
+        - id: fld_international_per_auth
+          value: '0.00'
+        - id: fld_monthly_fee
+          value: '10.00'
+        - id: fld_chargeback_fee
+          value: '25.00'
+        - id: fld_retrieval_request_fee
+          value: '10.00'
+        - id: fld_voice_auth_fee
+          value: '0.95'
+        - id: fld_ach_return_fee
+          value: '25.00'
+        - id: fld_batch_fee
+          value: '0.25'
+        - id: fld_avs_fee
+          value: '0.07'
+        - id: fld_1099_fee
+          value: '6.95'
+        - id: fld_monthly_minimum
+          value: '10.00'
+        - id: fld_annual_fee
+          value: '99.00'
+        - id: fld_breach_monitoring_protection
+          value: '0.00'
+        collections:
+        - id: col_bank_info
+          records:
+          - id: bank1
+            fields:
+            - id: fld_dda_account_number
+              value: '123456789'
+            - id: fld_dda_account_routing_number
+              value: '021000021'
+            - id: fld_dda_name_on_account
+              value: John Doe
+        - id: col_owners
+          records:
+          - id: owner1
+            fields:
+            - id: fld_owner_first_name
+              value: John
+            - id: fld_owner_last_name
+              value: Doe
+            - id: fld_owner_address
+              value: 789 main st
+            - id: fld_owner_city
+              value: New York
+            - id: fld_owner_country
+              value: US
+            - id: fld_owner_postal_code
+              value: 10001
+            - id: fld_owner_state
+              value: NY
+            - id: fld_owner_dob
+              value: '1970-12-31'
+            - id: fld_owner_ssn
+              value: 003456789
+            - id: fld_owner_ownership_percentage
+              value: '20'
+            - id: fld_owner_title
+              value: CEO
+            - id: fld_owner_email
+              value: abc@abc.com
+            - id: fld_owner_phone_num
+              value: 847-352-4850
+    sample-submitted-application:
+      summary: Application
+      description: A sample application
+      value:
+        id: app_6e9361041666a79e
+        package_id: pkg_merrick_tsys
+        status: submitted
+        fields:
+        - id: fld_dba_name
+          value: Network Merchant Inc
+        - id: fld_dba_address
+          value: '1450 American Ln #1200'
+        - id: fld_dba_city
+          value: Schaumburg
+        - id: fld_dba_country
+          value: US
+        - id: fld_dba_email
+          value: john@doe.com
+        - id: fld_dba_phone_number
+          value: 8473524850
+        - id: fld_dba_postal_code
+          value: 60173
+        - id: fld_dba_state
+          value: IL
+        - id: fld_legal_name
+          value: Network Merchant Inc
+        - id: fld_legal_phone_number
+          value: 847-352-4850
+        - id: fld_legal_address
+          value: '1450 American Ln #1200'
+        - id: fld_legal_attn
+          value: John Doe
+        - id: fld_legal_city
+          value: Schaumburg
+        - id: fld_legal_country
+          value: US
+        - id: fld_legal_postal_code
+          value: 60173
+        - id: fld_legal_state
+          value: IL
+        - id: fld_manager_name
+          value: Jane Doe
+        - id: fld_business_website
+          value: https://www.nmi.com/
+        - id: fld_mcc
+          value: 5812
+        - id: fld_date_opened
+          value: '2022-01-43'
+        - id: fld_federal_tax_id
+          value: 223456789
+        - id: fld_business_nature
+          value: Internet
+        - id: fld_monthly_volume
+          value: 6000
+        - id: fld_average_ticket
+          value: 50
+        - id: fld_individual_with_control_address
+          value: '1450 American Ln #1200'
+        - id: fld_individual_with_control_city
+          value: Schaumburg
+        - id: fld_individual_with_control_postal_code
+          value: 60173
+        - id: fld_individual_with_control_ssn
+          value: 3456789
+        - id: fld_individual_with_control_state
+          value: IL
+        - id: fld_individual_with_control_country
+          value: US
+        - id: fld_individual_with_control_dob
+          value: '2000-01-01'
+        - id: fld_individual_with_control_first_name
+          value: John
+        - id: fld_individual_with_control_last_name
+          value: Doe
+        - id: fld_individual_with_control_ownership_percentage
+          value: 100
+        - id: fld_individual_with_control_phone
+          value: 847-352-4850
+        - id: fld_individual_with_control_email
+          value: aaa@aa.com
+        - id: fld_high_ticket
+          value: 100
+        - id: fld_percent_key_entered
+          value: 20
+        - id: fld_percent_of_ecommerce
+          value: 0
+        - id: fld_percent_of_retail
+          value: 80
+        - id: fld_type_business
+          value: LLC
+        - id: fld_type_of_goods_sold
+          value: FinTech
+        - id: fld_years_in_business
+          value: 2
+        - id: fld_pricing_type
+          value: Flat Rate
+        - id: fld_qual_rate
+          value: 0.1
+        - id: fld_qual_rate_per_auth
+          value: 0.1
+        - id: fld_amex_processor_fees
+          value: '4.25'
+        - id: fld_amex_processor_per_auth
+          value: '0.25'
+        - id: fld_downgrade_surcharge
+          value: '0.00'
+        - id: fld_downgrade_per_auth
+          value: '0.00'
+        - id: fld_international_rate
+          value: '0.00'
+        - id: fld_international_per_auth
+          value: '0.00'
+        - id: fld_monthly_fee
+          value: '10.00'
+        - id: fld_chargeback_fee
+          value: '25.00'
+        - id: fld_retrieval_request_fee
+          value: '10.00'
+        - id: fld_voice_auth_fee
+          value: '0.95'
+        - id: fld_ach_return_fee
+          value: '25.00'
+        - id: fld_batch_fee
+          value: '0.25'
+        - id: fld_avs_fee
+          value: '0.07'
+        - id: fld_1099_fee
+          value: '6.95'
+        - id: fld_monthly_minimum
+          value: '10.00'
+        - id: fld_annual_fee
+          value: '99.00'
+        - id: fld_breach_monitoring_protection
+          value: '0.00'
+        collections:
+        - id: col_bank_info
+          records:
+          - id: bank1
+            fields:
+            - id: fld_dda_account_number
+              value: 123456789
+            - id: fld_dda_account_routing_number
+              value: 21000021
+            - id: fld_dda_name_on_account
+              value: John Doe
+        - id: col_owners
+          records:
+          - id: owner1
+            fields:
+            - id: fld_owner_name
+              value: John Doe
+            - id: fld_owner_first_name
+              value: John
+            - id: fld_owner_last_name
+              value: Doe
+            - id: fld_owner_address
+              value: 789 main st
+            - id: fld_owner_city
+              value: New York
+            - id: fld_owner_country
+              value: US
+            - id: fld_owner_postal_code
+              value: 10001
+            - id: fld_owner_state
+              value: NY
+            - id: fld_owner_dob
+              value: '1970-12-31'
+            - id: fld_owner_ssn
+              value: 3456789
+            - id: fld_owner_ownership_percentage
+              value: '20'
+            - id: fld_owner_title
+              value: CEO
+            - id: fld_owner_email
+              value: abc@abc.com
+            - id: fld_owner_phone_num
+              value: 5223433345
+        created_at: '2025-01-01T00:00:00Z'
+        updated_at: '2025-01-01T05:00:00Z'
+    sample-application-pend:
+      summary: Pend
+      description: This application will be automatically pended after submission
+      value:
+        package_id: pkg_merrick_tsys
+        fields:
+        - id: fld_dba_name
+          value: Network Merchant Inc
+        - id: fld_dba_address
+          value: '1450 American Ln #1200'
+        - id: fld_dba_city
+          value: Schaumburg
+        - id: fld_dba_country
+          value: US
+        - id: fld_dba_email
+          value: john@doe.com
+        - id: fld_dba_phone_number
+          value: '8473524850'
+        - id: fld_dba_postal_code
+          value: 60173
+        - id: fld_dba_state
+          value: IL
+        - id: fld_legal_name
+          value: Network Merchant Inc
+        - id: fld_legal_phone_number
+          value: 847-352-4850
+        - id: fld_legal_address
+          value: '1450 American Ln #1200'
+        - id: fld_legal_city
+          value: Schaumburg
+        - id: fld_legal_country
+          value: US
+        - id: fld_legal_postal_code
+          value: 60173
+        - id: fld_legal_state
+          value: IL
+        - id: fld_contact_name
+          value: Jane Doe
+        - id: fld_business_website
+          value: https://www.nmi.com/
+        - id: fld_mcc
+          value: 5812
+        - id: fld_date_opened
+          value: '2022-01-01'
+        - id: fld_federal_tax_id
+          value: 223456789
+        - id: fld_business_nature
+          value: Internet
+        - id: fld_monthly_volume
+          value: 110000
+        - id: fld_average_ticket
+          value: 50
+        - id: fld_individual_with_control_address
+          value: '1450 American Ln #1200'
+        - id: fld_individual_with_control_city
+          value: Schaumburg
+        - id: fld_individual_with_control_postal_code
+          value: 60173
+        - id: fld_individual_with_control_ssn
+          value: 003456789
+        - id: fld_individual_with_control_state
+          value: IL
+        - id: fld_individual_with_control_country
+          value: US
+        - id: fld_individual_with_control_dob
+          value: '2000-01-01'
+        - id: fld_individual_with_control_first_name
+          value: John
+        - id: fld_individual_with_control_last_name
+          value: Doe
+        - id: fld_individual_with_control_title
+          value: Owner
+        - id: fld_individual_with_control_ownership_percentage
+          value: 100
+        - id: fld_individual_with_control_phone
+          value: 847-352-4850
+        - id: fld_individual_with_control_email
+          value: aaa@aa.com
+        - id: fld_high_ticket
+          value: 100
+        - id: fld_percent_key_entered
+          value: 20
+        - id: fld_percent_of_ecommerce
+          value: 0
+        - id: fld_percent_of_moto
+          value: 0
+        - id: fld_percent_of_swiped
+          value: 80
+        - id: fld_type_business
+          value: LLC
+        - id: fld_state_incorporated
+          value: NY
+        - id: fld_type_of_goods_sold
+          value: FinTech
+        - id: fld_years_in_business
+          value: 2
+        - id: fld_pricing_type
+          value: Flat Rate
+        - id: fld_qual_rate
+          value: 0.1
+        - id: fld_qual_rate_per_auth
+          value: 0.1
+        - id: fld_amex_processor_fees
+          value: '4.25'
+        - id: fld_amex_processor_per_auth
+          value: '0.25'
+        - id: fld_downgrade_surcharge
+          value: '0.00'
+        - id: fld_downgrade_per_auth
+          value: '0.00'
+        - id: fld_international_rate
+          value: '0.00'
+        - id: fld_international_per_auth
+          value: '0.00'
+        - id: fld_monthly_fee
+          value: '10.00'
+        - id: fld_chargeback_fee
+          value: '25.00'
+        - id: fld_retrieval_request_fee
+          value: '10.00'
+        - id: fld_voice_auth_fee
+          value: '0.95'
+        - id: fld_ach_return_fee
+          value: '25.00'
+        - id: fld_batch_fee
+          value: '0.25'
+        - id: fld_avs_fee
+          value: '0.07'
+        - id: fld_1099_fee
+          value: '6.95'
+        - id: fld_monthly_minimum
+          value: '10.00'
+        - id: fld_annual_fee
+          value: '99.00'
+        - id: fld_breach_monitoring_protection
+          value: '0.00'
+        collections:
+        - id: col_bank_info
+          records:
+          - id: bank1
+            fields:
+            - id: fld_dda_account_number
+              value: '123456789'
+            - id: fld_dda_account_routing_number
+              value: '021000021'
+            - id: fld_dda_name_on_account
+              value: John Doe
+        - id: col_owners
+          records:
+          - id: owner1
+            fields:
+            - id: fld_owner_first_name
+              value: John
+            - id: fld_owner_last_name
+              value: Doe
+            - id: fld_owner_address
+              value: 789 main st
+            - id: fld_owner_city
+              value: New York
+            - id: fld_owner_country
+              value: US
+            - id: fld_owner_postal_code
+              value: 10001
+            - id: fld_owner_state
+              value: NY
+            - id: fld_owner_dob
+              value: '1970-12-31'
+            - id: fld_owner_ssn
+              value: 003456789
+            - id: fld_owner_ownership_percentage
+              value: '20'
+            - id: fld_owner_title
+              value: CEO
+            - id: fld_owner_email
+              value: abc@abc.com
+            - id: fld_owner_phone_num
+              value: 847-352-4850
+    sample-document-void-check:
+      summary: Success
+      description: Sample document (void check) for application
+      value:
+        id: doc_1b4254029faede5a
+        application_id: app_341c7b5b432a3158
+        type: Void Check
+        file_name: void_check.pdf
+        status: draft
+        created_at: '2025-01-14T14:20:16+00:00'
+        updated_at: '2025-01-14T14:20:16+00:00'
+  responses:
+    error-not-found:
+      description: Error response for resource not found
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              code:
+                type: string
+                description: Error code
+                maxLength: 100
+              message:
+                type: string
+                description: Error message
+                maxLength: 10000
+          examples:
+            not-found:
+              summary: Resource Not Found
+              description: The resource cannot be found
+              value:
+                code: NOT_FOUND
+                message: Resource not found
+    validation-error-page-size:
+      description: Bad request (validation error) response for invalid page size
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              code:
+                type: string
+                description: Error code
+                maxLength: 1000
+              message:
+                type: string
+                description: Error message
+                maxLength: 1000
+              errors:
+                type: array
+                maxItems: 1000
+                items:
+                  type: string
+                  description: The error message
+                  maxLength: 1000
+          examples:
+            standard:
+              summary: Invalid Page Size
+              description: This response is returned when the page size is invalid
+              value:
+                code: VALIDATION_ERROR
+                message: The selected per page is invalid.
+                errors:
+                - The selected per page is invalid.
+  securitySchemes:
+    oauth:
+      type: oauth2
+      flows:
+        clientCredentials:
+          tokenUrl: /oauth/token
+          scopes:
+            '*': Full access
+            packages:read: Read packages information
+            applications:read: Read access to applications
+            applications:write: Write access to applications
+            subscriptions:read: Read access to subscriptions
+            subscriptions:write: Write access to subscriptions (subscribe/updated/delete)
+x-provenance:
+  method: searched
+  source: https://docs.nmi.com/reference
+  harvested: '2026-10-14'
+  tool: harvest-readme-openapi.py
+  note: Assembled verbatim from the OpenAPI definition ReadMe embeds in each operation page of the provider's developer portal; paths and components merged by API title, nothing authored.
+  assembled_from:
+  - https://docs.nmi.com/reference/createapplication.md
+  - https://docs.nmi.com/reference/createsubscription.md
+  - https://docs.nmi.com/reference/deletesubscription.md
+  - https://docs.nmi.com/reference/getaccesstoken.md
+  - https://docs.nmi.com/reference/getapplication.md
+  - https://docs.nmi.com/reference/getapplicationdownloadagreement.md
+  - https://docs.nmi.com/reference/getapplicationlegalconsent.md
+  - https://docs.nmi.com/reference/getapplications.md
+  - https://docs.nmi.com/reference/getpackagebyid.md
+  - https://docs.nmi.com/reference/getpackages.md
+  - https://docs.nmi.com/reference/getsubscription.md
+  - https://docs.nmi.com/reference/getsubscriptions.md
+  - https://docs.nmi.com/reference/submitapplication.md
+  - https://docs.nmi.com/reference/updateapplication.md
+  - https://docs.nmi.com/reference/updateapplicationinfo.md
+  - https://docs.nmi.com/reference/updatesubscription.md
+  - https://docs.nmi.com/reference/uploaddocument.md
+  merge:
+    pages: 17
+    deduped: 353
+    conflicts_kept_first: 0

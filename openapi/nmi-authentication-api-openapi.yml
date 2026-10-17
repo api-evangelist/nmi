@@ -1,0 +1,208 @@
+openapi: 3.2.0
+info:
+  title: Payments Sign-Up Authentication API
+  description: Payments Sign-Up API
+  version: 1.0.0
+  license:
+    name: Proprietary
+    url: https://api.nmipayments.com/license
+servers:
+- url: https://sandbox.signup.nmi.com/api/v1
+  description: Sandbox
+- url: https://secure.nmi.com/api/v5/signup
+  description: Production
+tags:
+- name: Authentication
+  description: The Authorization endpoint allows clients to securely authenticate and obtain an access token for making requests to the API.
+paths:
+  /oauth/token:
+    post:
+      tags:
+      - Authentication
+      security: []
+      summary: Request an Access Token
+      description: 'This endpoint issues an OAuth access token via an HTTP POST request. The token remains valid for 60 minutes.
+
+        After expiration, you must request a new token.
+
+
+        ### Available Scopes and their access
+
+        | Scope | Description |
+
+        |---|---|
+
+        | packages:read | Read packages information |
+
+        | applications:read | Read access to applications |
+
+        | applications:write | Write access to applications |
+
+        | subscriptions:read | Read access to subscriptions |
+
+        | subscriptions:write | Write access to subscriptions (subscribe/updated/delete) |'
+      operationId: getAccessToken
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                grant_type:
+                  type: string
+                  description: The OAuth2 grant type (e.g., `client_credentials`).
+                  enum:
+                  - client_credentials
+                client_id:
+                  type: string
+                  description: Client Key identifier
+                  maxLength: 100
+                client_secret:
+                  type: string
+                  description: Client Secret
+                  maxLength: 100
+                scope:
+                  $ref: '#/components/schemas/scope-types'
+              required:
+              - grant_type
+              - client_id
+              - client_secret
+            examples:
+              success:
+                summary: Success
+                description: Request an Access Token for a Client
+                value:
+                  grant_type: client_credentials
+                  client_id: '**********'
+                  client_secret: '**********'
+                  scope: '*'
+              failure:
+                summary: Client Authentication Failed
+                description: Request an Access Token using an invalid Client
+                value:
+                  grant_type: client_credentials
+                  client_id: invalid_data
+                  client_secret: invalid_data
+                  scope: '*'
+      responses:
+        '200':
+          description: Successful response with the Access Token
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - access_token
+                - token_type
+                - expires_in
+                properties:
+                  token_type:
+                    type: string
+                    description: The type of token (typically `Bearer`).
+                    maxLength: 100
+                  expires_in:
+                    type: integer
+                    description: The lifetime of the token in seconds.
+                    example: 3600
+                  access_token:
+                    type: string
+                    description: The access token used to authenticate requests to protected resources.
+                    maxLength: 10000
+              examples:
+                success:
+                  summary: Success
+                  description: The response contains an access token.
+                  value:
+                    token_type: Bearer
+                    expires_in: 3600
+                    access_token: eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiI5ZDdhZDgwNS00NzZjLTQ0OTAtOWVkYS0yNzYzNDkxNTRkNzkiLCJqdGkiOiJmYjhjNjcwODcyMjkwMjhmZTcyYzcwMTVmMTNjZmY2Mjc4YzA3ODI5NmU5YWZiYjUwZGZiY2E1NGQzNzFmOWJjZjNmMjQ4NmRiNTMyMzhjMCIsImlhdCI6MTczMTY4MzIzMS44MDg3MTUsIm5iZiI6MTczMTY4MzIzMS44MDg3MTksImV4cCI6MTc2MzIxOTIzMS43NzAyMDgsInN1YiI6IiIsInNjb3BlcyI6WyIqIl19.jwquLMGyVVttPEC4Sa0TgKqOniUc2xS1JKG9qYdJxn2BdevAI87IfkZDwqoNkjuJCFNJF21MKkratf8xJtzyni-SK43UyYQ5uExMbYRCxFfRdPfn2siFokS8jE4vakAFVbUgxPFpGT83MGjX2QAZ-P1fL_DxT7b7xSxK3hxl_npumQyZSsqgx79N3g5xCDs6BpbtPonOVbG1exjVMoWt3H492j9A8p99OUuLTho1IYF47Gk3NBlEEYSYa2I2NIhETIEjxOeo4BkW1i0IyV3Kz1Ai_uqT0u_iCepI0P-6QySLs9hsWaKxvH9F-mpe5EqpDdz_WTB5EWq2vhg8EbfQjzKLSeBzFvuQp9CWYjjHgGDCgGPicQtbAa6zFlOsLQ9GA2xXlR5N7ikpGphrWSHmGxdJF3q57RLfRK8QW2EIB0WvoumER0apBG5d-ma_xxacLDJtwCWd7jF7oKPvDAzU1NZsaH3plDFGpHZQCTsRT1_Mz3FSxTV-42Hn1rhCrhGtHHxQtSb96t__3Jbj4qPNhlqXeboi0-ZXDtiO0LbPp2wnl3_UxaR0w-KVxbCYvtweb-SIT7lmnkZp1xxvJR-jCLZi6-_qyOUCK7ZXlibWC0CA7n_qLhSv8CXu1vw70nltqpnzXmO1Z063f5CIvdNjkl7mx1bOgO0NZk4hbb6cffY
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: The error type (e.g., `invalid_request`, `invalid_client`, `invalid_grant`).
+                    maxLength: 100
+                  error_description:
+                    type: string
+                    description: A detailed description of the error.
+                    maxLength: 1000
+                  message:
+                    type: string
+                    description: A message error.
+                    maxLength: 255
+              examples:
+                failure:
+                  summary: Client Authentication Failed
+                  description: The invalid client response
+                  value:
+                    error: invalid_client
+                    error_description: Client authentication failed
+                    message: Client authentication failed
+components:
+  schemas:
+    scope-types:
+      oneOf:
+      - type: string
+        enum:
+        - '*'
+        description: Accepts "*" to represent all scopes
+      - type: array
+        minItems: 1
+        maxItems: 10
+        uniqueItems: true
+        items:
+          type: string
+          enum:
+          - packages:read
+          - applications:read
+          - applications:write
+          - subscriptions:read
+          - subscriptions:write
+        description: Accepts an array of specific scopes
+  securitySchemes:
+    oauth:
+      type: oauth2
+      flows:
+        clientCredentials:
+          tokenUrl: /oauth/token
+          scopes:
+            '*': Full access
+            packages:read: Read packages information
+            applications:read: Read access to applications
+            applications:write: Write access to applications
+            subscriptions:read: Read access to subscriptions
+            subscriptions:write: Write access to subscriptions (subscribe/updated/delete)
+x-provenance:
+  method: searched
+  source: https://docs.nmi.com/reference
+  harvested: '2026-10-14'
+  tool: harvest-readme-openapi.py
+  note: Assembled verbatim from the OpenAPI definition ReadMe embeds in each operation page of the provider's developer portal; paths and components merged by API title, nothing authored.
+  assembled_from:
+  - https://docs.nmi.com/reference/createapplication.md
+  - https://docs.nmi.com/reference/createsubscription.md
+  - https://docs.nmi.com/reference/deletesubscription.md
+  - https://docs.nmi.com/reference/getaccesstoken.md
+  - https://docs.nmi.com/reference/getapplication.md
+  - https://docs.nmi.com/reference/getapplicationdownloadagreement.md
+  - https://docs.nmi.com/reference/getapplicationlegalconsent.md
+  - https://docs.nmi.com/reference/getapplications.md
+  - https://docs.nmi.com/reference/getpackagebyid.md
+  - https://docs.nmi.com/reference/getpackages.md
+  - https://docs.nmi.com/reference/getsubscription.md
+  - https://docs.nmi.com/reference/getsubscriptions.md
+  - https://docs.nmi.com/reference/submitapplication.md
+  - https://docs.nmi.com/reference/updateapplication.md
+  - https://docs.nmi.com/reference/updateapplicationinfo.md
+  - https://docs.nmi.com/reference/updatesubscription.md
+  - https://docs.nmi.com/reference/uploaddocument.md
+  merge:
+    pages: 17
+    deduped: 353
+    conflicts_kept_first: 0

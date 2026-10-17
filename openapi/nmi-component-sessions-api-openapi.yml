@@ -1,10 +1,12 @@
-openapi: 3.0.3
+openapi: 3.2.0
 info:
-  title: Embedded Components API
+  title: Embedded Components Component Sessions API
   version: 1.0.0
   description: API for creating sessions for embedded components.
 servers:
 - url: https://sandbox.nmi.com/api/v5/embedded-reporting
+tags:
+- name: Component Sessions
 paths:
   /sessions:
     post:

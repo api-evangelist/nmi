@@ -1,0 +1,239 @@
+openapi: 3.2.0
+info:
+  version: 1.0.0
+  title: CTV Onboarding Marketplace App API
+servers:
+- url: https://sandbox.nmi.com/api
+tags:
+- name: Marketplace App
+paths:
+  /v4/marketplace_app/ctv/onboarding:
+    post:
+      description: ''
+      operationId: post_v4marketplace_appctvonboarding
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              examples:
+                Example Successful Onboard:
+                  summary: Example Successful Onboard
+                  value:
+                    visa:
+                      requestStatus: completed
+                      requestStatusCode: ok
+                      onboardStatus: inProgress
+                      onboardId: 428f1794-b474-4e63-8698-da28ca41f724
+                    mastercard:
+                      requestStatus: completed
+                      requestStatusCode: ok
+                      onboardStatus: inProgress
+                      onboardId: b8740d75-7ca5-40d1-9cf9-eb921c8ed2aa
+      parameters:
+      - name: Authorization
+        in: header
+        required: true
+        description: Reseller API Key
+        schema:
+          type: string
+          default: ''
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                merchantId:
+                  type: string
+                  description: Merchant gateway ID
+                  default: ''
+                applications:
+                  type: array
+                  items:
+                    properties:
+                      serviceId:
+                        type: string
+                        default: ctv
+                        description: This value will always be "ctv"
+                      application:
+                        type: object
+                        properties:
+                          merchantLegalName:
+                            type: string
+                            description: Legal business name of the merchant
+                            default: ExampleMerchant LTC
+                          merchantDbaName:
+                            type: string
+                            description: '"Doing Business As" name for the merchant'
+                            default: ExampleMerchant
+                          merchantEmail:
+                            type: string
+                            description: Valid merchant email address
+                            default: example@email.com
+                          merchantCity:
+                            type: string
+                            description: Merchant’s city that business is located.
+                            default: Chicago
+                          merchantCountryCode:
+                            type: string
+                            description: Two-letter country code.
+                            default: US
+                          merchantWebsiteUrl:
+                            type: string
+                            default: https://example-site.com
+                            description: Merchant's website url. This must be unique for each merchant gateway. If merchants share a URL, making them unique is required (e.g. https://example.com/2 if a merchant is already using the example.com domain).
+                          merchantBusinessId:
+                            type: object
+                            properties:
+                              ssn:
+                                type: string
+                                description: 'Social Security Number (United States) example: 123-45-6789'
+                                default: ''
+                              ein:
+                                type: string
+                                description: 'Employer Identification Number (Tax ID) (United States) example: 12-3456789'
+                                default: ''
+                              acquirerId:
+                                type: string
+                                description: '(must be used with mid) example: 123456'
+                              mid:
+                                type: string
+                                description: 'merchant identification (must be used acquirerId). example: 123456'
+                              abn:
+                                type: string
+                                description: 'Australian Business Number (Australia). example: 83123456789'
+                                default: ''
+                              bid:
+                                type: string
+                                default: ''
+                                description: 'Business Identification Number. example: BID123456'
+                              bn:
+                                type: string
+                                description: Canadian Business Number (Canada). 123456789RC0001
+                                default: ''
+                              brno:
+                                type: string
+                                description: 'Malaysian Business Registration Number (Malaysia). example: 1234567'
+                                default: ''
+                              cl:
+                                type: string
+                                description: 'Commercial License Number (Qatar). example: 12345678'
+                                default: ''
+                              cln:
+                                type: string
+                                description: 'Commercial License Number (Kuwait). example: 987654'
+                                default: ''
+                              corporateNumber:
+                                type: string
+                                description: 'Corporate Number (Japan). example: 1234567890123'
+                                default: ''
+                              cnpj:
+                                type: string
+                                description: '(Brazil). example: 12.345.678/0001-95'
+                                default: ''
+                              cr:
+                                type: string
+                                description: 'Company Registration Number (Saudi Arabia). example: 1234567890'
+                                default: ''
+                              cuit:
+                                type: string
+                                description: '(Argentina). example: 20-12345678-9'
+                                default: ''
+                              edrpou:
+                                type: string
+                                description: 'Unified State Register of Enterprises (Ukraine). example: 12345678'
+                                default: ''
+                              hkbr:
+                                type: string
+                                description: 'Hong Kong Business Registration (Hong Kong). example: 12345678-000-01'
+                                default: ''
+                              nationalId:
+                                type: string
+                                description: 'National Taxpayer ID (Dominican Republic). example: 001-1234567-8'
+                                default: ''
+                              nzbn:
+                                type: string
+                                description: 'New Zealand Business Number (New Zealand). example: 9429031234567'
+                                default: ''
+                              pan:
+                                type: string
+                                description: 'Permanent Account Number (India). example: ABCDE1234F'
+                                default: ''
+                              rfc:
+                                type: string
+                                description: 'Business ID (Mexico). example: ABC123456T89'
+                                default: ''
+                              rnc:
+                                type: string
+                                description: 'National Taxpayer Registry (Dominican Republic). example: 101123456'
+                                default: ''
+                              ruc:
+                                type: string
+                                description: 'Single Taxpayer Registry (Peru). example: 20123456789'
+                                default: ''
+                              rut:
+                                type: string
+                                description: 'Single Tax Role (Chile / Colombia). example: 12.345.678-9'
+                                default: ''
+                              sin:
+                                type: string
+                                description: 'Social Insurance Number (Canada). example: 123-456-789'
+                                default: ''
+                              uen:
+                                type: string
+                                description: 'Unique Entity Number (Singapore). example: 201234567W'
+                                default: ''
+                              vat:
+                                type: string
+                                description: 'Value-Added Tax Number (EU & various). example: DE123456789'
+                                default: ''
+                            description: Business identification information which is used to identify and sign up merchant for Customer Token Vault
+                          paymentAppId:
+                            type: string
+                            description: 'Unique v4 UUID for this app instance. You can generate this how you want, but each must be unique to all applications across the platform. Duplicates will result in boarding errors. example: 5487317d-0a22-4d14-9d70-774331f62004'
+                            default: ''
+                          paymentAppLegalName:
+                            type: string
+                            description: Typically the same as the "merchantLegalName" value.
+                            default: ExampleMerchant LTC
+                          paymentAppDisplayName:
+                            type: string
+                            description: The app that will be using tokens. Something generic like "webApp" will work.
+                            default: webApp
+                        required:
+                        - merchantLegalName
+                        - merchantDbaName
+                        - merchantEmail
+                        - merchantCity
+                        - merchantCountryCode
+                        - merchantWebsiteUrl
+                        - merchantBusinessId
+                        - paymentAppId
+                        - paymentAppLegalName
+                        - paymentAppDisplayName
+                        description: Information regarding signup for the Customer Token Vault application
+                    type: object
+                    required:
+                    - serviceId
+                    - application
+              type: object
+              required:
+              - applications
+              - merchantId
+      security: []
+      tags:
+      - Marketplace App
+      summary: Post v4marketplace appctvonboarding
+      x-summary-source: derived
+x-provenance:
+  method: searched
+  source: https://docs.nmi.com/reference
+  harvested: '2026-10-14'
+  tool: harvest-readme-openapi.py
+  note: Assembled verbatim from the OpenAPI definition ReadMe embeds in each operation page of the provider's developer portal; paths and components merged by API title, nothing authored.
+  assembled_from:
+  - https://docs.nmi.com/reference/add-token-vault.md
+  merge:
+    pages: 1
+    deduped: 0
+    conflicts_kept_first: 0
