@@ -313,6 +313,8 @@ apis:
     https://secure.networkmerchants.com/gw/merchants/resources/integration/integration_portal.php
   baseURL: https://secure.networkmerchants.com
   tags:
+  - Application
+  tags_raw:
   - Applications
   properties:
   - type: OpenAPI
@@ -1139,6 +1141,8 @@ apis:
     https://secure.networkmerchants.com/gw/merchants/resources/integration/integration_portal.php
   baseURL: https://secure.networkmerchants.com
   tags:
+  - Product
+  tags_raw:
   - Products
   properties:
   - type: OpenAPI
@@ -1241,6 +1245,8 @@ apis:
     https://secure.networkmerchants.com/gw/merchants/resources/integration/integration_portal.php
   baseURL: https://secure.networkmerchants.com
   tags:
+  - Subscription
+  tags_raw:
   - Subscriptions
   properties:
   - type: OpenAPI
@@ -1292,6 +1298,8 @@ apis:
     https://secure.networkmerchants.com/gw/merchants/resources/integration/integration_portal.php
   baseURL: https://secure.networkmerchants.com
   tags:
+  - Transaction
+  tags_raw:
   - Transactions
   properties:
   - type: OpenAPI
@@ -1343,6 +1351,8 @@ apis:
     https://secure.networkmerchants.com/gw/merchants/resources/integration/integration_portal.php
   baseURL: https://secure.networkmerchants.com
   tags:
+  - User
+  tags_raw:
   - Users
   properties:
   - type: OpenAPI
